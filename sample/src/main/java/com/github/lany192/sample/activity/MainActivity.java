@@ -9,7 +9,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.github.lany192.sample.Constants;
 import com.github.lany192.sample.R;
 
-@Route(path = Constants.APP_MAIN)
+@Route(path = Constants.APP_MAIN, group = "app", name = "main")
 public class MainActivity extends AppCompatActivity {
 
     @Override

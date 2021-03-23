@@ -23,6 +23,7 @@ import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
+import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
@@ -31,6 +32,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
+import javax.tools.Diagnostic;
 
 @AutoService(Processor.class)
 public class MyProcessor extends AbstractProcessor {
@@ -47,18 +49,46 @@ public class MyProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
-        for (Element element : roundEnvironment.getElementsAnnotatedWith(Autowired.class)) {
-            if (!(element instanceof VariableElement)) {
-                return false;
+        Messager messager = processingEnv.getMessager();
+        for (Element routeElement : roundEnvironment.getElementsAnnotatedWith(Route.class)) {
+            Route route = routeElement.getAnnotation(Route.class);
+            messager.printMessage(Diagnostic.Kind.NOTE, route.name() + " --> " + route.group() + " --> " + route.path());
+            String packageName = processingEnv.getElementUtils().getPackageOf(routeElement).getQualifiedName().toString();
+            messager.printMessage(Diagnostic.Kind.NOTE, packageName);
+            String className = routeElement.getEnclosingElement().getSimpleName().toString();
+            messager.printMessage(Diagnostic.Kind.NOTE, className);
+            String fieldType = routeElement.asType().toString();
+            messager.printMessage(Diagnostic.Kind.NOTE, fieldType);
+
+            for (Element element : roundEnvironment.getElementsAnnotatedWith(Autowired.class)) {
+                if (element instanceof VariableElement) {
+                    VariableElement variableElement = (VariableElement) element;
+                    messager.printMessage(Diagnostic.Kind.NOTE, variableElement.getSimpleName());
+                    messager.printMessage(Diagnostic.Kind.NOTE, variableElement.asType().toString());
+//                    messager.printMessage(Diagnostic.Kind.NOTE, element.getAnnotationsByType(Autowired.class).getClass().getSimpleName());
+
+
+                    Autowired autowired = routeElement.getAnnotation(Autowired.class);
+
+                }
             }
-            getEachVariableElement(element);
+
+            messager.printMessage(Diagnostic.Kind.NOTE, "---------------------------------------------------------------");
         }
-        try {
-            createUIHelper();
-            createInjectors();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+
+//        for (Element element : roundEnvironment.getElementsAnnotatedWith(Autowired.class)) {
+//            if (!(element instanceof VariableElement)) {
+//                return false;
+//            }
+//            getEachVariableElement(element);
+//        }
+//        try {
+//            createUIHelper();
+//            createInjectors();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return true;
     }
 
