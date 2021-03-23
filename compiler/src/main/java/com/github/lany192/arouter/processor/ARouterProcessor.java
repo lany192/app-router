@@ -9,8 +9,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.lany192.arouter.entity.RouteDoc;
 import com.github.lany192.arouter.utils.Consts;
+import com.github.lany192.arouter.utils.Utils;
 import com.google.auto.service.AutoService;
-import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -79,69 +79,64 @@ public class ARouterProcessor extends BaseProcessor {
         logger.info(">>> 初始化 <<<");
     }
 
-//    @Override
-//    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-//        logger.info(">>> 开始... <<<");
-//        for (Element element : roundEnv.getElementsAnnotatedWith(Route.class)) {
-//            logger.info("发现:" + element.getSimpleName());
-//        }
-//
-//        if (CollectionUtils.isNotEmpty(annotations)) {
-//            Set<? extends Element> routeElements = roundEnv.getElementsAnnotatedWith(Route.class);
-//            try {
-//
-//                //this.parseRoutes(routeElements);
-//            } catch (Exception e) {
-//                logger.error(e);
-//            }
-//        }
-//        //这里要注意，要返回false，并且要放在Processor的前面，否则会影响arouter的Processor。
-//        return false;
-//    }
-
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        // 准备在gradle的控制台打印信息
         Messager messager = processingEnv.getMessager();
-        List<MethodSpec> methods = new ArrayList<>();
-        // 打印注解
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Route.class);
-        for (Element element : elements) {
-            if (element instanceof VariableElement) {
-                messager.printMessage(Diagnostic.Kind.WARNING, "忽略注解在非class上的注解");
-                return false;
+        if (CollectionUtils.isNotEmpty(elements)) {
+            List<MethodSpec> methods = new ArrayList<>();
+            for (Element element : elements) {
+                if (element instanceof VariableElement) {
+                    messager.printMessage(Diagnostic.Kind.WARNING, "忽略注解在非class上的注解");
+                    return false;
+                }
+                //获取包信息
+                PackageElement packageElement = processingEnv.getElementUtils().getPackageOf(element);
+                String className = element.getSimpleName().toString();
+                messager.printMessage(Diagnostic.Kind.NOTE, " 发现目标类: " + packageElement.getQualifiedName() + "." + className);
+                Route route = element.getAnnotation(Route.class);
+
+//                /**
+//                 * 支付确认界面
+//                 */
+//                public void pay(OrderType orderType, TargetType targetType, long targetId) {
+//                    ARouter.getInstance()
+//                            .build(Constants.USER_PAY)
+//                            .withInt(Constants.KEY_ORDER_TYPE, orderType.ordinal())
+//                            .withInt(Constants.KEY_TARGET_TYPE, targetType.ordinal())
+//                            .withLong(Constants.KEY_TARGET_ID, targetId)
+//                            .navigation();
+//                }
+
+                MethodSpec methodSpec = MethodSpec.methodBuilder(Utils.toLowerCaseFirstOne(className))
+                        .addModifiers(Modifier.PUBLIC)
+                        .addJavadoc("这里是注释")
+                        .addParameter(String[].class, "args")
+                        .addCode("ARouter.getInstance().build(\"" + route.path() + "\").navigation();")
+                        .returns(void.class)
+                        .build();
+                methods.add(methodSpec);
             }
-            //获取包信息
-            PackageElement packageElement = processingEnv.getElementUtils().getPackageOf(element);
-            String className = element.getSimpleName().toString();
-            messager.printMessage(Diagnostic.Kind.NOTE, " 发现目标类: " + packageElement.getQualifiedName() + "." + className);
-
-            MethodSpec methodSpec = MethodSpec.methodBuilder(className)
-                    .addModifiers(Modifier.ABSTRACT)
-                    .addAnnotation(AnnotationSpec
-                            .builder(ClassName.get("dagger.android", "ContributesAndroidInjector"))
-                            .build())
-                    .returns(ClassName.get(packageElement.getQualifiedName().toString(), className))
-                    .build();
-            methods.add(methodSpec);
-        }
-        try {
-            createRouterHelper(methods);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if (CollectionUtils.isNotEmpty(annotations)) {
-            Set<? extends Element> routeElements = roundEnv.getElementsAnnotatedWith(Route.class);
             try {
-
-                //this.parseRoutes(routeElements);
+                createRouterHelper(methods);
             } catch (Exception e) {
-                logger.error(e);
+                e.printStackTrace();
             }
+
+            if (CollectionUtils.isNotEmpty(annotations)) {
+                Set<? extends Element> routeElements = roundEnv.getElementsAnnotatedWith(Route.class);
+                try {
+
+                    //this.parseRoutes(routeElements);
+                } catch (Exception e) {
+                    logger.error(e);
+                }
+            }
+            messager.printMessage(Diagnostic.Kind.WARNING, "忽略异常提示");
+            //这里要注意，要返回false，并且要放在Processor的前面，否则会影响arouter的Processor。
+            return false;
         }
-        //这里要注意，要返回false，并且要放在Processor的前面，否则会影响arouter的Processor。
-        return false;
+        return true;
     }
 
     private void createRouterHelper(List<MethodSpec> methods) throws Exception {
