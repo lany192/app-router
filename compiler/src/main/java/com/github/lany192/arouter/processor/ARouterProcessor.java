@@ -223,7 +223,6 @@ public class ARouterProcessor extends BaseProcessor {
                     routeDocList.add(routeDoc);
 
 
-
 //                    builder.addParameter(String[].class, "args");
                     builder.addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
                     builder.addCode(".build(\"" + routeDoc.getPath() + "\")");
@@ -247,6 +246,8 @@ public class ARouterProcessor extends BaseProcessor {
     private void injectParamCollector(Element element, Map<String, Integer> paramsType, Map<String, Autowired> injectConfig) {
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                logger.info("字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString());
+
                 // It must be field, then it has annotation, but it not be provider.
                 Autowired paramConfig = field.getAnnotation(Autowired.class);
                 String injectName = StringUtils.isEmpty(paramConfig.name()) ? field.getSimpleName().toString() : paramConfig.name();
