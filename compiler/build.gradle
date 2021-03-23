@@ -1,0 +1,19 @@
+apply plugin: 'java'
+apply plugin: 'com.github.dcendents.android-maven'
+group = 'com.github.lany192'
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.squareup:javapoet:1.13.0'
+    implementation 'com.google.auto.service:auto-service:1.0-rc7'
+    annotationProcessor 'com.google.auto.service:auto-service:1.0-rc7'
+    implementation 'com.alibaba:arouter-annotation:1.0.6'
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+//编译JAVA文件时采用UTF-8
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
