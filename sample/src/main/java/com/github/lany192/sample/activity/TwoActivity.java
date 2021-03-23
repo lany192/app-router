@@ -14,7 +14,7 @@ import com.github.lany192.sample.R;
 public class TwoActivity extends AppCompatActivity {
     @Autowired(name = "ownerId", desc = "用户id")
     long ownerId;
-    @Autowired(name = "isFans", desc = "标题")
+    @Autowired(name = "title", desc = "标题")
     String title;
 
     @Override
