@@ -5,13 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import javax.annotation.processing.Messager;
 import javax.tools.Diagnostic;
 
-/**
- * Simplify the message print.
- *
- * @author Alex <a href="mailto:zhilong.liu@aliyun.com">Contact me.</a>
- * @version 1.0
- * @since 16/8/22 上午11:48
- */
 public class Logger {
     private Messager msg;
 

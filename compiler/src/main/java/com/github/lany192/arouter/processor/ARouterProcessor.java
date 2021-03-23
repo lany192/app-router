@@ -47,13 +47,9 @@ import static com.github.lany192.arouter.utils.Consts.ANNOTATION_TYPE_ROUTE;
 import static com.github.lany192.arouter.utils.Consts.FRAGMENT;
 import static com.github.lany192.arouter.utils.Consts.IPROVIDER_GROUP;
 import static com.github.lany192.arouter.utils.Consts.IROUTE_GROUP;
-import static com.github.lany192.arouter.utils.Consts.ITROUTE_ROOT;
 import static com.github.lany192.arouter.utils.Consts.METHOD_LOAD_INTO;
 import static com.github.lany192.arouter.utils.Consts.NAME_OF_GROUP;
-import static com.github.lany192.arouter.utils.Consts.NAME_OF_PROVIDER;
-import static com.github.lany192.arouter.utils.Consts.NAME_OF_ROOT;
 import static com.github.lany192.arouter.utils.Consts.PACKAGE_OF_GENERATE_FILE;
-import static com.github.lany192.arouter.utils.Consts.SEPARATOR;
 import static com.github.lany192.arouter.utils.Consts.SERVICE;
 import static com.github.lany192.arouter.utils.Consts.WARNING_TIPS;
 import static javax.lang.model.element.Modifier.PUBLIC;
@@ -74,12 +70,6 @@ public class ARouterProcessor extends BaseProcessor {
         logger.info(">>> RouteProcessor init. <<<");
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param annotations
-     * @param roundEnv
-     */
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         if (CollectionUtils.isNotEmpty(annotations)) {
@@ -312,32 +302,6 @@ public class ARouterProcessor extends BaseProcessor {
 
             String json = JSON.toJSONString(docSource, SerializerFeature.PrettyFormat);
             logger.info(json);
-
-            // Write provider into disk
-            String providerMapFileName = NAME_OF_PROVIDER + SEPARATOR + moduleName;
-            JavaFile.builder(PACKAGE_OF_GENERATE_FILE,
-                    TypeSpec.classBuilder(providerMapFileName)
-                            .addJavadoc(WARNING_TIPS)
-                            .addSuperinterface(ClassName.get(type_IProviderGroup))
-                            .addModifiers(PUBLIC)
-                            .addMethod(loadIntoMethodOfProviderBuilder.build())
-                            .build()
-            ).build().writeTo(mFiler);
-
-            logger.info(">>> Generated provider map, name is " + providerMapFileName + " <<<");
-
-            // Write root meta into disk.
-            String rootFileName = NAME_OF_ROOT + SEPARATOR + moduleName;
-            JavaFile.builder(PACKAGE_OF_GENERATE_FILE,
-                    TypeSpec.classBuilder(rootFileName)
-                            .addJavadoc(WARNING_TIPS)
-                            .addSuperinterface(ClassName.get(elementUtils.getTypeElement(ITROUTE_ROOT)))
-                            .addModifiers(PUBLIC)
-                            .addMethod(loadIntoMethodOfRootBuilder.build())
-                            .build()
-            ).build().writeTo(mFiler);
-
-            logger.info(">>> Generated root, name is " + rootFileName + " <<<");
         }
     }
 

@@ -19,13 +19,6 @@ import static com.github.lany192.arouter.utils.Consts.SERIALIZABLE;
 import static com.github.lany192.arouter.utils.Consts.SHORT;
 import static com.github.lany192.arouter.utils.Consts.STRING;
 
-/**
- * Utils for type exchange
- *
- * @author zhilong <a href="mailto:zhilong.lzl@alibaba-inc.com">Contact me.</a>
- * @version 1.0
- * @since 2017/2/21 下午1:06
- */
 public class TypeUtils {
 
     private Types types;

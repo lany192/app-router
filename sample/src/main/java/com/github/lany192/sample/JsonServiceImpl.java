@@ -1,11 +1,9 @@
 package com.github.lany192.sample;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.service.SerializationService;
-import com.google.gson.Gson;
 
 import java.lang.reflect.Type;
 
@@ -21,28 +19,17 @@ public class JsonServiceImpl implements SerializationService {
     }
 
     @Override
-    public <T> T json2Object(String json, Class<T> clazz) {
-        return JsonUtils.json2object(json, clazz);
+    public <T> T json2Object(String input, Class<T> clazz) {
+        return null;
     }
 
     @Override
     public String object2Json(Object object) {
-        String json = JsonUtils.object2json(object);
-        return json;
+        return JsonUtils.object2json(object);
     }
 
     @Override
     public <T> T parseObject(String json, Type clazz) {
-        if (TextUtils.isEmpty(json)) {
-            return null;
-        } else {
-            T t = null;
-            try {
-                t = (new Gson()).fromJson(json, clazz);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return t;
-        }
+        return JsonUtils.json2object(json, clazz);
     }
 }
