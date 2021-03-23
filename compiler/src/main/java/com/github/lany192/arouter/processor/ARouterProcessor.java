@@ -10,6 +10,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.lany192.arouter.entity.RouteDoc;
 import com.github.lany192.arouter.utils.Consts;
 import com.google.auto.service.AutoService;
+import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -32,14 +33,20 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import javax.annotation.processing.Filer;
+import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.Modifier;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import javax.tools.Diagnostic;
 
 import static com.github.lany192.arouter.utils.Consts.ACTIVITY;
 import static com.github.lany192.arouter.utils.Consts.ANNOTATION_TYPE_AUTOWIRED;
@@ -57,6 +64,8 @@ import static javax.lang.model.element.Modifier.PUBLIC;
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({ANNOTATION_TYPE_ROUTE, ANNOTATION_TYPE_AUTOWIRED})
 public class ARouterProcessor extends BaseProcessor {
+    private Filer filer;
+
     private Map<String, Set<RouteMeta>> groupMap = new HashMap<>(); // ModuleName and routeMeta.
     private Map<String, String> rootMap = new TreeMap<>();  // Map of root metas, used for generate class file in order.
 
@@ -66,15 +75,60 @@ public class ARouterProcessor extends BaseProcessor {
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
         iProvider = elementUtils.getTypeElement(Consts.IPROVIDER).asType();
-
+        filer = processingEnv.getFiler();
         logger.info(">>> 初始化 <<<");
     }
 
+//    @Override
+//    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+//        logger.info(">>> 开始... <<<");
+//        for (Element element : roundEnv.getElementsAnnotatedWith(Route.class)) {
+//            logger.info("发现:" + element.getSimpleName());
+//        }
+//
+//        if (CollectionUtils.isNotEmpty(annotations)) {
+//            Set<? extends Element> routeElements = roundEnv.getElementsAnnotatedWith(Route.class);
+//            try {
+//
+//                //this.parseRoutes(routeElements);
+//            } catch (Exception e) {
+//                logger.error(e);
+//            }
+//        }
+//        //这里要注意，要返回false，并且要放在Processor的前面，否则会影响arouter的Processor。
+//        return false;
+//    }
+
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        logger.info(">>> 开始... <<<");
-        for (Element element : roundEnv.getElementsAnnotatedWith(Route.class)) {
-            logger.info("发现:" + element.getSimpleName());
+        // 准备在gradle的控制台打印信息
+        Messager messager = processingEnv.getMessager();
+        List<MethodSpec> methods = new ArrayList<>();
+        // 打印注解
+        Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Route.class);
+        for (Element element : elements) {
+            if (element instanceof VariableElement) {
+                messager.printMessage(Diagnostic.Kind.WARNING, "忽略注解在非class上的注解");
+                return false;
+            }
+            //获取包信息
+            PackageElement packageElement = processingEnv.getElementUtils().getPackageOf(element);
+            String className = element.getSimpleName().toString();
+            messager.printMessage(Diagnostic.Kind.NOTE, " 发现目标类: " + packageElement.getQualifiedName() + "." + className);
+
+            MethodSpec methodSpec = MethodSpec.methodBuilder(className)
+                    .addModifiers(Modifier.ABSTRACT)
+                    .addAnnotation(AnnotationSpec
+                            .builder(ClassName.get("dagger.android", "ContributesAndroidInjector"))
+                            .build())
+                    .returns(ClassName.get(packageElement.getQualifiedName().toString(), className))
+                    .build();
+            methods.add(methodSpec);
+        }
+        try {
+            createRouterHelper(methods);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         if (CollectionUtils.isNotEmpty(annotations)) {
@@ -88,6 +142,17 @@ public class ARouterProcessor extends BaseProcessor {
         }
         //这里要注意，要返回false，并且要放在Processor的前面，否则会影响arouter的Processor。
         return false;
+    }
+
+    private void createRouterHelper(List<MethodSpec> methods) throws Exception {
+        TypeSpec.Builder builder = TypeSpec.classBuilder("RouterHelper")
+                .addJavadoc("路由助手，自动生成代码，请勿编辑")
+                .addModifiers(Modifier.PUBLIC);
+        for (MethodSpec method : methods) {
+            builder.addMethod(method);
+        }
+        JavaFile javaFile = JavaFile.builder("com.alibaba.android.arouter", builder.build()).build();
+        javaFile.writeTo(filer);
     }
 
     private void parseRoutes(Set<? extends Element> routeElements) throws IOException {
