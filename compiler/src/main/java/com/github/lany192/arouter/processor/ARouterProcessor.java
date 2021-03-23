@@ -201,7 +201,6 @@ public class ARouterProcessor extends BaseProcessor {
                     Map<String, Autowired> injectConfigs = routeMeta.getInjectConfig();
                     if (MapUtils.isNotEmpty(paramsType)) {
                         List<Param> paramList = new ArrayList<>();
-
                         for (Map.Entry<String, Integer> types : paramsType.entrySet()) {
 
                             Param param = new Param();
@@ -221,11 +220,37 @@ public class ARouterProcessor extends BaseProcessor {
 
                     routeDoc.setClassName(className.toString());
                     routeDocList.add(routeDoc);
-
-
-//                    builder.addParameter(String[].class, "args");
                     builder.addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
                     builder.addCode(".build(\"" + routeDoc.getPath() + "\")");
+
+                    if (MapUtils.isNotEmpty(paramsType)) {
+                        for (Map.Entry<String, Integer> types : paramsType.entrySet()) {
+                            switch (TypeKind.values()[types.getValue()].name().toLowerCase()) {
+                                case "string":
+                                    builder.addCode(".withString(\"" + types.getKey() + "\"," + types.getKey() + ")");
+                                    break;
+                                case "boolan":
+                                    builder.addCode(".withBoolean(\"" + types.getKey() + "\"," + types.getKey() + ")");
+                                    break;
+                                case "long":
+                                    builder.addCode(".withLong(\"" + types.getKey() + "\"," + types.getKey() + ")");
+                                    break;
+                                default:
+                                    builder.addCode(".withObject(\"" + types.getKey() + "\"," + types.getKey() + ")");
+                                    break;
+                            }
+
+                            Param param = new Param();
+                            Autowired injectConfig = injectConfigs.get(types.getKey());
+                            param.setKey(types.getKey());
+                            param.setType(TypeKind.values()[types.getValue()].name().toLowerCase());
+                            param.setDescription(injectConfig.desc());
+                            param.setRequired(injectConfig.required());
+
+
+                            builder.addParameter(types.getValue().getClass(), types.getKey());
+                        }
+                    }
                     builder.addCode(".navigation();");
                     builder.returns(void.class);
                     methods.add(builder.build());
