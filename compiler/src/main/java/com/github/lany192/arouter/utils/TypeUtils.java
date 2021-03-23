@@ -1,4 +1,4 @@
-package com.alibaba.android.arouter.compiler.utils;
+package com.github.lany192.arouter.utils;
 
 import com.alibaba.android.arouter.facade.enums.TypeKind;
 
@@ -7,17 +7,17 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-import static com.alibaba.android.arouter.compiler.utils.Consts.BOOLEAN;
-import static com.alibaba.android.arouter.compiler.utils.Consts.BYTE;
-import static com.alibaba.android.arouter.compiler.utils.Consts.DOUBEL;
-import static com.alibaba.android.arouter.compiler.utils.Consts.FLOAT;
-import static com.alibaba.android.arouter.compiler.utils.Consts.INTEGER;
-import static com.alibaba.android.arouter.compiler.utils.Consts.LONG;
-import static com.alibaba.android.arouter.compiler.utils.Consts.PARCELABLE;
-import static com.alibaba.android.arouter.compiler.utils.Consts.SERIALIZABLE;
-import static com.alibaba.android.arouter.compiler.utils.Consts.SHORT;
-import static com.alibaba.android.arouter.compiler.utils.Consts.STRING;
-import static com.alibaba.android.arouter.compiler.utils.Consts.CHAR;
+import static com.github.lany192.arouter.utils.Consts.BOOLEAN;
+import static com.github.lany192.arouter.utils.Consts.BYTE;
+import static com.github.lany192.arouter.utils.Consts.CHAR;
+import static com.github.lany192.arouter.utils.Consts.DOUBEL;
+import static com.github.lany192.arouter.utils.Consts.FLOAT;
+import static com.github.lany192.arouter.utils.Consts.INTEGER;
+import static com.github.lany192.arouter.utils.Consts.LONG;
+import static com.github.lany192.arouter.utils.Consts.PARCELABLE;
+import static com.github.lany192.arouter.utils.Consts.SERIALIZABLE;
+import static com.github.lany192.arouter.utils.Consts.SHORT;
+import static com.github.lany192.arouter.utils.Consts.STRING;
 
 /**
  * Utils for type exchange

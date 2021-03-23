@@ -1,2 +1,2 @@
-com.alibaba.android.arouter.compiler.processor.RouteProcessor,isolating
-com.alibaba.android.arouter.compiler.processor.AutowiredProcessor,isolating
+com.github.lany192.arouter.processor.RouteProcessor,isolating
+com.github.lany192.arouter.processor.AutowiredProcessor,isolating

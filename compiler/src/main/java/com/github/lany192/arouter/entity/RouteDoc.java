@@ -1,4 +1,4 @@
-package com.alibaba.android.arouter.compiler.entity;
+package com.github.lany192.arouter.entity;
 
 import com.alibaba.fastjson.annotation.JSONField;
 

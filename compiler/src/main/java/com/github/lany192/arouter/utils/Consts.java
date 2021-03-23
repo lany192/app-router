@@ -1,4 +1,4 @@
-package com.alibaba.android.arouter.compiler.utils;
+package com.github.lany192.arouter.utils;
 
 /**
  * Some consts used in processors

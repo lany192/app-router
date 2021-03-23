@@ -1,9 +1,14 @@
-package com.alibaba.android.arouter.compiler.processor;
+package com.github.lany192.arouter.processor;
 
-import com.alibaba.android.arouter.compiler.utils.Logger;
-import com.alibaba.android.arouter.compiler.utils.TypeUtils;
+import com.github.lany192.arouter.utils.Logger;
+import com.github.lany192.arouter.utils.TypeUtils;
+
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
@@ -11,12 +16,11 @@ import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
-import static com.alibaba.android.arouter.compiler.utils.Consts.*;
-import static com.alibaba.android.arouter.compiler.utils.Consts.NO_MODULE_NAME_TIPS;
+import static com.github.lany192.arouter.utils.Consts.KEY_GENERATE_DOC_NAME;
+import static com.github.lany192.arouter.utils.Consts.KEY_MODULE_NAME;
+import static com.github.lany192.arouter.utils.Consts.NO_MODULE_NAME_TIPS;
+import static com.github.lany192.arouter.utils.Consts.VALUE_ENABLE;
 
 /**
  * Base Processor

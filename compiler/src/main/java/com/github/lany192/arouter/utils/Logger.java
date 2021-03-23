@@ -1,4 +1,4 @@
-package com.alibaba.android.arouter.compiler.utils;
+package com.github.lany192.arouter.utils;
 
 import org.apache.commons.lang3.StringUtils;
 

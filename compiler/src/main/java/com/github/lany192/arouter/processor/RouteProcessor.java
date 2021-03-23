@@ -1,7 +1,5 @@
-package com.alibaba.android.arouter.compiler.processor;
+package com.github.lany192.arouter.processor;
 
-import com.alibaba.android.arouter.compiler.entity.RouteDoc;
-import com.alibaba.android.arouter.compiler.utils.Consts;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.enums.RouteType;
@@ -9,6 +7,8 @@ import com.alibaba.android.arouter.facade.enums.TypeKind;
 import com.alibaba.android.arouter.facade.model.RouteMeta;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.github.lany192.arouter.entity.RouteDoc;
+import com.github.lany192.arouter.utils.Consts;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
@@ -43,22 +43,22 @@ import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.StandardLocation;
 
-import static com.alibaba.android.arouter.compiler.utils.Consts.ACTIVITY;
-import static com.alibaba.android.arouter.compiler.utils.Consts.ANNOTATION_TYPE_AUTOWIRED;
-import static com.alibaba.android.arouter.compiler.utils.Consts.ANNOTATION_TYPE_ROUTE;
-import static com.alibaba.android.arouter.compiler.utils.Consts.FRAGMENT;
-import static com.alibaba.android.arouter.compiler.utils.Consts.IPROVIDER_GROUP;
-import static com.alibaba.android.arouter.compiler.utils.Consts.IROUTE_GROUP;
-import static com.alibaba.android.arouter.compiler.utils.Consts.ITROUTE_ROOT;
-import static com.alibaba.android.arouter.compiler.utils.Consts.METHOD_LOAD_INTO;
-import static com.alibaba.android.arouter.compiler.utils.Consts.NAME_OF_GROUP;
-import static com.alibaba.android.arouter.compiler.utils.Consts.NAME_OF_PROVIDER;
-import static com.alibaba.android.arouter.compiler.utils.Consts.NAME_OF_ROOT;
-import static com.alibaba.android.arouter.compiler.utils.Consts.PACKAGE_OF_GENERATE_DOCS;
-import static com.alibaba.android.arouter.compiler.utils.Consts.PACKAGE_OF_GENERATE_FILE;
-import static com.alibaba.android.arouter.compiler.utils.Consts.SEPARATOR;
-import static com.alibaba.android.arouter.compiler.utils.Consts.SERVICE;
-import static com.alibaba.android.arouter.compiler.utils.Consts.WARNING_TIPS;
+import static com.github.lany192.arouter.utils.Consts.ACTIVITY;
+import static com.github.lany192.arouter.utils.Consts.ANNOTATION_TYPE_AUTOWIRED;
+import static com.github.lany192.arouter.utils.Consts.ANNOTATION_TYPE_ROUTE;
+import static com.github.lany192.arouter.utils.Consts.FRAGMENT;
+import static com.github.lany192.arouter.utils.Consts.IPROVIDER_GROUP;
+import static com.github.lany192.arouter.utils.Consts.IROUTE_GROUP;
+import static com.github.lany192.arouter.utils.Consts.ITROUTE_ROOT;
+import static com.github.lany192.arouter.utils.Consts.METHOD_LOAD_INTO;
+import static com.github.lany192.arouter.utils.Consts.NAME_OF_GROUP;
+import static com.github.lany192.arouter.utils.Consts.NAME_OF_PROVIDER;
+import static com.github.lany192.arouter.utils.Consts.NAME_OF_ROOT;
+import static com.github.lany192.arouter.utils.Consts.PACKAGE_OF_GENERATE_DOCS;
+import static com.github.lany192.arouter.utils.Consts.PACKAGE_OF_GENERATE_FILE;
+import static com.github.lany192.arouter.utils.Consts.SEPARATOR;
+import static com.github.lany192.arouter.utils.Consts.SERVICE;
+import static com.github.lany192.arouter.utils.Consts.WARNING_TIPS;
 import static javax.lang.model.element.Modifier.PUBLIC;
 
 /**
