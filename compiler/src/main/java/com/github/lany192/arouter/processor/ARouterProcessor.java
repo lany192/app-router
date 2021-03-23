@@ -108,12 +108,13 @@ public class ARouterProcessor extends BaseProcessor {
 //                            .withLong(Constants.KEY_TARGET_ID, targetId)
 //                            .navigation();
 //                }
-
                 MethodSpec methodSpec = MethodSpec.methodBuilder(Utils.toLowerCaseFirstOne(className))
                         .addModifiers(Modifier.PUBLIC)
-                        .addJavadoc("这里是注释")
+                        .addJavadoc("这里是注释" + route.group())
                         .addParameter(String[].class, "args")
-                        .addStatement("ARouter.getInstance().build(\"" + route.path() + "\").navigation()")
+                        .addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"))
+                        .addCode(".build(\"" + route.path() + "\")")
+                        .addCode(".navigation();")
                         .returns(void.class)
                         .build();
                 methods.add(methodSpec);
@@ -140,34 +141,15 @@ public class ARouterProcessor extends BaseProcessor {
         return true;
     }
 
-    /*    */
-
-    /**
-     * private volatile static Router instance;
-     * <p>
-     * private Router() {
-     * <p>
-     * }
-     * <p>
-     * public static Router get() {
-     * if (instance == null) {
-     * synchronized (Router.class) {
-     * if (instance == null) {
-     * instance = new Router();
-     * }
-     * }
-     * }
-     * return instance;
-     * }
-     */
     private void createRouterHelper(List<MethodSpec> methods) throws Exception {
         TypeSpec.Builder builder = TypeSpec.classBuilder("Router")
                 .addJavadoc("路由助手，自动生成代码，请勿编辑")
                 .addModifiers(Modifier.PUBLIC);
 
-//        TypeName routerTypeName=TypeName.get(elementUtils.getTypeElement("com.alibaba.android.arouter.Router").asType());
+        ClassName routerType = ClassName.get("com.alibaba.android.arouter", "Router");
 
-        FieldSpec fieldSpec = FieldSpec.builder(ClassName.get("com.alibaba.android.arouter", "Router"), "instance", Modifier.VOLATILE, Modifier.STATIC, Modifier.PRIVATE).build();
+
+        FieldSpec fieldSpec = FieldSpec.builder(routerType, "instance", Modifier.VOLATILE, Modifier.STATIC, Modifier.PRIVATE).build();
         builder.addField(fieldSpec);
 
         builder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build());
@@ -182,7 +164,7 @@ public class ARouterProcessor extends BaseProcessor {
                 .addCode("}")
                 .addCode("}")
                 .addCode("return instance;")
-                .returns(ClassName.get("com.alibaba.android.arouter", "Router"))
+                .returns(routerType)
                 .build();
         builder.addMethod(methodSpec);
         for (MethodSpec method : methods) {
