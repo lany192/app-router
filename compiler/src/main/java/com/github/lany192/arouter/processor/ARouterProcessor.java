@@ -7,6 +7,7 @@ import com.alibaba.android.arouter.facade.enums.TypeKind;
 import com.alibaba.android.arouter.facade.model.RouteMeta;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.github.lany192.arouter.entity.Param;
 import com.github.lany192.arouter.entity.RouteDoc;
 import com.github.lany192.arouter.utils.Consts;
 import com.github.lany192.arouter.utils.Utils;
@@ -55,7 +56,7 @@ import static com.github.lany192.arouter.utils.Consts.SERVICE;
 @SupportedAnnotationTypes({ANNOTATION_TYPE_ROUTE, ANNOTATION_TYPE_AUTOWIRED})
 public class ARouterProcessor extends BaseProcessor {
     private Filer filer;
-    private Map<String, Set<RouteMeta>> groupMap = new HashMap<>(); // ModuleName and routeMeta.
+    private final Map<String, Set<RouteMeta>> groupMap = new HashMap<>(); // ModuleName and routeMeta.
     private TypeMirror iProvider = null;
 
     @Override
@@ -235,11 +236,11 @@ public class ARouterProcessor extends BaseProcessor {
                     Map<String, Integer> paramsType = routeMeta.getParamsType();
                     Map<String, Autowired> injectConfigs = routeMeta.getInjectConfig();
                     if (MapUtils.isNotEmpty(paramsType)) {
-                        List<RouteDoc.Param> paramList = new ArrayList<>();
+                        List<Param> paramList = new ArrayList<>();
 
                         for (Map.Entry<String, Integer> types : paramsType.entrySet()) {
 
-                            RouteDoc.Param param = new RouteDoc.Param();
+                            Param param = new Param();
                             Autowired injectConfig = injectConfigs.get(types.getKey());
                             param.setKey(types.getKey());
                             param.setType(TypeKind.values()[types.getValue()].name().toLowerCase());
