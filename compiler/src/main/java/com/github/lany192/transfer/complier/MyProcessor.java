@@ -34,7 +34,7 @@ import javax.lang.model.element.VariableElement;
 
 @AutoService(Processor.class)
 public class MyProcessor extends AbstractProcessor {
-    private static final String PACKAGE_NAME = "com.github.lany192.transfer";
+    private static final String PACKAGE_NAME = "com.github.lany192.arouter";
     private Filer filer;
     private Map<String, UIEntity> map;
 

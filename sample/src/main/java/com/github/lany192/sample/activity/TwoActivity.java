@@ -14,14 +14,14 @@ import com.github.lany192.sample.R;
 public class TwoActivity extends AppCompatActivity {
     @Autowired(name = "ownerId", desc = "用户id")
     long ownerId;
-    @Autowired(name = "isFans", desc = "是否粉丝")
-    boolean isFans;
+    @Autowired(name = "isFans", desc = "标题")
+    String title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two);
         TextView showText = (TextView) findViewById(R.id.textView);
-        showText.setText("用户id==" + ownerId + "  是否粉丝==" + isFans);
+        showText.setText("用户id==" + ownerId + "  标题==" + title);
     }
 }

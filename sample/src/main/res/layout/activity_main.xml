@@ -10,16 +10,16 @@
         android:id="@+id/button1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="goto OneActivity" />
+        android:text="goto One Activity" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="goto TwoActivity" />
+        android:text="goto Two Activity" />
     <Button
         android:id="@+id/button3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="goto ThreeActivity" />
+        android:text="goto Three Activity" />
 </LinearLayout>
