@@ -39,9 +39,7 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
-import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
@@ -58,6 +56,7 @@ public class ARouterProcessor extends BaseProcessor {
     private Filer filer;
     private final Map<String, Set<RouteMeta>> groupMap = new HashMap<>(); // ModuleName and routeMeta.
     private TypeMirror iProvider = null;
+    List<MethodSpec> methods = new ArrayList<>();
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -72,53 +71,12 @@ public class ARouterProcessor extends BaseProcessor {
         Messager messager = processingEnv.getMessager();
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Route.class);
         if (CollectionUtils.isNotEmpty(elements)) {
-            List<MethodSpec> methods = new ArrayList<>();
-            for (Element element : elements) {
-                if (element instanceof VariableElement) {
-                    messager.printMessage(Diagnostic.Kind.WARNING, "忽略注解在非class上的注解");
-                    return false;
-                }
-                //获取包信息
-                PackageElement packageElement = processingEnv.getElementUtils().getPackageOf(element);
-                String className = element.getSimpleName().toString();
-                messager.printMessage(Diagnostic.Kind.NOTE, " 发现目标类: " + packageElement.getQualifiedName() + "." + className);
-                Route route = element.getAnnotation(Route.class);
-
-//                /**
-//                 * 支付确认界面
-//                 */
-//                public void pay(OrderType orderType, TargetType targetType, long targetId) {
-//                    ARouter.getInstance()
-//                            .build(Constants.USER_PAY)
-//                            .withInt(Constants.KEY_ORDER_TYPE, orderType.ordinal())
-//                            .withInt(Constants.KEY_TARGET_TYPE, targetType.ordinal())
-//                            .withLong(Constants.KEY_TARGET_ID, targetId)
-//                            .navigation();
-//                }
-                MethodSpec methodSpec = MethodSpec.methodBuilder(Utils.toLowerCaseFirstOne(className))
-                        .addModifiers(Modifier.PUBLIC)
-                        .addJavadoc("这里是注释" + route.group())
-//                        .addParameter(String[].class, "args")
-                        .addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"))
-                        .addCode(".build(\"" + route.path() + "\")")
-                        .addCode(".navigation();")
-                        .returns(void.class)
-                        .build();
-                methods.add(methodSpec);
-            }
+            Set<? extends Element> routeElements = roundEnv.getElementsAnnotatedWith(Route.class);
             try {
+                parseRoutes(routeElements);
                 createRouterHelper(methods);
             } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if (CollectionUtils.isNotEmpty(annotations)) {
-                Set<? extends Element> routeElements = roundEnv.getElementsAnnotatedWith(Route.class);
-                try {
-                    this.parseRoutes(routeElements);
-                } catch (Exception e) {
-                    logger.error(e);
-                }
+                logger.error(e);
             }
             messager.printMessage(Diagnostic.Kind.WARNING, "忽略异常提示");
             //这里要注意，要返回false，并且要放在Processor的前面，否则会影响arouter的Processor。
@@ -162,8 +120,7 @@ public class ARouterProcessor extends BaseProcessor {
 
     private void parseRoutes(Set<? extends Element> routeElements) throws IOException {
         if (CollectionUtils.isNotEmpty(routeElements)) {
-            // prepare the type an so on.
-
+            logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             logger.info(">>> Found routes, size is " + routeElements.size() + " <<<");
 
             TypeMirror type_Activity = elementUtils.getTypeElement(ACTIVITY).asType();
@@ -206,8 +163,10 @@ public class ARouterProcessor extends BaseProcessor {
                 }
                 categories(routeMeta);
             }
-            Map<String, List<RouteDoc>> docSource = new HashMap<>();
 
+            logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+            methods.clear();
+            Map<String, List<RouteDoc>> docSource = new HashMap<>();
             // Start generate java source, structure is divided into upper and lower levels, used for demand initialization.
             for (Map.Entry<String, Set<RouteMeta>> entry : groupMap.entrySet()) {
                 String groupName = entry.getKey();
@@ -232,6 +191,11 @@ public class ARouterProcessor extends BaseProcessor {
                             break;
                     }
 
+                    MethodSpec.Builder builder = MethodSpec
+                            .methodBuilder(Utils.toLowerCaseFirstOne(className.simpleName()))
+                            .addModifiers(Modifier.PUBLIC)
+                            .addJavadoc("这里是注释" + routeDoc.getGroup());
+
                     // Make map body for paramsType
                     Map<String, Integer> paramsType = routeMeta.getParamsType();
                     Map<String, Autowired> injectConfigs = routeMeta.getInjectConfig();
@@ -248,6 +212,8 @@ public class ARouterProcessor extends BaseProcessor {
                             param.setRequired(injectConfig.required());
 
                             paramList.add(param);
+
+                            builder.addParameter(types.getValue().getClass(), types.getKey());
                         }
 
                         routeDoc.setParams(paramList);
@@ -255,10 +221,19 @@ public class ARouterProcessor extends BaseProcessor {
 
                     routeDoc.setClassName(className.toString());
                     routeDocList.add(routeDoc);
+
+
+
+//                    builder.addParameter(String[].class, "args");
+                    builder.addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
+                    builder.addCode(".build(\"" + routeDoc.getPath() + "\")");
+                    builder.addCode(".navigation();");
+                    builder.returns(void.class);
+                    methods.add(builder.build());
                 }
                 docSource.put(groupName, routeDocList);
             }
-
+            logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
             String json = JSON.toJSONString(docSource, SerializerFeature.PrettyFormat);
             logger.info(json);
         }
