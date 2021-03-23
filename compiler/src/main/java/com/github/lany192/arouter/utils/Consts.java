@@ -76,10 +76,6 @@ public class Consts {
     public static final String KEY_MODULE_NAME = "AROUTER_MODULE_NAME";
     public static final String KEY_GENERATE_DOC_NAME = "AROUTER_GENERATE_DOC";
 
-    public static final String VALUE_ENABLE = "enable";
-
-    // Annotation type
-    public static final String ANNOTATION_TYPE_INTECEPTOR = FACADE_PACKAGE + ".annotation.Interceptor";
     public static final String ANNOTATION_TYPE_ROUTE = FACADE_PACKAGE + ".annotation.Route";
     public static final String ANNOTATION_TYPE_AUTOWIRED = FACADE_PACKAGE + ".annotation.Autowired";
 }

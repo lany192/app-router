@@ -23,7 +23,6 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -41,7 +40,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
-import javax.tools.StandardLocation;
 
 import static com.github.lany192.arouter.utils.Consts.ACTIVITY;
 import static com.github.lany192.arouter.utils.Consts.ANNOTATION_TYPE_AUTOWIRED;
@@ -54,7 +52,6 @@ import static com.github.lany192.arouter.utils.Consts.METHOD_LOAD_INTO;
 import static com.github.lany192.arouter.utils.Consts.NAME_OF_GROUP;
 import static com.github.lany192.arouter.utils.Consts.NAME_OF_PROVIDER;
 import static com.github.lany192.arouter.utils.Consts.NAME_OF_ROOT;
-import static com.github.lany192.arouter.utils.Consts.PACKAGE_OF_GENERATE_DOCS;
 import static com.github.lany192.arouter.utils.Consts.PACKAGE_OF_GENERATE_FILE;
 import static com.github.lany192.arouter.utils.Consts.SEPARATOR;
 import static com.github.lany192.arouter.utils.Consts.SERVICE;
@@ -75,24 +72,10 @@ public class RouteProcessor extends BaseProcessor {
     private Map<String, String> rootMap = new TreeMap<>();  // Map of root metas, used for generate class file in order.
 
     private TypeMirror iProvider = null;
-    private Writer docWriter;       // Writer used for write doc
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
-
-        if (generateDoc) {
-            try {
-                docWriter = mFiler.createResource(
-                        StandardLocation.SOURCE_OUTPUT,
-                        PACKAGE_OF_GENERATE_DOCS,
-                        "route-map-of-" + moduleName + ".json"
-                ).openWriter();
-            } catch (IOException e) {
-                logger.error("Create doc writer failed, because " + e.getMessage());
-            }
-        }
-
         iProvider = elementUtils.getTypeElement(Consts.IPROVIDER).asType();
 
         logger.info(">>> RouteProcessor init. <<<");
@@ -334,12 +317,8 @@ public class RouteProcessor extends BaseProcessor {
                 }
             }
 
-            // Output route doc
-            if (generateDoc) {
-                docWriter.append(JSON.toJSONString(docSource, SerializerFeature.PrettyFormat));
-                docWriter.flush();
-                docWriter.close();
-            }
+            String json = JSON.toJSONString(docSource, SerializerFeature.PrettyFormat);
+            logger.info(json);
 
             // Write provider into disk
             String providerMapFileName = NAME_OF_PROVIDER + SEPARATOR + moduleName;
