@@ -38,10 +38,12 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.6'
 
+    //这个要放在arouter的前面
+    annotationProcessor project(path: ':compiler')
+
     //界面路由 https://github.com/alibaba/ARouter
     implementation 'com.alibaba:arouter-api:1.5.1'
     annotationProcessor 'com.alibaba:arouter-compiler:1.5.1'
 
-    annotationProcessor project(path: ':compiler')
 
 }

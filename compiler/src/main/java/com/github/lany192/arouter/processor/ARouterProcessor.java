@@ -67,23 +67,26 @@ public class ARouterProcessor extends BaseProcessor {
         super.init(processingEnv);
         iProvider = elementUtils.getTypeElement(Consts.IPROVIDER).asType();
 
-        logger.info(">>> RouteProcessor init. <<<");
+        logger.info(">>> 初始化 <<<");
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        logger.info(">>> 开始... <<<");
+        for (Element element : roundEnv.getElementsAnnotatedWith(Route.class)) {
+            logger.info("发现:" + element.getSimpleName());
+        }
+
         if (CollectionUtils.isNotEmpty(annotations)) {
             Set<? extends Element> routeElements = roundEnv.getElementsAnnotatedWith(Route.class);
             try {
-                logger.info(">>> Found routes, start... <<<");
-                this.parseRoutes(routeElements);
 
+                //this.parseRoutes(routeElements);
             } catch (Exception e) {
                 logger.error(e);
             }
-            return true;
         }
-
+        //这里要注意，要返回false，并且要放在Processor的前面，否则会影响arouter的Processor。
         return false;
     }
 
