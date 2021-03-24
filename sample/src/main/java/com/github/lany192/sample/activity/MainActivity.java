@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.button1).setOnClickListener(v ->
-                Router.get().one(66, true, 10.5f,'w',"哈哈",'1',"流利")
+                Router.get().one(66, true, 10.5f,'w',"哈哈",(byte)1,"流利")
         );
         findViewById(R.id.button2).setOnClickListener(v ->
                 Router.get().two(88, "这是一个标题", 8.68)
