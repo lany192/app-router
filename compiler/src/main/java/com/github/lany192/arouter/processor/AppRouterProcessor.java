@@ -101,65 +101,68 @@ public class AppRouterProcessor extends BaseProcessor {
 
         switch (field.asType().toString()) {
             case "java.lang.String":
-                return ".withString(\"" + key + "\"," + fieldName + ")";
+                return ".withString(\"" + key + "\"," + key + ")";
             case "boolean":
-                return ".withBoolean(\"" + key + "\"," + fieldName + ")";
+                return ".withBoolean(\"" + key + "\"," + key + ")";
             case "long":
-                return ".withLong(\"" + key + "\"," + fieldName + ")";
+                return ".withLong(\"" + key + "\"," + key + ")";
             case "int":
-                return ".withInt(\"" + key + "\"," + fieldName + ")";
+                return ".withInt(\"" + key + "\"," + key + ")";
             case "float":
-                return ".withFloat(\"" + key + "\"," + fieldName + ")";
+                return ".withFloat(\"" + key + "\"," + key + ")";
             case "double":
-                return ".withDouble(\"" + key + "\"," + fieldName + ")";
+                return ".withDouble(\"" + key + "\"," + key + ")";
             case "char":
-                return ".withChar(\"" + key + "\"," + fieldName + ")";
+                return ".withChar(\"" + key + "\"," + key + ")";
             case "byte":
-                return ".withByte(\"" + key + "\"," + fieldName + ")";
+                return ".withByte(\"" + key + "\"," + key + ")";
             case "short":
-                return ".withShort(\"" + key + "\"," + fieldName + ")";
+                return ".withShort(\"" + key + "\"," + key + ")";
             case "java.lang.CharSequence":
-                return ".withCharSequence(\"" + key + "\"," + fieldName + ")";
+                return ".withCharSequence(\"" + key + "\"," + key + ")";
             default:
-                return ".withObject(\"" + key + "\"," + fieldName + ")";
+                return ".withObject(\"" + key + "\"," + key + ")";
         }
     }
 
     private ParameterSpec getParameter(Element field, Autowired autowired) {
+        String fieldName = field.getSimpleName().toString();
+        String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
+
         ParameterSpec.Builder builder;
         switch (field.asType().toString()) {
             case "java.lang.String":
-                builder = ParameterSpec.builder(String.class, field.getSimpleName().toString());
+                builder = ParameterSpec.builder(String.class, key);
                 break;
             case "boolean":
-                builder = ParameterSpec.builder(boolean.class, field.getSimpleName().toString());
+                builder = ParameterSpec.builder(boolean.class, key);
                 break;
             case "long":
-                builder = ParameterSpec.builder(long.class, field.getSimpleName().toString());
+                builder = ParameterSpec.builder(long.class, key);
                 break;
             case "int":
-                builder = ParameterSpec.builder(int.class, field.getSimpleName().toString());
+                builder = ParameterSpec.builder(int.class, key);
                 break;
             case "float":
-                builder = ParameterSpec.builder(float.class, field.getSimpleName().toString());
+                builder = ParameterSpec.builder(float.class, key);
                 break;
             case "double":
-                builder = ParameterSpec.builder(double.class, field.getSimpleName().toString());
+                builder = ParameterSpec.builder(double.class, key);
                 break;
             case "char":
-                builder = ParameterSpec.builder(char.class, field.getSimpleName().toString());
+                builder = ParameterSpec.builder(char.class, key);
                 break;
             case "byte":
-                builder = ParameterSpec.builder(byte.class, field.getSimpleName().toString());
+                builder = ParameterSpec.builder(byte.class, key);
                 break;
             case "short":
-                builder = ParameterSpec.builder(short.class, field.getSimpleName().toString());
+                builder = ParameterSpec.builder(short.class, key);
                 break;
             case "java.lang.CharSequence":
-                builder = ParameterSpec.builder(CharSequence.class, field.getSimpleName().toString());
+                builder = ParameterSpec.builder(CharSequence.class, key);
                 break;
             default:
-                builder = ParameterSpec.builder(Object.class, field.getSimpleName().toString());
+                builder = ParameterSpec.builder(Object.class, key);
                 break;
         }
         return builder.addJavadoc(autowired.desc() + "\n").build();

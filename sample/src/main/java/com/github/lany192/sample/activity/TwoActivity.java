@@ -17,7 +17,7 @@ public class TwoActivity extends AppCompatActivity {
     @Autowired(name = "ownerId", desc = "用户id")
     long ownerId;
     @Autowired(name = "title", desc = "标题")
-    String title;
+    String mTitle;
     @Autowired(name = "cent", desc = "积分")
     double cent;
     @Autowired(name = "items", desc = "列表")
@@ -33,7 +33,7 @@ public class TwoActivity extends AppCompatActivity {
         StringBuilder builder = new StringBuilder();
         builder.append("界面TWO");
         builder.append("\n用户id:").append(ownerId);
-        builder.append("\n标题:").append(title);
+        builder.append("\n标题:").append(mTitle);
         builder.append("\n积分:").append(cent);
         builder.append("\n列表:").append(items);
         builder.append("\n测试A:").append(data);
