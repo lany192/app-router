@@ -3,7 +3,6 @@ package com.github.lany192.arouter.processor;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.enums.TypeKind;
-import com.alibaba.android.arouter.facade.model.RouteMeta;
 import com.github.lany192.arouter.utils.Consts;
 import com.github.lany192.arouter.utils.Logger;
 import com.github.lany192.arouter.utils.TypeUtils;
