@@ -16,6 +16,8 @@ public class OneActivity extends AppCompatActivity {
     long ownerId;
     @Autowired(name = "isFans", desc = "是否粉丝")
     boolean isFans;
+    @Autowired(name = "money", desc = "余额")
+    float money;
 
     private TextView showText;
 
@@ -23,7 +25,7 @@ public class OneActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_one);
-        showText = (TextView) findViewById(R.id.my_text_view);
-        showText.setText(ownerId + "  " + isFans);
+        showText = findViewById(R.id.my_text_view);
+        showText.setText(ownerId + "  " + isFans + " " + money);
     }
 }
