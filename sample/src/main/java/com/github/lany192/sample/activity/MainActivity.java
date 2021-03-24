@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
                 Router.get().twoActivity(88, "这是一个标题")
         );
         findViewById(R.id.button3).setOnClickListener(v ->
-                Router.get().threeActivity("张三", new User("李四", 888))
+                Router.get().threeActivity("张三",  new User("李四", 888),18)
         );
     }
 }

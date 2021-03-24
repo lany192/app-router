@@ -17,12 +17,14 @@ public class ThreeActivity extends AppCompatActivity {
     String name;
     @Autowired(name = "user", desc = "用户")
     User user;
+    @Autowired(name = "age", desc = "年龄")
+    int age;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_three);
         TextView showText = findViewById(R.id.my_text_view);
-        showText.setText("名称==" + name + "  年龄==" + user);
+        showText.setText("名称==" + name + "  年龄==" + age+ "  用户==" + user);
     }
 }

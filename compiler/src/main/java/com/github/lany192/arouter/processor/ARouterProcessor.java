@@ -83,6 +83,11 @@ public class ARouterProcessor extends BaseProcessor {
                                             .addJavadoc(autowired.desc() + "\n")
                                             .build();
                                     break;
+                                case "int":
+                                    parameterSpec = ParameterSpec.builder(int.class, field.getSimpleName().toString())
+                                            .addJavadoc(autowired.desc() + "\n")
+                                            .build();
+                                    break;
                                 default:
                                     parameterSpec = ParameterSpec.builder(Object.class, field.getSimpleName().toString())
                                             .addJavadoc(autowired.desc() + "\n")
@@ -109,6 +114,9 @@ public class ARouterProcessor extends BaseProcessor {
                                     break;
                                 case "long":
                                     builder.addCode(".withLong(\"" + key + "\"," + fieldName + ")");
+                                    break;
+                                case "int":
+                                    builder.addCode(".withInt(\"" + key + "\"," + fieldName + ")");
                                     break;
                                 default:
                                     builder.addCode(".withObject(\"" + key + "\"," + fieldName + ")");
