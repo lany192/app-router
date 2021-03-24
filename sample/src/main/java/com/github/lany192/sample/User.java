@@ -2,7 +2,7 @@ package com.github.lany192.sample;
 
 import java.io.Serializable;
 
-public class User {
+public class User implements Serializable {
     private String name;
     private int id;
 

@@ -2,8 +2,10 @@ package com.github.lany192.arouter.processor;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.facade.enums.TypeKind;
 import com.github.lany192.arouter.utils.Consts;
 import com.github.lany192.arouter.utils.Logger;
+import com.github.lany192.arouter.utils.TypeUtils;
 import com.github.lany192.arouter.utils.Utils;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
@@ -41,10 +43,15 @@ public class AppRouterProcessor extends AbstractProcessor {
     private Logger logger;
     private Types types;
     private TypeMirror iProvider = null;
+    private TypeUtils typeUtils;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
+        mFiler = processingEnv.getFiler();
+        types = processingEnv.getTypeUtils();
+        typeUtils = new TypeUtils(types, processingEnv.getElementUtils());
+
         mFiler = processingEnv.getFiler();
         types = processingEnv.getTypeUtils();
         logger = new Logger(processingEnv.getMessager());
@@ -82,7 +89,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                 for (Element field : element.getEnclosedElements()) {
                     if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                         Autowired autowired = field.getAnnotation(Autowired.class);
-                        logger.info("目标类:" + element.getSimpleName() + ",路径:" + route.path() + "字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString() + "，注释:" + autowired.desc() + "，必选:" + autowired.required());
+//                        logger.info("目标类:" + element.getSimpleName() + ",路径:" + route.path() + "字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString() + "，注释:" + autowired.desc() + "，必选:" + autowired.required());
                         builder.addParameter(getParameter(field, autowired));
                     }
                 }
@@ -113,30 +120,29 @@ public class AppRouterProcessor extends AbstractProcessor {
     private String makeCode(Element field, Autowired autowired) {
         String fieldName = field.getSimpleName().toString();
         String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
-
-        logger.info(field.asType().toString());
-
-        switch (field.asType().toString()) {
-            case "java.lang.String":
-                return ".withString(\"" + key + "\"," + key + ")";
-            case "boolean":
+        switch (TypeKind.values()[typeUtils.typeExchange(field)]) {
+            case BOOLEAN:
                 return ".withBoolean(\"" + key + "\"," + key + ")";
-            case "long":
-                return ".withLong(\"" + key + "\"," + key + ")";
-            case "int":
-                return ".withInt(\"" + key + "\"," + key + ")";
-            case "float":
-                return ".withFloat(\"" + key + "\"," + key + ")";
-            case "double":
-                return ".withDouble(\"" + key + "\"," + key + ")";
-            case "char":
-                return ".withChar(\"" + key + "\"," + key + ")";
-            case "byte":
+            case BYTE:
                 return ".withByte(\"" + key + "\"," + key + ")";
-            case "short":
+            case SHORT:
                 return ".withShort(\"" + key + "\"," + key + ")";
-            case "java.lang.CharSequence":
-                return ".withCharSequence(\"" + key + "\"," + key + ")";
+            case INT:
+                return ".withInt(\"" + key + "\"," + key + ")";
+            case LONG:
+                return ".withLong(\"" + key + "\"," + key + ")";
+            case CHAR:
+                return ".withChar(\"" + key + "\"," + key + ")";
+            case FLOAT:
+                return ".withFloat(\"" + key + "\"," + key + ")";
+            case DOUBLE:
+                return ".withDouble(\"" + key + "\"," + key + ")";
+            case STRING:
+                return ".withString(\"" + key + "\"," + key + ")";
+            case SERIALIZABLE:
+                return ".withSerializable(\"" + key + "\"," + key + ")";
+            case PARCELABLE:
+                return ".withParcelable(\"" + key + "\"," + key + ")";
             default:
                 return ".withObject(\"" + key + "\"," + key + ")";
         }
