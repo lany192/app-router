@@ -18,6 +18,10 @@ public class OneActivity extends AppCompatActivity {
     boolean isFans;
     @Autowired(name = "money", desc = "余额")
     float money;
+    @Autowired(name = "data1", desc = "数据A")
+    char data1;
+    @Autowired(name = "data2", desc = "数据B")
+    CharSequence data2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,8 @@ public class OneActivity extends AppCompatActivity {
         builder.append("\n用户id:").append(ownerId);
         builder.append("\n是否粉丝:").append(isFans);
         builder.append("\n余额:").append(money);
+        builder.append("\n数据A:").append(data1);
+        builder.append("\n数据B:").append(data2);
         showText.setText(builder);
     }
 }
