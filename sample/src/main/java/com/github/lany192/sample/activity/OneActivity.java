@@ -19,13 +19,16 @@ public class OneActivity extends AppCompatActivity {
     @Autowired(name = "money", desc = "余额")
     float money;
 
-    private TextView showText;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_one);
-        showText = findViewById(R.id.my_text_view);
-        showText.setText(ownerId + "  " + isFans + " " + money);
+        TextView showText = findViewById(R.id.show_text_view);
+        StringBuilder builder = new StringBuilder();
+        builder.append("界面ONE");
+        builder.append("\n用户id:").append(ownerId);
+        builder.append("\n是否粉丝:").append(isFans);
+        builder.append("\n余额:").append(money);
+        showText.setText(builder);
     }
 }

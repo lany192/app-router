@@ -107,6 +107,8 @@ public class ARouterProcessor extends BaseProcessor {
                 return ".withInt(\"" + key + "\"," + fieldName + ")";
             case "float":
                 return ".withFloat(\"" + key + "\"," + fieldName + ")";
+            case "double":
+                return ".withDouble(\"" + key + "\"," + fieldName + ")";
             default:
                 return ".withObject(\"" + key + "\"," + fieldName + ")";
         }
@@ -129,6 +131,9 @@ public class ARouterProcessor extends BaseProcessor {
                 break;
             case "float":
                 builder = ParameterSpec.builder(float.class, field.getSimpleName().toString());
+                break;
+            case "double":
+                builder = ParameterSpec.builder(double.class, field.getSimpleName().toString());
                 break;
             default:
                 builder = ParameterSpec.builder(Object.class, field.getSimpleName().toString());

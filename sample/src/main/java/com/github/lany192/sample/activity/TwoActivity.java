@@ -16,12 +16,19 @@ public class TwoActivity extends AppCompatActivity {
     long ownerId;
     @Autowired(name = "title", desc = "标题")
     String title;
+    @Autowired(name = "cent", desc = "积分")
+    double cent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two);
-        TextView showText = (TextView) findViewById(R.id.textView);
-        showText.setText("用户id==" + ownerId + "  标题==" + title);
+        TextView showText = findViewById(R.id.show_text_view);
+        StringBuilder builder = new StringBuilder();
+        builder.append("界面TWO");
+        builder.append("\n用户id:").append(ownerId);
+        builder.append("\n标题:").append(title);
+        builder.append("\n积分:").append(cent);
+        showText.setText(builder);
     }
 }

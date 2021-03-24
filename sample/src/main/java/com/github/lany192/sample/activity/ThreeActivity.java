@@ -24,7 +24,12 @@ public class ThreeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_three);
-        TextView showText = findViewById(R.id.my_text_view);
-        showText.setText("名称==" + name + "  年龄==" + age+ "  用户==" + user);
+        TextView showText = findViewById(R.id.show_text_view);
+        StringBuilder builder = new StringBuilder();
+        builder.append("界面THREE");
+        builder.append("\n名称:").append(name);
+        builder.append("\n年龄:").append(age);
+        builder.append("\n用户:").append(user);
+        showText.setText(builder);
     }
 }

@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
                 Router.get().one(66, true, 10.5f)
         );
         findViewById(R.id.button2).setOnClickListener(v ->
-                Router.get().two(88, "这是一个标题")
+                Router.get().two(88, "这是一个标题", 8.68)
         );
         findViewById(R.id.button3).setOnClickListener(v ->
                 Router.get().three("张三", new User("李四", 888), 18)
