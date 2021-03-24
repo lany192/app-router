@@ -24,5 +24,5 @@ public class Consts {
     public static final String IPROVIDER = FACADE_PACKAGE + TEMPLATE_PACKAGE + ".IProvider";
 
     // Log
-    static final String PREFIX_OF_LOGGER = PROJECT + "::Compiler ";
+    static final String PREFIX_OF_LOGGER = PROJECT + " >>> ";
 }

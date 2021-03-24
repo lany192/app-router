@@ -56,7 +56,7 @@ public class AppRouterProcessor extends AbstractProcessor {
         types = processingEnv.getTypeUtils();
         logger = new Logger(processingEnv.getMessager());
         iProvider = processingEnv.getElementUtils().getTypeElement(Consts.IPROVIDER).asType();
-        logger.info(">>> 初始化 <<<");
+        logger.info("初始化");
     }
 
     @Override
@@ -110,7 +110,7 @@ public class AppRouterProcessor extends AbstractProcessor {
             } catch (Exception e) {
                 logger.error(e);
             }
-            messager.printMessage(Diagnostic.Kind.WARNING, "忽略异常提示");
+            logger.info("忽略异常提示");
             //这里要注意，要返回false，并且要放在Processor的前面，否则会影响arouter的Processor。
             return false;
         }
