@@ -54,35 +54,35 @@ public class ARouterProcessor extends BaseProcessor {
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Route.class);
         if (CollectionUtils.isNotEmpty(elements)) {
             Set<? extends Element> routeElements = roundEnv.getElementsAnnotatedWith(Route.class);
-            try {
-                List<MethodSpec> methods = new ArrayList<>();
-                for (Element element : routeElements) {
-                    String methodName = Utils.toLowerCaseFirstOne(element.getSimpleName().toString().replace("Activity", ""));
-                    MethodSpec.Builder builder = MethodSpec
-                            .methodBuilder(methodName)
-                            .addModifiers(Modifier.PUBLIC)
-                            .addJavadoc("跳转到" + element.getSimpleName());
-                    Route route = element.getAnnotation(Route.class);
-                    for (Element field : element.getEnclosedElements()) {
-                        if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                            Autowired autowired = field.getAnnotation(Autowired.class);
-                            logger.info("目标类:" + element.getSimpleName() + ",路径:" + route.path() + "字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString() + "，注释:" + autowired.desc());
-                            builder.addParameter(getParameter(field, autowired));
-                        }
+            List<MethodSpec> methods = new ArrayList<>();
+            for (Element element : routeElements) {
+                String methodName = Utils.toLowerCaseFirstOne(element.getSimpleName().toString().replace("Activity", ""));
+                MethodSpec.Builder builder = MethodSpec
+                        .methodBuilder(methodName)
+                        .addModifiers(Modifier.PUBLIC)
+                        .addJavadoc("跳转到" + element.getSimpleName());
+                Route route = element.getAnnotation(Route.class);
+                for (Element field : element.getEnclosedElements()) {
+                    if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                        Autowired autowired = field.getAnnotation(Autowired.class);
+                        logger.info("目标类:" + element.getSimpleName() + ",路径:" + route.path() + "字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString() + "，注释:" + autowired.desc());
+                        builder.addParameter(getParameter(field, autowired));
                     }
-                    builder.addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
-                    builder.addCode(".build(\"" + route.path() + "\")");
-                    for (Element field : element.getEnclosedElements()) {
-                        if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                            Autowired autowired = field.getAnnotation(Autowired.class);
-                            logger.info("目标类:" + element.getSimpleName() + ",路径:" + route.path() + "字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString() + "，注释:" + autowired.desc());
-                            builder.addCode(makeCode(field, autowired));
-                        }
-                    }
-                    builder.addCode(".navigation();");
-                    builder.returns(void.class);
-                    methods.add(builder.build());
                 }
+                builder.addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
+                builder.addCode(".build(\"" + route.path() + "\")");
+                for (Element field : element.getEnclosedElements()) {
+                    if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                        Autowired autowired = field.getAnnotation(Autowired.class);
+                        logger.info("目标类:" + element.getSimpleName() + ",路径:" + route.path() + "字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString() + "，注释:" + autowired.desc());
+                        builder.addCode(makeCode(field, autowired));
+                    }
+                }
+                builder.addCode(".navigation();");
+                builder.returns(void.class);
+                methods.add(builder.build());
+            }
+            try {
                 createRouterHelper(methods);
             } catch (Exception e) {
                 logger.error(e);
