@@ -2,7 +2,6 @@ package com.github.lany192.arouter.processor;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.alibaba.android.arouter.facade.model.RouteMeta;
 import com.github.lany192.arouter.utils.Consts;
 import com.github.lany192.arouter.utils.Utils;
 import com.google.auto.service.AutoService;
@@ -17,9 +16,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.Filer;
@@ -41,9 +38,7 @@ import static com.github.lany192.arouter.utils.Consts.ANNOTATION_TYPE_ROUTE;
 @SupportedAnnotationTypes({ANNOTATION_TYPE_ROUTE, ANNOTATION_TYPE_AUTOWIRED})
 public class ARouterProcessor extends BaseProcessor {
     private Filer filer;
-    private final Map<String, Set<RouteMeta>> groupMap = new HashMap<>(); // ModuleName and routeMeta.
     private TypeMirror iProvider = null;
-    List<MethodSpec> methods = new ArrayList<>();
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -60,6 +55,7 @@ public class ARouterProcessor extends BaseProcessor {
         if (CollectionUtils.isNotEmpty(elements)) {
             Set<? extends Element> routeElements = roundEnv.getElementsAnnotatedWith(Route.class);
             try {
+                List<MethodSpec> methods = new ArrayList<>();
                 for (Element element : routeElements) {
                     MethodSpec.Builder builder = MethodSpec
                             .methodBuilder(Utils.toLowerCaseFirstOne(element.getSimpleName().toString()))
@@ -70,33 +66,30 @@ public class ARouterProcessor extends BaseProcessor {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                             Autowired autowired = field.getAnnotation(Autowired.class);
                             logger.info("目标类:" + element.getSimpleName() + ",路径:" + route.path() + "字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString() + "，注释:" + autowired.desc());
-
+                            ParameterSpec parameterSpec;
                             switch (field.asType().toString()) {
                                 case "java.lang.String":
-                                    builder.addParameter(ParameterSpec
-                                            .builder(String.class, field.getSimpleName().toString())
+                                    parameterSpec = ParameterSpec.builder(String.class, field.getSimpleName().toString())
                                             .addJavadoc(autowired.desc() + "\n")
-                                            .build());
+                                            .build();
                                     break;
                                 case "boolean":
-                                    builder.addParameter(ParameterSpec
-                                            .builder(boolean.class, field.getSimpleName().toString())
+                                    parameterSpec = ParameterSpec.builder(boolean.class, field.getSimpleName().toString())
                                             .addJavadoc(autowired.desc() + "\n")
-                                            .build());
+                                            .build();
                                     break;
                                 case "long":
-                                    builder.addParameter(ParameterSpec
-                                            .builder(long.class, field.getSimpleName().toString())
+                                    parameterSpec = ParameterSpec.builder(long.class, field.getSimpleName().toString())
                                             .addJavadoc(autowired.desc() + "\n")
-                                            .build());
+                                            .build();
                                     break;
                                 default:
-                                    builder.addParameter(ParameterSpec
-                                            .builder(Object.class, field.getSimpleName().toString())
+                                    parameterSpec = ParameterSpec.builder(Object.class, field.getSimpleName().toString())
                                             .addJavadoc(autowired.desc() + "\n")
-                                            .build());
+                                            .build();
                                     break;
                             }
+                            builder.addParameter(parameterSpec);
                         }
                     }
                     builder.addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
