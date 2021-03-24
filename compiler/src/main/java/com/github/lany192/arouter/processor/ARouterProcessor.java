@@ -118,6 +118,8 @@ public class ARouterProcessor extends BaseProcessor {
                 return ".withChar(\"" + key + "\"," + fieldName + ")";
             case "byte":
                 return ".withByte(\"" + key + "\"," + fieldName + ")";
+            case "short":
+                return ".withShort(\"" + key + "\"," + fieldName + ")";
             case "java.lang.CharSequence":
                 return ".withCharSequence(\"" + key + "\"," + fieldName + ")";
             default:
@@ -151,6 +153,9 @@ public class ARouterProcessor extends BaseProcessor {
                 break;
             case "byte":
                 builder = ParameterSpec.builder(byte.class, field.getSimpleName().toString());
+                break;
+            case "short":
+                builder = ParameterSpec.builder(short.class, field.getSimpleName().toString());
                 break;
             case "java.lang.CharSequence":
                 builder = ParameterSpec.builder(CharSequence.class, field.getSimpleName().toString());
