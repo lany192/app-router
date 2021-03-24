@@ -18,13 +18,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.button1).setOnClickListener(v ->
-                Router.get().oneActivity(66, true,10.5f)
+                Router.get().one(66, true, 10.5f)
         );
         findViewById(R.id.button2).setOnClickListener(v ->
-                Router.get().twoActivity(88, "这是一个标题")
+                Router.get().two(88, "这是一个标题")
         );
         findViewById(R.id.button3).setOnClickListener(v ->
-                Router.get().threeActivity("张三",  new User("李四", 888),18)
+                Router.get().three("张三", new User("李四", 888), 18)
         );
     }
 }

@@ -57,8 +57,9 @@ public class ARouterProcessor extends BaseProcessor {
             try {
                 List<MethodSpec> methods = new ArrayList<>();
                 for (Element element : routeElements) {
+                    String methodName = Utils.toLowerCaseFirstOne(element.getSimpleName().toString().replace("Activity", ""));
                     MethodSpec.Builder builder = MethodSpec
-                            .methodBuilder(Utils.toLowerCaseFirstOne(element.getSimpleName().toString()))
+                            .methodBuilder(methodName)
                             .addModifiers(Modifier.PUBLIC)
                             .addJavadoc("跳转到" + element.getSimpleName());
                     Route route = element.getAnnotation(Route.class);
