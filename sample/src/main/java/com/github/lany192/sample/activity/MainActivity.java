@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.alibaba.android.arouter.Router;
+import com.alibaba.android.arouter.AppRouter;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.github.lany192.sample.Constants;
 import com.github.lany192.sample.R;
@@ -21,17 +21,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.button1).setOnClickListener(v ->
-                Router.get().one(66, true, 10.5f, 'w', "哈哈", (byte) 1, "流利")
+                AppRouter.get().one(66, true, 10.5f, 'w', "哈哈", (byte) 1, "流利")
         );
         findViewById(R.id.button2).setOnClickListener(v -> {
                     List<String> items = new ArrayList<>();
                     items.add("张三");
                     items.add("王五");
-                    Router.get().two(88, "这是一个标题", 8.68, items,(short) 9);
+                    AppRouter.get().two(88, "这是一个标题", 8.68, items, (short) 9);
                 }
         );
         findViewById(R.id.button3).setOnClickListener(v ->
-                Router.get().three("张三", new User("李四", 888), 18)
+                AppRouter.get().three("张三", new User("李四", 888), 18)
         );
     }
 }

@@ -166,11 +166,11 @@ public class ARouterProcessor extends BaseProcessor {
     }
 
     private void createRouterHelper(List<MethodSpec> methods) throws Exception {
-        TypeSpec.Builder builder = TypeSpec.classBuilder("Router")
+        TypeSpec.Builder builder = TypeSpec.classBuilder("AppRouter")
                 .addJavadoc("路由助手,自动生成,请勿编辑!")
                 .addModifiers(Modifier.PUBLIC);
 
-        ClassName routerType = ClassName.get("com.alibaba.android.arouter", "Router");
+        ClassName routerType = ClassName.get("com.alibaba.android.arouter", "AppRouter");
 
 
         FieldSpec fieldSpec = FieldSpec.builder(routerType, "instance", Modifier.VOLATILE, Modifier.STATIC, Modifier.PRIVATE).build();
@@ -181,9 +181,9 @@ public class ARouterProcessor extends BaseProcessor {
         MethodSpec getMethodSpec = MethodSpec.methodBuilder("get")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .beginControlFlow("if (instance == null) ")
-                .beginControlFlow("synchronized (Router.class) ")
+                .beginControlFlow("synchronized (AppRouter.class) ")
                 .beginControlFlow("if (instance == null) ")
-                .addCode("instance = new Router();")
+                .addCode("instance = new AppRouter();")
                 .endControlFlow()
                 .endControlFlow()
                 .endControlFlow()

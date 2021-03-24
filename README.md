@@ -16,4 +16,4 @@
 
 ### 调用方法
     
-    Router.get().one(66, true, 10.5f, 'w', "哈哈", (byte) 1, "流利")
+    AppRouter.get().one(66, true, 10.5f, 'w', "哈哈", (byte) 1, "流利")
