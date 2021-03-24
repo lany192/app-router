@@ -22,7 +22,7 @@ public class ThreeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_three);
-        TextView showText = (TextView) findViewById(R.id.my_text_view);
+        TextView showText = findViewById(R.id.my_text_view);
         showText.setText("名称==" + name + "  年龄==" + user);
     }
 }

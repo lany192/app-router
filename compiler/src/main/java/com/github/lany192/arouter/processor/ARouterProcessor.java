@@ -14,6 +14,7 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -105,18 +106,19 @@ public class ARouterProcessor extends BaseProcessor {
                             Autowired autowired = field.getAnnotation(Autowired.class);
                             logger.info("目标类:" + element.getSimpleName() + ",路径:" + route.path() + "字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString() + "，注释:" + autowired.desc());
                             String fieldName = field.getSimpleName().toString();
+                            String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
                             switch (field.asType().toString()) {
                                 case "java.lang.String":
-                                    builder.addCode(".withString(\"" + fieldName + "\"," + fieldName + ")");
+                                    builder.addCode(".withString(\"" + key + "\"," + fieldName + ")");
                                     break;
                                 case "boolean":
-                                    builder.addCode(".withBoolean(\"" + fieldName + "\"," + fieldName + ")");
+                                    builder.addCode(".withBoolean(\"" + key + "\"," + fieldName + ")");
                                     break;
                                 case "long":
-                                    builder.addCode(".withLong(\"" + fieldName + "\"," + fieldName + ")");
+                                    builder.addCode(".withLong(\"" + key + "\"," + fieldName + ")");
                                     break;
                                 default:
-                                    builder.addCode(".withObject(\"" + fieldName + "\"," + fieldName + ")");
+                                    builder.addCode(".withObject(\"" + key + "\"," + fieldName + ")");
                                     break;
                             }
                         }
