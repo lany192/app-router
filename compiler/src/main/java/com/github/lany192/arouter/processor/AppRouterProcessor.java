@@ -3,6 +3,7 @@ package com.github.lany192.arouter.processor;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.enums.TypeKind;
+import com.alibaba.android.arouter.facade.model.RouteMeta;
 import com.github.lany192.arouter.utils.Consts;
 import com.github.lany192.arouter.utils.Logger;
 import com.github.lany192.arouter.utils.TypeUtils;
@@ -25,7 +26,6 @@ import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
-import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
@@ -35,7 +35,6 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
-import javax.tools.Diagnostic;
 
 @AutoService(Processor.class)
 public class AppRouterProcessor extends AbstractProcessor {
@@ -74,7 +73,6 @@ public class AppRouterProcessor extends AbstractProcessor {
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        Messager messager = processingEnv.getMessager();
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Route.class);
         if (elements != null && !elements.isEmpty()) {
             Set<? extends Element> routeElements = roundEnv.getElementsAnnotatedWith(Route.class);
@@ -84,7 +82,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                 MethodSpec.Builder builder = MethodSpec
                         .methodBuilder(methodName)
                         .addModifiers(Modifier.PUBLIC)
-                        .addJavadoc("跳转到" + element.getSimpleName());
+                        .addJavadoc("跳转到 " + ClassName.get((TypeElement) element));
                 Route route = element.getAnnotation(Route.class);
                 for (Element field : element.getEnclosedElements()) {
                     if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
