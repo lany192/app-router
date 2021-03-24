@@ -1,5 +1,7 @@
-# UITransfer
-android ui skip utils
+[![](https://jitpack.io/v/lany192/app-router.svg)](https://jitpack.io/#lany192/app-router)
+# AppRouter
+    基于Arouter的增强工具
+    
 # 项目根build.gradle引入 
     allprojects {
         repositories {
@@ -9,33 +11,9 @@ android ui skip utils
     }
 # app模块build.gradle引入 
     dependencies {
-        compile 'com.github.lany192.UITransfer:annotation:1.0.3'
-        annotationProcessor 'com.github.lany192.UITransfer:compiler:1.0.3'
-    }
-
-# 使用方法
-
-### 声明需要的参数
-    public class OneActivity extends AppCompatActivity {
-        @RequestParam
-        String name;
-        @RequestParam
-        int age;
-    
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            UIHelper.bind(this);
-            ...
-        }
+        annotationProcessor 'com.github.lany192:app-router:1.0.0'
     }
 
 ### 调用方法
-
-普通跳转startActivity
     
-    UIHelper.from(MainActivity.this).toOneActivity().setAge(3).setName("哈哈哈").start();
-
-返回结果跳转普通跳转startActivityForResult
-
-    UIHelper.from(MainActivity.this).toOneActivity().setAge(3).setName("哈哈哈").start(int requestCode);
+    Router.get().one(66, true, 10.5f, 'w', "哈哈", (byte) 1, "流利")
