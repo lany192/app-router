@@ -12,7 +12,7 @@ import com.github.lany192.sample.R;
 
 @Route(path = Constants.APP_ONE)
 public class OneActivity extends AppCompatActivity {
-    @Autowired(name = "ownerId", desc = "用户id")
+    @Autowired(name = "ownerId", desc = "用户id", required = true)
     long ownerId;
     @Autowired(name = "isFans", desc = "是否粉丝")
     boolean isFans;
@@ -22,6 +22,8 @@ public class OneActivity extends AppCompatActivity {
     char data1;
     @Autowired(name = "data2", desc = "数据B")
     CharSequence data2;
+    @Autowired(name = "data3", desc = "数据C")
+    byte data3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
