@@ -3,6 +3,7 @@ package com.github.lany192.arouter.processor;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.github.lany192.arouter.utils.Consts;
+import com.github.lany192.arouter.utils.Logger;
 import com.github.lany192.arouter.utils.Utils;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
@@ -13,47 +14,62 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Types;
 import javax.tools.Diagnostic;
 
-import static com.github.lany192.arouter.utils.Consts.ANNOTATION_TYPE_AUTOWIRED;
-import static com.github.lany192.arouter.utils.Consts.ANNOTATION_TYPE_ROUTE;
-
 @AutoService(Processor.class)
-@SupportedAnnotationTypes({ANNOTATION_TYPE_ROUTE, ANNOTATION_TYPE_AUTOWIRED})
-public class AppRouterProcessor extends BaseProcessor {
-    private Filer filer;
+public class AppRouterProcessor extends AbstractProcessor {
+    private Filer mFiler;
+    private Logger logger;
+    private Types types;
     private TypeMirror iProvider = null;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
-        iProvider = elementUtils.getTypeElement(Consts.IPROVIDER).asType();
-        filer = processingEnv.getFiler();
+        mFiler = processingEnv.getFiler();
+        types = processingEnv.getTypeUtils();
+        logger = new Logger(processingEnv.getMessager());
+        iProvider = processingEnv.getElementUtils().getTypeElement(Consts.IPROVIDER).asType();
         logger.info(">>> 初始化 <<<");
+    }
+
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return SourceVersion.latestSupported();
+    }
+
+    @Override
+    public Set<String> getSupportedAnnotationTypes() {
+        Set<String> set = new LinkedHashSet<>();
+        set.add(Route.class.getCanonicalName());
+        set.add(Autowired.class.getCanonicalName());
+        return set;
     }
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         Messager messager = processingEnv.getMessager();
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Route.class);
-        if (CollectionUtils.isNotEmpty(elements)) {
+        if (elements != null && !elements.isEmpty()) {
             Set<? extends Element> routeElements = roundEnv.getElementsAnnotatedWith(Route.class);
             List<MethodSpec> methods = new ArrayList<>();
             for (Element element : routeElements) {
@@ -262,6 +278,6 @@ public class AppRouterProcessor extends BaseProcessor {
                 // 设置表示缩进的字符串
                 .indent("    ")
                 .build();
-        javaFile.writeTo(filer);
+        javaFile.writeTo(mFiler);
     }
 }
