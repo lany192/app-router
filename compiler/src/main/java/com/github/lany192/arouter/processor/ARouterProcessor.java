@@ -2,13 +2,7 @@ package com.github.lany192.arouter.processor;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.alibaba.android.arouter.facade.enums.RouteType;
-import com.alibaba.android.arouter.facade.enums.TypeKind;
 import com.alibaba.android.arouter.facade.model.RouteMeta;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.github.lany192.arouter.entity.Param;
-import com.github.lany192.arouter.entity.RouteDoc;
 import com.github.lany192.arouter.utils.Consts;
 import com.github.lany192.arouter.utils.Utils;
 import com.google.auto.service.AutoService;
@@ -20,17 +14,12 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
@@ -41,15 +30,11 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
-import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.tools.Diagnostic;
 
-import static com.github.lany192.arouter.utils.Consts.ACTIVITY;
 import static com.github.lany192.arouter.utils.Consts.ANNOTATION_TYPE_AUTOWIRED;
 import static com.github.lany192.arouter.utils.Consts.ANNOTATION_TYPE_ROUTE;
-import static com.github.lany192.arouter.utils.Consts.FRAGMENT;
-import static com.github.lany192.arouter.utils.Consts.SERVICE;
 
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({ANNOTATION_TYPE_ROUTE, ANNOTATION_TYPE_AUTOWIRED})
@@ -74,7 +59,72 @@ public class ARouterProcessor extends BaseProcessor {
         if (CollectionUtils.isNotEmpty(elements)) {
             Set<? extends Element> routeElements = roundEnv.getElementsAnnotatedWith(Route.class);
             try {
-                parseRoutes(routeElements);
+                for (Element element : routeElements) {
+                    MethodSpec.Builder builder = MethodSpec
+                            .methodBuilder(Utils.toLowerCaseFirstOne(element.getSimpleName().toString()))
+                            .addModifiers(Modifier.PUBLIC)
+                            .addJavadoc("跳转到" + element.getSimpleName());
+                    Route route = element.getAnnotation(Route.class);
+                    for (Element field : element.getEnclosedElements()) {
+                        if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                            Autowired autowired = field.getAnnotation(Autowired.class);
+                            logger.info("目标类:" + element.getSimpleName() + ",路径:" + route.path() + "字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString() + "，注释:" + autowired.desc());
+
+                            switch (field.asType().toString()) {
+                                case "java.lang.String":
+                                    builder.addParameter(ParameterSpec
+                                            .builder(String.class, field.getSimpleName().toString())
+                                            .addJavadoc(autowired.desc() + "\n")
+                                            .build());
+                                    break;
+                                case "boolean":
+                                    builder.addParameter(ParameterSpec
+                                            .builder(boolean.class, field.getSimpleName().toString())
+                                            .addJavadoc(autowired.desc() + "\n")
+                                            .build());
+                                    break;
+                                case "long":
+                                    builder.addParameter(ParameterSpec
+                                            .builder(long.class, field.getSimpleName().toString())
+                                            .addJavadoc(autowired.desc() + "\n")
+                                            .build());
+                                    break;
+                                default:
+                                    builder.addParameter(ParameterSpec
+                                            .builder(Object.class, field.getSimpleName().toString())
+                                            .addJavadoc(autowired.desc() + "\n")
+                                            .build());
+                                    break;
+                            }
+                        }
+                    }
+                    builder.addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
+                    builder.addCode(".build(\"" + route.path() + "\")");
+                    for (Element field : element.getEnclosedElements()) {
+                        if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                            Autowired autowired = field.getAnnotation(Autowired.class);
+                            logger.info("目标类:" + element.getSimpleName() + ",路径:" + route.path() + "字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString() + "，注释:" + autowired.desc());
+                            String fieldName = field.getSimpleName().toString();
+                            switch (field.asType().toString()) {
+                                case "java.lang.String":
+                                    builder.addCode(".withString(\"" + fieldName + "\"," + fieldName + ")");
+                                    break;
+                                case "boolean":
+                                    builder.addCode(".withBoolean(\"" + fieldName + "\"," + fieldName + ")");
+                                    break;
+                                case "long":
+                                    builder.addCode(".withLong(\"" + fieldName + "\"," + fieldName + ")");
+                                    break;
+                                default:
+                                    builder.addCode(".withObject(\"" + fieldName + "\"," + fieldName + ")");
+                                    break;
+                            }
+                        }
+                    }
+                    builder.addCode(".navigation();");
+                    builder.returns(void.class);
+                    methods.add(builder.build());
+                }
                 createRouterHelper(methods);
             } catch (Exception e) {
                 logger.error(e);
@@ -130,257 +180,5 @@ public class ARouterProcessor extends BaseProcessor {
         }
         JavaFile javaFile = JavaFile.builder("com.alibaba.android.arouter", builder.build()).build();
         javaFile.writeTo(filer);
-    }
-
-    private void parseRoutes(Set<? extends Element> routeElements) throws IOException {
-        if (CollectionUtils.isNotEmpty(routeElements)) {
-            logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-            logger.info(">>> Found routes, size is " + routeElements.size() + " <<<");
-
-            TypeMirror type_Activity = elementUtils.getTypeElement(ACTIVITY).asType();
-            TypeMirror type_Service = elementUtils.getTypeElement(SERVICE).asType();
-            TypeMirror fragmentTm = elementUtils.getTypeElement(FRAGMENT).asType();
-            TypeMirror fragmentTmV4 = elementUtils.getTypeElement(Consts.FRAGMENT_V4).asType();
-
-            //  Follow a sequence, find out metas of group first, generate java file, then statistics them as root.
-            for (Element element : routeElements) {
-                TypeMirror tm = element.asType();
-                Route route = element.getAnnotation(Route.class);
-                RouteMeta routeMeta;
-
-                // Activity or Fragment
-                if (types.isSubtype(tm, type_Activity) || types.isSubtype(tm, fragmentTm) || types.isSubtype(tm, fragmentTmV4)) {
-                    // Get all fields annotation by @Autowired
-                    Map<String, Integer> paramsType = new HashMap<>();
-                    Map<String, Autowired> injectConfig = new HashMap<>();
-                    injectParamCollector(element, paramsType, injectConfig);
-
-                    if (types.isSubtype(tm, type_Activity)) {
-                        // Activity
-                        logger.info(">>> Found activity route: " + tm.toString() + " <<<");
-                        routeMeta = new RouteMeta(route, element, RouteType.ACTIVITY, paramsType);
-                    } else {
-                        // Fragment
-                        logger.info(">>> Found fragment route: " + tm.toString() + " <<<");
-                        routeMeta = new RouteMeta(route, element, RouteType.parse(FRAGMENT), paramsType);
-                    }
-
-                    routeMeta.setInjectConfig(injectConfig);
-                } else if (types.isSubtype(tm, iProvider)) {         // IProvider
-                    logger.info(">>> Found provider route: " + tm.toString() + " <<<");
-                    routeMeta = new RouteMeta(route, element, RouteType.PROVIDER, null);
-                } else if (types.isSubtype(tm, type_Service)) {           // Service
-                    logger.info(">>> Found service route: " + tm.toString() + " <<<");
-                    routeMeta = new RouteMeta(route, element, RouteType.parse(SERVICE), null);
-                } else {
-                    throw new RuntimeException("The @Route is marked on unsupported class, look at [" + tm.toString() + "].");
-                }
-                categories(routeMeta);
-            }
-
-            logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-            methods.clear();
-            Map<String, List<RouteDoc>> docSource = new HashMap<>();
-            // Start generate java source, structure is divided into upper and lower levels, used for demand initialization.
-            for (Map.Entry<String, Set<RouteMeta>> entry : groupMap.entrySet()) {
-                String groupName = entry.getKey();
-
-                List<RouteDoc> routeDocList = new ArrayList<>();
-
-                // Build group method body
-                Set<RouteMeta> groupData = entry.getValue();
-                for (RouteMeta routeMeta : groupData) {
-                    RouteDoc routeDoc = extractDocInfo(routeMeta);
-
-                    ClassName className = ClassName.get((TypeElement) routeMeta.getRawType());
-
-                    switch (routeMeta.getType()) {
-                        case PROVIDER:  // Need cache provider's super class
-                            List<? extends TypeMirror> interfaces = ((TypeElement) routeMeta.getRawType()).getInterfaces();
-                            for (TypeMirror tm : interfaces) {
-                                routeDoc.addPrototype(tm.toString());
-                            }
-                            break;
-                        default:
-                            break;
-                    }
-
-                    MethodSpec.Builder builder = MethodSpec
-                            .methodBuilder(Utils.toLowerCaseFirstOne(className.simpleName()))
-                            .addModifiers(Modifier.PUBLIC)
-                            .addJavadoc("跳转到" + className.simpleName());
-
-                    // Make map body for paramsType
-                    Map<String, Integer> paramsType = routeMeta.getParamsType();
-                    Map<String, Autowired> injectConfigs = routeMeta.getInjectConfig();
-                    if (MapUtils.isNotEmpty(paramsType)) {
-                        List<Param> paramList = new ArrayList<>();
-                        for (Map.Entry<String, Integer> types : paramsType.entrySet()) {
-
-                            Param param = new Param();
-                            Autowired injectConfig = injectConfigs.get(types.getKey());
-                            param.setKey(types.getKey());
-                            param.setType(TypeKind.values()[types.getValue()].name().toLowerCase());
-                            param.setDescription(injectConfig.desc());
-                            param.setRequired(injectConfig.required());
-
-                            paramList.add(param);
-
-                            builder.addParameter(ParameterSpec
-                                    .builder(types.getValue().getClass(), types.getKey())
-                                    .addJavadoc(injectConfig.desc() + "\n")
-                                    .build());
-                        }
-
-                        routeDoc.setParams(paramList);
-                    }
-
-                    routeDoc.setClassName(className.toString());
-                    routeDocList.add(routeDoc);
-                    builder.addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
-                    builder.addCode(".build(\"" + routeDoc.getPath() + "\")");
-
-                    if (MapUtils.isNotEmpty(paramsType)) {
-                        for (Map.Entry<String, Integer> types : paramsType.entrySet()) {
-                            switch (TypeKind.values()[types.getValue()].name().toLowerCase()) {
-                                case "string":
-                                    builder.addCode(".withString(\"" + types.getKey() + "\"," + types.getKey() + ")");
-                                    break;
-                                case "boolean":
-                                    builder.addCode(".withBoolean(\"" + types.getKey() + "\"," + types.getKey() + ")");
-                                    break;
-                                case "long":
-                                    builder.addCode(".withLong(\"" + types.getKey() + "\"," + types.getKey() + ")");
-                                    break;
-                                default:
-                                    builder.addCode(".withObject(\"" + types.getKey() + "\"," + types.getKey() + ")");
-                                    break;
-                            }
-
-                            Param param = new Param();
-                            Autowired injectConfig = injectConfigs.get(types.getKey());
-                            param.setKey(types.getKey());
-                            param.setType(TypeKind.values()[types.getValue()].name().toLowerCase());
-                            param.setDescription(injectConfig.desc());
-                            param.setRequired(injectConfig.required());
-
-
-                            builder.addParameter(types.getValue().getClass(), types.getKey());
-                        }
-                    }
-                    builder.addCode(".navigation();");
-                    builder.returns(void.class);
-                    methods.add(builder.build());
-                }
-                docSource.put(groupName, routeDocList);
-            }
-            logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-            String json = JSON.toJSONString(docSource, SerializerFeature.PrettyFormat);
-            logger.info(json);
-        }
-    }
-
-    /**
-     * Recursive inject config collector.
-     *
-     * @param element current element.
-     */
-    private void injectParamCollector(Element element, Map<String, Integer> paramsType, Map<String, Autowired> injectConfig) {
-        for (Element field : element.getEnclosedElements()) {
-            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                logger.info("字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString());
-
-                // It must be field, then it has annotation, but it not be provider.
-                Autowired paramConfig = field.getAnnotation(Autowired.class);
-                String injectName = StringUtils.isEmpty(paramConfig.name()) ? field.getSimpleName().toString() : paramConfig.name();
-                paramsType.put(injectName, typeUtils.typeExchange(field));
-                injectConfig.put(injectName, paramConfig);
-            }
-        }
-
-        // if has parent?
-        TypeMirror parent = ((TypeElement) element).getSuperclass();
-        if (parent instanceof DeclaredType) {
-            Element parentElement = ((DeclaredType) parent).asElement();
-            if (parentElement instanceof TypeElement && !((TypeElement) parentElement).getQualifiedName().toString().startsWith("android")) {
-                injectParamCollector(parentElement, paramsType, injectConfig);
-            }
-        }
-    }
-
-    /**
-     * Extra doc info from route meta
-     *
-     * @param routeMeta meta
-     * @return doc
-     */
-    private RouteDoc extractDocInfo(RouteMeta routeMeta) {
-        RouteDoc routeDoc = new RouteDoc();
-        routeDoc.setGroup(routeMeta.getGroup());
-        routeDoc.setPath(routeMeta.getPath());
-        routeDoc.setDescription(routeMeta.getName());
-        routeDoc.setType(routeMeta.getType().name().toLowerCase());
-        routeDoc.setMark(routeMeta.getExtra());
-
-        return routeDoc;
-    }
-
-    /**
-     * Sort metas in group.
-     *
-     * @param routeMete metas.
-     */
-    private void categories(RouteMeta routeMete) {
-        if (routeVerify(routeMete)) {
-            logger.info(">>> Start categories, group = " + routeMete.getGroup() + ", path = " + routeMete.getPath() + " <<<");
-            Set<RouteMeta> routeMetas = groupMap.get(routeMete.getGroup());
-            if (CollectionUtils.isEmpty(routeMetas)) {
-                Set<RouteMeta> routeMetaSet = new TreeSet<>(new Comparator<RouteMeta>() {
-                    @Override
-                    public int compare(RouteMeta r1, RouteMeta r2) {
-                        try {
-                            return r1.getPath().compareTo(r2.getPath());
-                        } catch (NullPointerException npe) {
-                            logger.error(npe.getMessage());
-                            return 0;
-                        }
-                    }
-                });
-                routeMetaSet.add(routeMete);
-                groupMap.put(routeMete.getGroup(), routeMetaSet);
-            } else {
-                routeMetas.add(routeMete);
-            }
-        } else {
-            logger.warning(">>> Route meta verify error, group is " + routeMete.getGroup() + " <<<");
-        }
-    }
-
-    /**
-     * Verify the route meta
-     *
-     * @param meta raw meta
-     */
-    private boolean routeVerify(RouteMeta meta) {
-        String path = meta.getPath();
-        if (StringUtils.isEmpty(path) || !path.startsWith("/")) {   // The path must be start with '/' and not empty!
-            return false;
-        }
-        if (StringUtils.isEmpty(meta.getGroup())) { // Use default group(the first word in path)
-            try {
-                String defaultGroup = path.substring(1, path.indexOf("/", 1));
-                if (StringUtils.isEmpty(defaultGroup)) {
-                    return false;
-                }
-
-                meta.setGroup(defaultGroup);
-                return true;
-            } catch (Exception e) {
-                logger.error("Failed to extract default group! " + e.getMessage());
-                return false;
-            }
-        }
-
-        return true;
     }
 }
