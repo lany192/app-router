@@ -74,7 +74,6 @@ public class ARouterProcessor extends BaseProcessor {
                 for (Element field : element.getEnclosedElements()) {
                     if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                         Autowired autowired = field.getAnnotation(Autowired.class);
-                        logger.info("目标类:" + element.getSimpleName() + ",路径:" + route.path() + "字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString() + "，注释:" + autowired.desc());
                         builder.addCode(makeCode(field, autowired));
                     }
                 }
@@ -140,7 +139,7 @@ public class ARouterProcessor extends BaseProcessor {
 
     private void createRouterHelper(List<MethodSpec> methods) throws Exception {
         TypeSpec.Builder builder = TypeSpec.classBuilder("Router")
-                .addJavadoc("路由助手，自动生成代码，请勿编辑")
+                .addJavadoc("路由助手,自动生成,请勿编辑!")
                 .addModifiers(Modifier.PUBLIC);
 
         ClassName routerType = ClassName.get("com.alibaba.android.arouter", "Router");
@@ -176,6 +175,22 @@ public class ARouterProcessor extends BaseProcessor {
                 .returns(void.class)
                 .build();
         builder.addMethod(skipMethodSpec);
+
+        MethodSpec skipMethodSpec2 = MethodSpec.methodBuilder("skip")
+                .addJavadoc("通用跳转")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(ParameterSpec
+                        .builder(String.class, "path")
+                        .addJavadoc("路由路径\n")
+                        .build())
+                .addParameter(ParameterSpec
+                        .builder(ClassName.get("android.os", "Bundle"), "bundle")
+                        .addJavadoc("Bundle对象")
+                        .build())
+                .addStatement("ARouter.getInstance().build(path).with(bundle).navigation()")
+                .returns(void.class)
+                .build();
+        builder.addMethod(skipMethodSpec2);
 
         for (MethodSpec method : methods) {
             builder.addMethod(method);
