@@ -208,7 +208,7 @@ public class ARouterProcessor extends BaseProcessor {
                     MethodSpec.Builder builder = MethodSpec
                             .methodBuilder(Utils.toLowerCaseFirstOne(className.simpleName()))
                             .addModifiers(Modifier.PUBLIC)
-                            .addJavadoc("这里是注释" + routeDoc.getGroup());
+                            .addJavadoc("跳转到" + className.simpleName());
 
                     // Make map body for paramsType
                     Map<String, Integer> paramsType = routeMeta.getParamsType();
