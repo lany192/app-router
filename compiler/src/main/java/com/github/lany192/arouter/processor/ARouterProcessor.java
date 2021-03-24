@@ -226,7 +226,10 @@ public class ARouterProcessor extends BaseProcessor {
 
                             paramList.add(param);
 
-                            builder.addParameter(types.getValue().getClass(), types.getKey());
+                            builder.addParameter(ParameterSpec
+                                    .builder(types.getValue().getClass(), types.getKey())
+                                    .addJavadoc(injectConfig.desc() + "\n")
+                                    .build());
                         }
 
                         routeDoc.setParams(paramList);
@@ -243,7 +246,7 @@ public class ARouterProcessor extends BaseProcessor {
                                 case "string":
                                     builder.addCode(".withString(\"" + types.getKey() + "\"," + types.getKey() + ")");
                                     break;
-                                case "boolan":
+                                case "boolean":
                                     builder.addCode(".withBoolean(\"" + types.getKey() + "\"," + types.getKey() + ")");
                                     break;
                                 case "long":
