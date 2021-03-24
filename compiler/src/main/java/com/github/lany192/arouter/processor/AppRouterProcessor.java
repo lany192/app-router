@@ -36,7 +36,7 @@ import static com.github.lany192.arouter.utils.Consts.ANNOTATION_TYPE_ROUTE;
 
 @AutoService(Processor.class)
 @SupportedAnnotationTypes({ANNOTATION_TYPE_ROUTE, ANNOTATION_TYPE_AUTOWIRED})
-public class ARouterProcessor extends BaseProcessor {
+public class AppRouterProcessor extends BaseProcessor {
     private Filer filer;
     private TypeMirror iProvider = null;
 
