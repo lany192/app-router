@@ -24,6 +24,8 @@ public class OneActivity extends AppCompatActivity {
     CharSequence data2;
     @Autowired(name = "data3", desc = "数据C")
     byte data3;
+    @Autowired(desc = "数据D")
+    String data4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
