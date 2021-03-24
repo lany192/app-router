@@ -16,6 +16,7 @@ import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -98,7 +99,7 @@ public class ARouterProcessor extends BaseProcessor {
 
         builder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build());
 
-        MethodSpec methodSpec = MethodSpec.methodBuilder("get")
+        MethodSpec getMethodSpec = MethodSpec.methodBuilder("get")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .beginControlFlow("if (instance == null) ")
                 .beginControlFlow("synchronized (Router.class) ")
@@ -110,7 +111,20 @@ public class ARouterProcessor extends BaseProcessor {
                 .addCode("return instance;")
                 .returns(routerType)
                 .build();
-        builder.addMethod(methodSpec);
+        builder.addMethod(getMethodSpec);
+
+        MethodSpec skipMethodSpec = MethodSpec.methodBuilder("skip")
+                .addJavadoc("通用跳转")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(ParameterSpec
+                        .builder(String.class, "path")
+                        .addJavadoc("路由路径")
+                        .build())
+                .addStatement("ARouter.getInstance().build(path).navigation()")
+                .returns(void.class)
+                .build();
+        builder.addMethod(skipMethodSpec);
+
         for (MethodSpec method : methods) {
             builder.addMethod(method);
         }
