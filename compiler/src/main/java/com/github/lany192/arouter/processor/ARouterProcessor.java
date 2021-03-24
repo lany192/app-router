@@ -66,40 +66,28 @@ public class ARouterProcessor extends BaseProcessor {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                             Autowired autowired = field.getAnnotation(Autowired.class);
                             logger.info("目标类:" + element.getSimpleName() + ",路径:" + route.path() + "字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString() + "，注释:" + autowired.desc());
-                            ParameterSpec parameterSpec;
+                            ParameterSpec.Builder paramBuilder;
                             switch (field.asType().toString()) {
                                 case "java.lang.String":
-                                    parameterSpec = ParameterSpec.builder(String.class, field.getSimpleName().toString())
-                                            .addJavadoc(autowired.desc() + "\n")
-                                            .build();
+                                    paramBuilder = ParameterSpec.builder(String.class, field.getSimpleName().toString());
                                     break;
                                 case "boolean":
-                                    parameterSpec = ParameterSpec.builder(boolean.class, field.getSimpleName().toString())
-                                            .addJavadoc(autowired.desc() + "\n")
-                                            .build();
+                                    paramBuilder = ParameterSpec.builder(boolean.class, field.getSimpleName().toString());
                                     break;
                                 case "long":
-                                    parameterSpec = ParameterSpec.builder(long.class, field.getSimpleName().toString())
-                                            .addJavadoc(autowired.desc() + "\n")
-                                            .build();
+                                    paramBuilder = ParameterSpec.builder(long.class, field.getSimpleName().toString());
                                     break;
                                 case "int":
-                                    parameterSpec = ParameterSpec.builder(int.class, field.getSimpleName().toString())
-                                            .addJavadoc(autowired.desc() + "\n")
-                                            .build();
+                                    paramBuilder = ParameterSpec.builder(int.class, field.getSimpleName().toString());
                                     break;
                                 case "float":
-                                    parameterSpec = ParameterSpec.builder(float.class, field.getSimpleName().toString())
-                                            .addJavadoc(autowired.desc() + "\n")
-                                            .build();
+                                    paramBuilder = ParameterSpec.builder(float.class, field.getSimpleName().toString());
                                     break;
                                 default:
-                                    parameterSpec = ParameterSpec.builder(Object.class, field.getSimpleName().toString())
-                                            .addJavadoc(autowired.desc() + "\n")
-                                            .build();
+                                    paramBuilder = ParameterSpec.builder(Object.class, field.getSimpleName().toString());
                                     break;
                             }
-                            builder.addParameter(parameterSpec);
+                            builder.addParameter(paramBuilder.addJavadoc(autowired.desc() + "\n").build());
                         }
                     }
                     builder.addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
