@@ -2,9 +2,7 @@ package com.github.lany192.arouter.processor;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.alibaba.android.arouter.facade.enums.TypeKind;
 import com.github.lany192.arouter.utils.Consts;
-import com.github.lany192.arouter.utils.TypeUtils;
 import com.github.lany192.arouter.utils.Utils;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
@@ -206,6 +204,7 @@ public class ARouterProcessor extends BaseProcessor {
                 .build();
         builder.addMethod(skipMethodSpec);
 
+
         MethodSpec skipMethodSpec2 = MethodSpec.methodBuilder("skip")
                 .addJavadoc("通用跳转")
                 .addModifiers(Modifier.PUBLIC)
@@ -221,6 +220,18 @@ public class ARouterProcessor extends BaseProcessor {
                 .returns(void.class)
                 .build();
         builder.addMethod(skipMethodSpec2);
+
+        MethodSpec skipMethodSpec3 = MethodSpec.methodBuilder("skip")
+                .addJavadoc("通用跳转")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(ParameterSpec
+                        .builder(ClassName.get("android.net", "Uri"), "uri")
+                        .addJavadoc("路由路径")
+                        .build())
+                .addStatement("ARouter.getInstance().build(uri).navigation()")
+                .returns(void.class)
+                .build();
+        builder.addMethod(skipMethodSpec3);
 
         for (MethodSpec method : methods) {
             builder.addMethod(method);

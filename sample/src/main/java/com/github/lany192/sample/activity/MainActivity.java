@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
                     List<String> items = new ArrayList<>();
                     items.add("张三");
                     items.add("王五");
-                    Router.get().two(88, "这是一个标题", 8.68, items,9);
+                    Router.get().two(88, "这是一个标题", 8.68, items,(short) 9);
                 }
         );
         findViewById(R.id.button3).setOnClickListener(v ->
