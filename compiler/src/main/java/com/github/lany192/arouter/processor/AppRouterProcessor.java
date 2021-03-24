@@ -10,6 +10,7 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -128,9 +129,9 @@ public class AppRouterProcessor extends BaseProcessor {
     private ParameterSpec getParameter(Element field, Autowired autowired) {
         String fieldName = field.getSimpleName().toString();
         String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
-
+        String typeName = field.asType().toString();
         ParameterSpec.Builder builder;
-        switch (field.asType().toString()) {
+        switch (typeName) {
             case "java.lang.String":
                 builder = ParameterSpec.builder(String.class, key);
                 break;
@@ -162,7 +163,24 @@ public class AppRouterProcessor extends BaseProcessor {
                 builder = ParameterSpec.builder(CharSequence.class, key);
                 break;
             default:
-                builder = ParameterSpec.builder(Object.class, key);
+                //是否是泛型
+                if (typeName.contains("<") && typeName.contains(">")) {
+                    int startIndex = typeName.indexOf("<");
+                    int endIndex = typeName.indexOf(">");
+                    String tmp = typeName.substring(startIndex + 1, endIndex);
+                    int index = tmp.lastIndexOf(".");
+                    ClassName className = ClassName.get(tmp.substring(0, index), tmp.substring(index + 1));
+                    ClassName list = ClassName.get("java.util", "List");
+                    builder = ParameterSpec.builder(ParameterizedTypeName.get(list, className), key);
+                } else {
+                    if (typeName.contains(".")) {
+                        int index = typeName.lastIndexOf(".");
+                        ClassName className = ClassName.get(typeName.substring(0, index), typeName.substring(index + 1));
+                        builder = ParameterSpec.builder(className, key);
+                    } else {
+                        builder = ParameterSpec.builder(Object.class, key);
+                    }
+                }
                 break;
         }
         return builder.addJavadoc(autowired.desc() + "\n").build();
@@ -239,7 +257,11 @@ public class AppRouterProcessor extends BaseProcessor {
         for (MethodSpec method : methods) {
             builder.addMethod(method);
         }
-        JavaFile javaFile = JavaFile.builder("com.alibaba.android.arouter", builder.build()).build();
+        JavaFile javaFile = JavaFile
+                .builder("com.alibaba.android.arouter", builder.build())
+                // 设置表示缩进的字符串
+                .indent("    ")
+                .build();
         javaFile.writeTo(filer);
     }
 }
