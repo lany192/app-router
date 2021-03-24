@@ -67,28 +67,7 @@ public class ARouterProcessor extends BaseProcessor {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                             Autowired autowired = field.getAnnotation(Autowired.class);
                             logger.info("目标类:" + element.getSimpleName() + ",路径:" + route.path() + "字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString() + "，注释:" + autowired.desc());
-                            ParameterSpec.Builder paramBuilder;
-                            switch (field.asType().toString()) {
-                                case "java.lang.String":
-                                    paramBuilder = ParameterSpec.builder(String.class, field.getSimpleName().toString());
-                                    break;
-                                case "boolean":
-                                    paramBuilder = ParameterSpec.builder(boolean.class, field.getSimpleName().toString());
-                                    break;
-                                case "long":
-                                    paramBuilder = ParameterSpec.builder(long.class, field.getSimpleName().toString());
-                                    break;
-                                case "int":
-                                    paramBuilder = ParameterSpec.builder(int.class, field.getSimpleName().toString());
-                                    break;
-                                case "float":
-                                    paramBuilder = ParameterSpec.builder(float.class, field.getSimpleName().toString());
-                                    break;
-                                default:
-                                    paramBuilder = ParameterSpec.builder(Object.class, field.getSimpleName().toString());
-                                    break;
-                            }
-                            builder.addParameter(paramBuilder.addJavadoc(autowired.desc() + "\n").build());
+                            builder.addParameter(getParameter(field, autowired));
                         }
                     }
                     builder.addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
@@ -97,28 +76,7 @@ public class ARouterProcessor extends BaseProcessor {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                             Autowired autowired = field.getAnnotation(Autowired.class);
                             logger.info("目标类:" + element.getSimpleName() + ",路径:" + route.path() + "字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString() + "，注释:" + autowired.desc());
-                            String fieldName = field.getSimpleName().toString();
-                            String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
-                            switch (field.asType().toString()) {
-                                case "java.lang.String":
-                                    builder.addCode(".withString(\"" + key + "\"," + fieldName + ")");
-                                    break;
-                                case "boolean":
-                                    builder.addCode(".withBoolean(\"" + key + "\"," + fieldName + ")");
-                                    break;
-                                case "long":
-                                    builder.addCode(".withLong(\"" + key + "\"," + fieldName + ")");
-                                    break;
-                                case "int":
-                                    builder.addCode(".withInt(\"" + key + "\"," + fieldName + ")");
-                                    break;
-                                case "float":
-                                    builder.addCode(".withFloat(\"" + key + "\"," + fieldName + ")");
-                                    break;
-                                default:
-                                    builder.addCode(".withObject(\"" + key + "\"," + fieldName + ")");
-                                    break;
-                            }
+                            builder.addCode(makeCode(field, autowired));
                         }
                     }
                     builder.addCode(".navigation();");
@@ -134,6 +92,50 @@ public class ARouterProcessor extends BaseProcessor {
             return false;
         }
         return true;
+    }
+
+    private String makeCode(Element field, Autowired autowired) {
+        String fieldName = field.getSimpleName().toString();
+        String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
+        switch (field.asType().toString()) {
+            case "java.lang.String":
+                return ".withString(\"" + key + "\"," + fieldName + ")";
+            case "boolean":
+                return ".withBoolean(\"" + key + "\"," + fieldName + ")";
+            case "long":
+                return ".withLong(\"" + key + "\"," + fieldName + ")";
+            case "int":
+                return ".withInt(\"" + key + "\"," + fieldName + ")";
+            case "float":
+                return ".withFloat(\"" + key + "\"," + fieldName + ")";
+            default:
+                return ".withObject(\"" + key + "\"," + fieldName + ")";
+        }
+    }
+
+    private ParameterSpec getParameter(Element field, Autowired autowired) {
+        ParameterSpec.Builder builder;
+        switch (field.asType().toString()) {
+            case "java.lang.String":
+                builder = ParameterSpec.builder(String.class, field.getSimpleName().toString());
+                break;
+            case "boolean":
+                builder = ParameterSpec.builder(boolean.class, field.getSimpleName().toString());
+                break;
+            case "long":
+                builder = ParameterSpec.builder(long.class, field.getSimpleName().toString());
+                break;
+            case "int":
+                builder = ParameterSpec.builder(int.class, field.getSimpleName().toString());
+                break;
+            case "float":
+                builder = ParameterSpec.builder(float.class, field.getSimpleName().toString());
+                break;
+            default:
+                builder = ParameterSpec.builder(Object.class, field.getSimpleName().toString());
+                break;
+        }
+        return builder.addJavadoc(autowired.desc() + "\n").build();
     }
 
     private void createRouterHelper(List<MethodSpec> methods) throws Exception {
