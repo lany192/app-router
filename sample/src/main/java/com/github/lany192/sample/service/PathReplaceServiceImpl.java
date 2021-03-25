@@ -32,7 +32,7 @@ public class PathReplaceServiceImpl implements PathReplaceService {
     @Override
     public Uri forUri(Uri uri) {
         Log.i(TAG, "Uri: " + uri);
-        if ("lzj3000://leaderboards?age=18&username=张三".equals(uri.toString())) {
+        if ("hello://leaderboards?age=18&username=张三".equals(uri.toString())) {
             uri = Uri.parse("demo://m.test.com/app/three?age=18&username=张三");
         }
         return uri;

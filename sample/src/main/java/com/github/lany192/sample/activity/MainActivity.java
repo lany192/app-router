@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         String link1 = "demo://m.test.com/app/one";
         String link2 = "demo://m.test.com/app/two";
         String link3 = "demo://m.test.com/app/three?age=18&username=张三";
-        String link4 = "lzj3000://leaderboards?age=18&username=张三";
+        String link4 = "hello://leaderboards?age=18&username=张三";
 
         String content = "跳转:\n\n第一个界面:" + link1
                 + "\n\n第二个界面:" + link2
