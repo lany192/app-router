@@ -3,7 +3,7 @@ package com.github.lany192.arouter.utils;
 public class Consts {
     public static final String PROJECT = "AppRouter";
 
-    public static final String PARCELABLE = "android.os.Parcelable";
+
 
     // Java type
     private static final String LANG = "java.lang";
@@ -16,7 +16,10 @@ public class Consts {
     public static final String BOOLEAN = LANG + ".Boolean";
     public static final String CHAR = LANG + ".Character";
     public static final String STRING = LANG + ".String";
+    public static final String CHARSEQUENCE = LANG + ".CharSequence";
     public static final String SERIALIZABLE = "java.io.Serializable";
+    public static final String PARCELABLE = "android.os.Parcelable";
+
 
     // Custom interface
     private static final String FACADE_PACKAGE = "com.alibaba.android.arouter.facade";

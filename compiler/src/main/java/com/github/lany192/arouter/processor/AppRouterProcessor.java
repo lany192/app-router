@@ -230,63 +230,35 @@ public class AppRouterProcessor extends AbstractProcessor {
                 return ".withObject(\"" + key + "\"," + key + ")";
         }
     }
-
     private ParameterSpec getParameter(Element field, Autowired autowired) {
         String fieldName = field.getSimpleName().toString();
         String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
         String typeName = field.asType().toString();
         ParameterSpec.Builder builder;
-        switch (typeName) {
-            case "java.lang.String":
-                builder = ParameterSpec.builder(String.class, key);
-                break;
-            case "boolean":
-                builder = ParameterSpec.builder(boolean.class, key);
-                break;
-            case "long":
-                builder = ParameterSpec.builder(long.class, key);
-                break;
-            case "int":
-                builder = ParameterSpec.builder(int.class, key);
-                break;
-            case "float":
-                builder = ParameterSpec.builder(float.class, key);
-                break;
-            case "double":
-                builder = ParameterSpec.builder(double.class, key);
-                break;
-            case "char":
-                builder = ParameterSpec.builder(char.class, key);
-                break;
-            case "byte":
-                builder = ParameterSpec.builder(byte.class, key);
-                break;
-            case "short":
-                builder = ParameterSpec.builder(short.class, key);
-                break;
-            case "java.lang.CharSequence":
-                builder = ParameterSpec.builder(CharSequence.class, key);
-                break;
-            default:
-                //是否是泛型
-                if (typeName.contains("<") && typeName.contains(">")) {
-                    int startIndex = typeName.indexOf("<");
-                    int endIndex = typeName.indexOf(">");
-                    String tmp = typeName.substring(startIndex + 1, endIndex);
-                    int index = tmp.lastIndexOf(".");
-                    ClassName className = ClassName.get(tmp.substring(0, index), tmp.substring(index + 1));
-                    ClassName list = ClassName.get("java.util", "List");
-                    builder = ParameterSpec.builder(ParameterizedTypeName.get(list, className), key);
+        TypeMirror typeMirror = field.asType();
+        logger.info("字段:" + fieldName + ",类型:" + typeName);
+        //是否原始类型
+        if (typeMirror.getKind().isPrimitive()) {
+            builder = ParameterSpec.builder(TypeName.get(typeMirror), key);
+        } else {
+            //是否是泛型
+            if (typeName.contains("<") && typeName.contains(">")) {
+                int startIndex = typeName.indexOf("<");
+                int endIndex = typeName.indexOf(">");
+                String tmp = typeName.substring(startIndex + 1, endIndex);
+                int index = tmp.lastIndexOf(".");
+                ClassName className = ClassName.get(tmp.substring(0, index), tmp.substring(index + 1));
+                ClassName list = ClassName.get("java.util", "List");
+                builder = ParameterSpec.builder(ParameterizedTypeName.get(list, className), key);
+            } else {
+                if (typeName.contains(".")) {
+                    int index = typeName.lastIndexOf(".");
+                    ClassName className = ClassName.get(typeName.substring(0, index), typeName.substring(index + 1));
+                    builder = ParameterSpec.builder(className, key);
                 } else {
-                    if (typeName.contains(".")) {
-                        int index = typeName.lastIndexOf(".");
-                        ClassName className = ClassName.get(typeName.substring(0, index), typeName.substring(index + 1));
-                        builder = ParameterSpec.builder(className, key);
-                    } else {
-                        builder = ParameterSpec.builder(Object.class, key);
-                    }
+                    builder = ParameterSpec.builder(Object.class, key);
                 }
-                break;
+            }
         }
         return builder.addJavadoc(autowired.desc() + "\n").build();
     }
