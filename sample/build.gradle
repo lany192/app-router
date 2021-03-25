@@ -38,6 +38,9 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:2.8.6'
 
+    //超链接处理 https://github.com/klinker24/Android-TextView-LinkBuilder
+    implementation 'com.klinkerapps:link_builder:2.0.5'
+
     //这个要放在arouter的前面
     annotationProcessor project(path: ':compiler')
 
