@@ -1,9 +1,10 @@
-package com.github.lany192.sample;
+package com.github.lany192.sample.service;
 
 import android.content.Context;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.service.SerializationService;
+import com.github.lany192.sample.JsonUtils;
 
 import java.lang.reflect.Type;
 

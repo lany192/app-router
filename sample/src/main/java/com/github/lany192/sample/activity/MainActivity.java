@@ -24,7 +24,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.button1).setOnClickListener(v ->
-                AppRouter.get().one(66, true, 10.5f, 'w', "哈哈", (byte) 1, "流利")
+                        AppRouter.get().skip("/one")
+//                AppRouter.get().one(66, true, 10.5f, 'w', "哈哈", (byte) 1, "流利")
         );
         findViewById(R.id.button2).setOnClickListener(v -> {
                     List<String> items = new ArrayList<>();
