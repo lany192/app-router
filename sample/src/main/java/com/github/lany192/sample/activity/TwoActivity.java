@@ -1,8 +1,10 @@
 package com.github.lany192.sample.activity;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.TextView;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
@@ -29,6 +31,12 @@ public class TwoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_two);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         TextView showText = findViewById(R.id.show_text_view);
         StringBuilder builder = new StringBuilder();
         builder.append("界面TWO");
@@ -38,5 +46,15 @@ public class TwoActivity extends AppCompatActivity {
         builder.append("\n列表:").append(items);
         builder.append("\n测试A:").append(data);
         showText.setText(builder);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish(); // back button
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
