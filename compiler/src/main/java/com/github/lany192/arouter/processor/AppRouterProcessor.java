@@ -176,7 +176,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                             builder.addParameter(getParameter(field, autowired));
                         }
                     }
-                    builder.addCode("return ("+element.getSimpleName().toString()+")$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
+                    builder.addCode("return (" + element.getSimpleName().toString() + ")$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
                     builder.addCode(".build(\"" + route.path() + "\")");
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -220,14 +220,15 @@ public class AppRouterProcessor extends AbstractProcessor {
             } else if (typeKind == PARCELABLE) {
                 return ".withParcelable(\"" + key + "\"," + key + ")";
             } else {
-                //是否是泛型
-                if (!typeName.contains("<") && typeName.contains(".")) {
-                    int index = typeName.lastIndexOf(".");
-                    name = Utils.toUpperCaseFirstOne(typeName.substring(index + 1));
-                    return ".with" + name + "(\"" + key + "\"," + key + ")";
-                } else {
-                    return ".withObject(\"" + key + "\"," + key + ")";
+                if (typeName.startsWith("java.lang") || typeName.startsWith("java.util")) {
+                    //是否是泛型
+                    if (!typeName.contains("<") && typeName.contains(".")) {
+                        int index = typeName.lastIndexOf(".");
+                        name = Utils.toUpperCaseFirstOne(typeName.substring(index + 1));
+                        return ".with" + name + "(\"" + key + "\"," + key + ")";
+                    }
                 }
+                return ".withObject(\"" + key + "\"," + key + ")";
             }
         }
     }

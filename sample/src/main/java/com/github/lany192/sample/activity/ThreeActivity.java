@@ -11,7 +11,7 @@ import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.github.lany192.sample.Constants;
 import com.github.lany192.sample.R;
-import com.github.lany192.sample.User;
+import com.github.lany192.sample.entity.User;
 
 @Route(path = Constants.APP_THREE)
 public class ThreeActivity extends AppCompatActivity {

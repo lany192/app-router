@@ -14,7 +14,8 @@ import com.alibaba.android.arouter.AppRouter;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.github.lany192.sample.Constants;
 import com.github.lany192.sample.R;
-import com.github.lany192.sample.User;
+import com.github.lany192.sample.entity.Person;
+import com.github.lany192.sample.entity.User;
 import com.klinker.android.link_builder.Link;
 import com.klinker.android.link_builder.LinkBuilder;
 import com.klinker.android.link_builder.TouchableMovementMethod;
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
                     List<String> items = new ArrayList<>();
                     items.add("张三");
                     items.add("王五");
-                    AppRouter.get().two(88, "这是一个标题", 8.68, items, (short) 9);
+                    AppRouter.get().two(88, "这是一个标题", 8.68, items, (short) 9, new Person("王武", 89));
                 }
         );
         findViewById(R.id.button3).setOnClickListener(v ->

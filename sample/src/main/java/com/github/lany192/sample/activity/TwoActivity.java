@@ -11,6 +11,7 @@ import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.github.lany192.sample.Constants;
 import com.github.lany192.sample.R;
+import com.github.lany192.sample.entity.Person;
 
 import java.util.List;
 
@@ -26,6 +27,8 @@ public class TwoActivity extends AppCompatActivity {
     List<String> items;
     @Autowired(name = "data", desc = "测试A")
     short data;
+    @Autowired(name = "person", desc = "个人")
+    Person person;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,7 @@ public class TwoActivity extends AppCompatActivity {
         builder.append("\n积分:").append(cent);
         builder.append("\n列表:").append(items);
         builder.append("\n测试A:").append(data);
+        builder.append("\n个人:").append(person);
         showText.setText(builder);
     }
 
