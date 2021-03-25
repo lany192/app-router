@@ -134,8 +134,54 @@ public class AppRouterProcessor extends AbstractProcessor {
                     methods.add(builder.build());
                 } else if (types.isSubtype(element.asType(), iProvider)) {// IProvider
                     logger.info(">>> Found provider route: " + element.asType().toString() + " <<<");
+                    String methodName = Utils.toLowerCaseFirstOne(element.getSimpleName().toString());
+                    MethodSpec.Builder builder = MethodSpec
+                            .methodBuilder(methodName)
+                            .addModifiers(Modifier.PUBLIC)
+                            .addJavadoc("跳转到 " + ClassName.get((TypeElement) element));
+                    Route route = element.getAnnotation(Route.class);
+                    for (Element field : element.getEnclosedElements()) {
+                        if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                            Autowired autowired = field.getAnnotation(Autowired.class);
+                            builder.addParameter(getParameter(field, autowired));
+                        }
+                    }
+                    builder.addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
+                    builder.addCode(".build(\"" + route.path() + "\")");
+                    for (Element field : element.getEnclosedElements()) {
+                        if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                            Autowired autowired = field.getAnnotation(Autowired.class);
+                            builder.addCode(makeCode(field, autowired));
+                        }
+                    }
+                    builder.addCode(".navigation();");
+                    builder.returns(void.class);
+                    methods.add(builder.build());
                 } else if (types.isSubtype(element.asType(), getTypeMirror(Consts.SERVICE))) {// Service
                     logger.info(">>> Found service route: " + element.asType().toString() + " <<<");
+                    String methodName = Utils.toLowerCaseFirstOne(element.getSimpleName().toString());
+                    MethodSpec.Builder builder = MethodSpec
+                            .methodBuilder(methodName)
+                            .addModifiers(Modifier.PUBLIC)
+                            .addJavadoc("跳转到 " + ClassName.get((TypeElement) element));
+                    Route route = element.getAnnotation(Route.class);
+                    for (Element field : element.getEnclosedElements()) {
+                        if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                            Autowired autowired = field.getAnnotation(Autowired.class);
+                            builder.addParameter(getParameter(field, autowired));
+                        }
+                    }
+                    builder.addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
+                    builder.addCode(".build(\"" + route.path() + "\")");
+                    for (Element field : element.getEnclosedElements()) {
+                        if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                            Autowired autowired = field.getAnnotation(Autowired.class);
+                            builder.addCode(makeCode(field, autowired));
+                        }
+                    }
+                    builder.addCode(".navigation();");
+                    builder.returns(void.class);
+                    methods.add(builder.build());
                 } else {
                     throw new RuntimeException("The @Route is marked on unsupported class, look at [" + element.asType().toString() + "].");
                 }
