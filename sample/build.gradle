@@ -1,4 +1,14 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.getName())
+    }
+}
+
 
 android {
     compileSdkVersion 30
@@ -9,13 +19,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        javaCompileOptions {
-            annotationProcessorOptions {
-                includeCompileClasspath true
-                // 生成的文档路径 : build/generated/source/apt/(debug or release)/com/alibaba/android/arouter/docs/route-map-of-${moduleName}.json
-                arguments = [AROUTER_MODULE_NAME: project.getName(), AROUTER_GENERATE_DOC: "enable"]
-            }
-        }
     }
     buildTypes {
         release {
@@ -32,6 +35,8 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -41,12 +46,9 @@ dependencies {
     //超链接处理 https://github.com/klinker24/Android-TextView-LinkBuilder
     implementation 'com.klinkerapps:link_builder:2.0.5'
 
-    //这个要放在arouter的前面
-    annotationProcessor project(path: ':compiler')
-
+    //这个要放在arouter-compiler的前面
+    kapt project(path: ':compiler')
     //界面路由 https://github.com/alibaba/ARouter
     implementation 'com.alibaba:arouter-api:1.5.1'
-    annotationProcessor 'com.alibaba:arouter-compiler:1.5.1'
-
-
+    kapt 'com.alibaba:arouter-compiler:1.5.1'
 }

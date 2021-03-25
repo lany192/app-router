@@ -9,9 +9,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".activity.SchemeFilterActivity"
             android:exported="true">
+
             <!-- Scheme -->
             <intent-filter>
                 <data
@@ -40,6 +42,9 @@
         <activity
             android:name=".activity.ThreeActivity"
             android:label="ThreeActivity" />
+        <activity
+            android:name=".activity.FourActivity"
+            android:label="FourActivity" />
     </application>
 
 </manifest>
