@@ -14,6 +14,7 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
 import org.apache.commons.lang3.StringUtils;
@@ -35,6 +36,9 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
+/**
+ * @author Administrator
+ */
 @AutoService(Processor.class)
 public class AppRouterProcessor extends AbstractProcessor {
     private Filer mFiler;
@@ -103,7 +107,6 @@ public class AppRouterProcessor extends AbstractProcessor {
                     builder.returns(void.class);
                     methods.add(builder.build());
                 } else if (isFragment(element)) { // Fragment
-                    String methodName = element.getSimpleName().toString();
                     MethodSpec.Builder builder = MethodSpec
                             .methodBuilder("get" + element.getSimpleName().toString())
                             .addModifiers(Modifier.PUBLIC)
@@ -159,11 +162,10 @@ public class AppRouterProcessor extends AbstractProcessor {
                     methods.add(builder.build());
                 } else if (types.isSubtype(element.asType(), getTypeMirror(Consts.SERVICE))) {// Service
                     logger.info(">>> Found service route: " + element.asType().toString() + " <<<");
-                    String methodName = Utils.toLowerCaseFirstOne(element.getSimpleName().toString());
                     MethodSpec.Builder builder = MethodSpec
-                            .methodBuilder(methodName)
+                            .methodBuilder("get" + element.getSimpleName().toString())
                             .addModifiers(Modifier.PUBLIC)
-                            .addJavadoc("跳转到 " + ClassName.get((TypeElement) element));
+                            .addJavadoc("获取 " + ClassName.get((TypeElement) element));
                     Route route = element.getAnnotation(Route.class);
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -171,7 +173,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                             builder.addParameter(getParameter(field, autowired));
                         }
                     }
-                    builder.addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
+                    builder.addCode("return ("+element.getSimpleName().toString()+")$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
                     builder.addCode(".build(\"" + route.path() + "\")");
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -180,7 +182,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                         }
                     }
                     builder.addCode(".navigation();");
-                    builder.returns(void.class);
+                    builder.returns(TypeName.get(element.asType()));
                     methods.add(builder.build());
                 } else {
                     throw new RuntimeException("The @Route is marked on unsupported class, look at [" + element.asType().toString() + "].");
