@@ -51,8 +51,12 @@ public class MainActivity extends AppCompatActivity {
         String link1 = "demo://m.test.com/app/one";
         String link2 = "demo://m.test.com/app/two";
         String link3 = "demo://m.test.com/app/three?age=18&username=张三";
+        String link4 = "lzj3000://leaderboards?age=18&username=张三";
 
-        String content = "跳转:\n\n第一个界面:" + link1 + "\n\n第二个界面:" + link2 + "\n\n第三个界面:" + link3;
+        String content = "跳转:\n\n第一个界面:" + link1
+                + "\n\n第二个界面:" + link2
+                + "\n\n第三个界面:" + link3
+                + "\n\n第三个界面:" + link4;
         TextView demoText = findViewById(R.id.textView);
         demoText.setText(LinkBuilder.from(this, content)
                 .addLink(new Link(link1)
@@ -66,6 +70,11 @@ public class MainActivity extends AppCompatActivity {
                             AppRouter.get().skip(Uri.parse(clickedText));
                         }))
                 .addLink(new Link(link3)
+                        .setTextColor(Color.BLUE)
+                        .setOnClickListener(clickedText -> {
+                            AppRouter.get().skip(Uri.parse(clickedText));
+                        }))
+                .addLink(new Link(link4)
                         .setTextColor(Color.BLUE)
                         .setOnClickListener(clickedText -> {
                             AppRouter.get().skip(Uri.parse(clickedText));
