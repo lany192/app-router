@@ -13,7 +13,7 @@ import com.github.lany192.sample.R;
 @Route(path = Constants.APP_ONE)
 public class OneActivity extends AppCompatActivity {
     @Autowired(name = "ownerId", desc = "用户id", required = true)
-    Long ownerId;
+    int ownerId;
     @Autowired(name = "isFans", desc = "是否粉丝")
     boolean isFans;
     @Autowired(name = "money", desc = "余额")

@@ -36,6 +36,9 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
+import static com.alibaba.android.arouter.facade.enums.TypeKind.PARCELABLE;
+import static com.alibaba.android.arouter.facade.enums.TypeKind.SERIALIZABLE;
+
 /**
  * @author Administrator
  */
@@ -203,40 +206,39 @@ public class AppRouterProcessor extends AbstractProcessor {
     private String makeCode(Element field, Autowired autowired) {
         String fieldName = field.getSimpleName().toString();
         String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
-        switch (TypeKind.values()[typeUtils.typeExchange(field)]) {
-            case BOOLEAN:
-                return ".withBoolean(\"" + key + "\"," + key + ")";
-            case BYTE:
-                return ".withByte(\"" + key + "\"," + key + ")";
-            case SHORT:
-                return ".withShort(\"" + key + "\"," + key + ")";
-            case INT:
-                return ".withInt(\"" + key + "\"," + key + ")";
-            case LONG:
-                return ".withLong(\"" + key + "\"," + key + ")";
-            case CHAR:
-                return ".withChar(\"" + key + "\"," + key + ")";
-            case FLOAT:
-                return ".withFloat(\"" + key + "\"," + key + ")";
-            case DOUBLE:
-                return ".withDouble(\"" + key + "\"," + key + ")";
-            case STRING:
-                return ".withString(\"" + key + "\"," + key + ")";
-            case SERIALIZABLE:
+        String typeName = field.asType().toString();
+        TypeMirror typeMirror = field.asType();
+        TypeKind typeKind = TypeKind.values()[typeUtils.typeExchange(field)];
+
+        String name = Utils.toUpperCaseFirstOne(typeName);
+        logger.info("字段:" + fieldName + "," + name);
+        if (typeMirror.getKind().isPrimitive()) {
+            return ".with" + name + "(\"" + key + "\"," + key + ")";
+        } else {
+            if (typeKind == SERIALIZABLE) {
                 return ".withSerializable(\"" + key + "\"," + key + ")";
-            case PARCELABLE:
+            } else if (typeKind == PARCELABLE) {
                 return ".withParcelable(\"" + key + "\"," + key + ")";
-            default:
-                return ".withObject(\"" + key + "\"," + key + ")";
+            } else {
+                //是否是泛型
+                if (!typeName.contains("<") && typeName.contains(".")) {
+                    int index = typeName.lastIndexOf(".");
+                    name = Utils.toUpperCaseFirstOne(typeName.substring(index + 1));
+                    return ".with" + name + "(\"" + key + "\"," + key + ")";
+                } else {
+                    return ".withObject(\"" + key + "\"," + key + ")";
+                }
+            }
         }
     }
+
     private ParameterSpec getParameter(Element field, Autowired autowired) {
         String fieldName = field.getSimpleName().toString();
         String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
         String typeName = field.asType().toString();
         ParameterSpec.Builder builder;
         TypeMirror typeMirror = field.asType();
-        logger.info("字段:" + fieldName + ",类型:" + typeName);
+//        logger.info("字段:" + fieldName + ",类型:" + typeName);
         //是否原始类型
         if (typeMirror.getKind().isPrimitive()) {
             builder = ParameterSpec.builder(TypeName.get(typeMirror), key);
