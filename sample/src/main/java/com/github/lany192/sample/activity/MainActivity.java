@@ -3,6 +3,9 @@ package com.github.lany192.sample.activity;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.alibaba.android.arouter.AppRouter;
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -33,5 +36,10 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button3).setOnClickListener(v ->
                 AppRouter.get().three("张三", new User("李四", 888), 18)
         );
+        Fragment fragment = AppRouter.get().getHelloFragment("张无忌");
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.add(R.id.fl_fragment_content, fragment);
+        transaction.commit();
     }
 }

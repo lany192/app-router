@@ -17,9 +17,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="goto Two" />
+
     <Button
         android:id="@+id/button3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="goto Three" />
+
+    <FrameLayout
+        android:id="@+id/fl_fragment_content"
+        android:layout_width="match_parent"
+        android:layout_height="500dp" />
 </LinearLayout>
