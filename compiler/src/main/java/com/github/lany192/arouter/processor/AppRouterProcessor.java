@@ -89,7 +89,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                     MethodSpec.Builder builder = MethodSpec
                             .methodBuilder(methodName)
                             .addModifiers(Modifier.PUBLIC)
-                            .addJavadoc("跳转到 " + ClassName.get((TypeElement) element));
+                            .addJavadoc("跳转到{@link " + ClassName.get((TypeElement) element) + "}");
                     Route route = element.getAnnotation(Route.class);
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -113,7 +113,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                     MethodSpec.Builder builder = MethodSpec
                             .methodBuilder("get" + element.getSimpleName().toString())
                             .addModifiers(Modifier.PUBLIC)
-                            .addJavadoc("获取 " + ClassName.get((TypeElement) element));
+                            .addJavadoc("获取{@link " + ClassName.get((TypeElement) element) + "}");
                     Route route = element.getAnnotation(Route.class);
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -144,7 +144,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                     MethodSpec.Builder builder = MethodSpec
                             .methodBuilder(methodName)
                             .addModifiers(Modifier.PUBLIC)
-                            .addJavadoc("跳转到 " + ClassName.get((TypeElement) element));
+                            .addJavadoc("跳转到{@link " + ClassName.get((TypeElement) element) + "}");
                     Route route = element.getAnnotation(Route.class);
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -168,7 +168,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                     MethodSpec.Builder builder = MethodSpec
                             .methodBuilder("get" + element.getSimpleName().toString())
                             .addModifiers(Modifier.PUBLIC)
-                            .addJavadoc("获取 " + ClassName.get((TypeElement) element));
+                            .addJavadoc("获取{@link " + ClassName.get((TypeElement) element) + "}");
                     Route route = element.getAnnotation(Route.class);
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
