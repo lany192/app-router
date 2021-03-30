@@ -26,7 +26,7 @@ import javax.lang.model.element.TypeElement;
  * @author Administrator
  */
 @AutoService(Processor.class)
-public class RouterPathProcessor extends AbstractProcessor {
+public class RoutePathProcessor extends AbstractProcessor {
     private Logger logger;
 
     @Override
@@ -79,7 +79,7 @@ public class RouterPathProcessor extends AbstractProcessor {
     }
 
     private void createRouterPath(List<FieldSpec> fields) throws Exception {
-        TypeSpec.Builder builder = TypeSpec.classBuilder("RouterPath")
+        TypeSpec.Builder builder = TypeSpec.classBuilder("RoutePath")
                 .addJavadoc("路径集合,自动生成,请勿编辑!")
                 .addModifiers(Modifier.PUBLIC);
         builder.addFields(fields);
