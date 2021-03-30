@@ -9,10 +9,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.github.lany192.sample.Constants;
 import com.github.lany192.sample.R;
 
-@Route(path = Constants.APP_ONE)
+@Route(path = "/app/one")
 public class OneActivity extends AppCompatActivity {
     @Autowired(name = "ownerId", desc = "用户id", required = true)
     int ownerId;
@@ -28,7 +27,6 @@ public class OneActivity extends AppCompatActivity {
     byte data3;
     @Autowired(desc = "数据D")
     String data4;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

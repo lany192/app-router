@@ -15,7 +15,7 @@ import com.github.lany192.sample.entity.Person;
 
 import java.util.List;
 
-@Route(path = Constants.APP_TWO)
+@Route(path = "/app/two")
 public class TwoActivity extends AppCompatActivity {
     @Autowired(name = "ownerId", desc = "用户id")
     long ownerId;

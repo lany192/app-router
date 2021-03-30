@@ -4,9 +4,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
+import com.alibaba.android.arouter.RoutePath;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.service.PathReplaceService;
-import com.github.lany192.sample.Constants;
 
 /**
  * @author Administrator
@@ -24,7 +24,7 @@ public class PathReplaceServiceImpl implements PathReplaceService {
     @Override
     public String forString(String path) {
         if ("/one".equals(path)) {
-            return Constants.APP_ONE;
+            return RoutePath.APP_ONE;
         }
         return path;
     }

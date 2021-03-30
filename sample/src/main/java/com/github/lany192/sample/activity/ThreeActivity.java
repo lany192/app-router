@@ -13,7 +13,7 @@ import com.github.lany192.sample.Constants;
 import com.github.lany192.sample.R;
 import com.github.lany192.sample.entity.User;
 
-@Route(path = Constants.APP_THREE)
+@Route(path = "/app/three")
 public class ThreeActivity extends AppCompatActivity {
     @Autowired(name = "username", desc = "名称")
     String name;

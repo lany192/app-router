@@ -12,7 +12,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.alibaba.android.arouter.AppRouter;
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.github.lany192.sample.Constants;
 import com.github.lany192.sample.R;
 import com.github.lany192.sample.entity.Person;
 import com.github.lany192.sample.entity.User;
@@ -23,7 +22,7 @@ import com.klinker.android.link_builder.TouchableMovementMethod;
 import java.util.ArrayList;
 import java.util.List;
 
-@Route(path = Constants.APP_MAIN, group = "app", name = "main")
+@Route(path = "/app/main", group = "app", name = "main")
 public class MainActivity extends AppCompatActivity {
 
     @Override

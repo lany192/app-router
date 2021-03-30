@@ -6,10 +6,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
-import com.github.lany192.sample.Constants
 import com.github.lany192.sample.R
 
-@Route(path = Constants.APP_FOUR)
+@Route(path = "/app/four")
 class FourActivity : AppCompatActivity() {
     @JvmField
     @Autowired(name = "title", desc = "标题")
