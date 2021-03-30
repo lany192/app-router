@@ -22,7 +22,7 @@ import com.klinker.android.link_builder.TouchableMovementMethod;
 import java.util.ArrayList;
 import java.util.List;
 
-@Route(path = "/app/main", group = "app", name = "main")
+@Route(path = "/app/main")
 public class MainActivity extends AppCompatActivity {
 
     @Override

@@ -14,7 +14,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.github.lany192.sample.R;
 
-@Route(path = "/app/hello", group = "app")
+@Route(path = "/app/hello")
 public class HelloFragment extends Fragment {
     @Autowired(name = "username", desc = "名称")
     String name;
