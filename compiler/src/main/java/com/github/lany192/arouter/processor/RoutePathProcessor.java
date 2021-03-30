@@ -66,8 +66,17 @@ public class RoutePathProcessor extends AbstractProcessor {
                         .build();
                 fields.add(fieldSpec);
             }
+            TypeSpec.Builder builder = TypeSpec.classBuilder("RoutePath")
+                    .addJavadoc("路径集合,自动生成,请勿编辑!")
+                    .addModifiers(Modifier.PUBLIC);
+            builder.addFields(fields);
+            JavaFile javaFile = JavaFile
+                    .builder("com.alibaba.android.arouter", builder.build())
+                    // 设置表示缩进的字符串
+                    .indent("    ")
+                    .build();
             try {
-                createRouterPath(fields);
+                javaFile.writeTo(processingEnv.getFiler());
             } catch (Exception e) {
                 logger.error(e);
             }
@@ -76,18 +85,5 @@ public class RoutePathProcessor extends AbstractProcessor {
             return false;
         }
         return true;
-    }
-
-    private void createRouterPath(List<FieldSpec> fields) throws Exception {
-        TypeSpec.Builder builder = TypeSpec.classBuilder("RoutePath")
-                .addJavadoc("路径集合,自动生成,请勿编辑!")
-                .addModifiers(Modifier.PUBLIC);
-        builder.addFields(fields);
-        JavaFile javaFile = JavaFile
-                .builder("com.alibaba.android.arouter", builder.build())
-                // 设置表示缩进的字符串
-                .indent("    ")
-                .build();
-        javaFile.writeTo(processingEnv.getFiler());
     }
 }
