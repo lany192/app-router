@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.Filer;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
@@ -44,7 +43,6 @@ import static com.alibaba.android.arouter.facade.enums.TypeKind.SERIALIZABLE;
  */
 @AutoService(Processor.class)
 public class AppRouterProcessor extends AbstractProcessor {
-    private Filer mFiler;
     private Logger logger;
     private Types types;
     private TypeMirror iProvider = null;
@@ -53,12 +51,8 @@ public class AppRouterProcessor extends AbstractProcessor {
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
-        mFiler = processingEnv.getFiler();
         types = processingEnv.getTypeUtils();
         typeUtils = new TypeUtils(types, processingEnv.getElementUtils());
-
-        mFiler = processingEnv.getFiler();
-        types = processingEnv.getTypeUtils();
         logger = new Logger(processingEnv.getMessager());
         iProvider = processingEnv.getElementUtils().getTypeElement(Consts.IPROVIDER).asType();
         logger.info("初始化");
@@ -184,7 +178,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                             builder.addCode(makeCode(field, autowired));
                         }
                     }
-                    builder.addCode(".navigation();");
+                    builder.addCode("\n.navigation();");
                     builder.returns(TypeName.get(element.asType()));
                     methods.add(builder.build());
                 } else {
@@ -213,22 +207,22 @@ public class AppRouterProcessor extends AbstractProcessor {
         String name = Utils.toUpperCaseFirstOne(typeName);
         logger.info("字段:" + fieldName + "," + name);
         if (typeMirror.getKind().isPrimitive()) {
-            return ".with" + name + "(\"" + key + "\"," + key + ")";
+            return "\n.with" + name + "(\"" + key + "\"," + key + ")";
         } else {
             if (typeKind == SERIALIZABLE) {
-                return ".withSerializable(\"" + key + "\"," + key + ")";
+                return "\n.withSerializable(\"" + key + "\"," + key + ")";
             } else if (typeKind == PARCELABLE) {
-                return ".withParcelable(\"" + key + "\"," + key + ")";
+                return "\n.withParcelable(\"" + key + "\"," + key + ")";
             } else {
                 if (typeName.startsWith("java.lang") || typeName.startsWith("java.util")) {
                     //是否是泛型
                     if (!typeName.contains("<") && typeName.contains(".")) {
                         int index = typeName.lastIndexOf(".");
                         name = Utils.toUpperCaseFirstOne(typeName.substring(index + 1));
-                        return ".with" + name + "(\"" + key + "\"," + key + ")";
+                        return "\n.with" + name + "(\"" + key + "\"," + key + ")";
                     }
                 }
-                return ".withObject(\"" + key + "\"," + key + ")";
+                return "\n.withObject(\"" + key + "\"," + key + ")";
             }
         }
     }
@@ -342,7 +336,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                 // 设置表示缩进的字符串
                 .indent("    ")
                 .build();
-        javaFile.writeTo(mFiler);
+        javaFile.writeTo(processingEnv.getFiler());
     }
 
 

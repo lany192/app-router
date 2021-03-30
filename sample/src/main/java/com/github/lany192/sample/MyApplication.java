@@ -14,6 +14,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
         ARouter.init(this);
+        ARouter.openLog();
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
 
             @Override
