@@ -53,7 +53,6 @@ public class RouterPathProcessor extends AbstractProcessor {
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Route.class);
         if (elements != null && !elements.isEmpty()) {
             List<FieldSpec> fields = new ArrayList<>();
-            logger.info("---------------------------------------------------------------------------------------");
             for (Element element : elements) {
                 Route route = element.getAnnotation(Route.class);
                 String path = route.path();
