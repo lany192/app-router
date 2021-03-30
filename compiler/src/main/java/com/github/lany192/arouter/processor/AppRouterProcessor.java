@@ -93,21 +93,21 @@ public class AppRouterProcessor extends AbstractProcessor {
                         }
                     }
                     builder.addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
-                    builder.addCode(".build(\"" + route.path() + "\")");
+                    builder.addCode("\n.build(\"" + route.path() + "\")");
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                             Autowired autowired = field.getAnnotation(Autowired.class);
                             builder.addCode(makeCode(field, autowired));
                         }
                     }
-                    builder.addCode(".navigation();");
+                    builder.addCode("\n.navigation();");
                     builder.returns(void.class);
                     methods.add(builder.build());
                 } else if (isFragment(element)) { // Fragment
                     MethodSpec.Builder builder = MethodSpec
                             .methodBuilder("get" + element.getSimpleName().toString())
                             .addModifiers(Modifier.PUBLIC)
-                            .addJavadoc("获取{@link " + ClassName.get((TypeElement) element) + "}");
+                            .addJavadoc("获取实例{@link " + ClassName.get((TypeElement) element) + "}");
                     Route route = element.getAnnotation(Route.class);
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -116,14 +116,14 @@ public class AppRouterProcessor extends AbstractProcessor {
                         }
                     }
                     builder.addCode("return (Fragment)$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
-                    builder.addCode(".build(\"" + route.path() + "\")");
+                    builder.addCode("\n.build(\"" + route.path() + "\")");
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                             Autowired autowired = field.getAnnotation(Autowired.class);
                             builder.addCode(makeCode(field, autowired));
                         }
                     }
-                    builder.addCode(".navigation();");
+                    builder.addCode("\n.navigation();");
                     if (types.isSubtype(element.asType(), getTypeMirror(Consts.FRAGMENT_X))) {
                         builder.returns(ClassName.get("androidx.fragment.app", "Fragment"));
                     } else if (types.isSubtype(element.asType(), getTypeMirror(Consts.FRAGMENT_V4))) {
@@ -147,14 +147,14 @@ public class AppRouterProcessor extends AbstractProcessor {
                         }
                     }
                     builder.addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
-                    builder.addCode(".build(\"" + route.path() + "\")");
+                    builder.addCode("\n.build(\"" + route.path() + "\")");
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                             Autowired autowired = field.getAnnotation(Autowired.class);
                             builder.addCode(makeCode(field, autowired));
                         }
                     }
-                    builder.addCode(".navigation();");
+                    builder.addCode("\n.navigation();");
                     builder.returns(void.class);
                     methods.add(builder.build());
                 } else if (types.isSubtype(element.asType(), getTypeMirror(Consts.SERVICE))) {// Service
@@ -171,7 +171,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                         }
                     }
                     builder.addCode("return (" + element.getSimpleName().toString() + ")$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
-                    builder.addCode(".build(\"" + route.path() + "\")");
+                    builder.addCode("\n.build(\"" + route.path() + "\")");
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                             Autowired autowired = field.getAnnotation(Autowired.class);
