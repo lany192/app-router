@@ -77,6 +77,8 @@ public class AppRouterProcessor extends AbstractProcessor {
         if (elements != null && !elements.isEmpty()) {
             Set<? extends Element> routeElements = roundEnv.getElementsAnnotatedWith(Route.class);
             List<MethodSpec> methods = new ArrayList<>();
+            ClassName routerClassName = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
+            ClassName routePathClassName = ClassName.get("com.alibaba.android.arouter", "RoutePath");
             for (Element element : routeElements) {
                 if (isActivity(element)) { // Activity
                     String methodName = Utils.toLowerCaseFirstOne(element.getSimpleName().toString().replace("Activity", ""));
@@ -92,8 +94,8 @@ public class AppRouterProcessor extends AbstractProcessor {
                             builder.addParameter(getParameter(field, autowired));
                         }
                     }
-                    builder.addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
-                    builder.addCode("\n.build(\"" + route.path() + "\")");
+                    builder.addCode("$T.getInstance()", routerClassName);
+                    builder.addCode("\n.build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                             Autowired autowired = field.getAnnotation(Autowired.class);
@@ -115,8 +117,8 @@ public class AppRouterProcessor extends AbstractProcessor {
                             builder.addParameter(getParameter(field, autowired));
                         }
                     }
-                    builder.addCode("return (Fragment)$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
-                    builder.addCode("\n.build(\"" + route.path() + "\")");
+                    builder.addCode("return (Fragment)$T.getInstance()", routerClassName);
+                    builder.addCode("\n.build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                             Autowired autowired = field.getAnnotation(Autowired.class);
@@ -146,8 +148,8 @@ public class AppRouterProcessor extends AbstractProcessor {
                             builder.addParameter(getParameter(field, autowired));
                         }
                     }
-                    builder.addCode("$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
-                    builder.addCode("\n.build(\"" + route.path() + "\")");
+                    builder.addCode("$T.getInstance()", routerClassName);
+                    builder.addCode("\n.build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                             Autowired autowired = field.getAnnotation(Autowired.class);
@@ -170,8 +172,8 @@ public class AppRouterProcessor extends AbstractProcessor {
                             builder.addParameter(getParameter(field, autowired));
                         }
                     }
-                    builder.addCode("return (" + element.getSimpleName().toString() + ")$T.getInstance()", ClassName.get("com.alibaba.android.arouter.launcher", "ARouter"));
-                    builder.addCode("\n.build(\"" + route.path() + "\")");
+                    builder.addCode("return (" + element.getSimpleName().toString() + ")$T.getInstance()", routerClassName);
+                    builder.addCode("\n.build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                             Autowired autowired = field.getAnnotation(Autowired.class);
