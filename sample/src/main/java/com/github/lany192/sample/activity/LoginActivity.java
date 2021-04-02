@@ -16,7 +16,7 @@ import com.github.lany192.sample.UserHelper;
  */
 @Route(path = "/app/login")
 public class LoginActivity extends AppCompatActivity {
-    @Autowired(name = "path", desc = "跳转路径")
+    @Autowired(name = "route_path", desc = "跳转路径,不含参数")
     String path;
 
     @Override

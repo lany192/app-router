@@ -4,12 +4,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.alibaba.android.arouter.AppRouter;
 import com.alibaba.android.arouter.RoutePath;
 import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.annotation.Interceptor;
 import com.alibaba.android.arouter.facade.callback.InterceptorCallback;
 import com.alibaba.android.arouter.facade.template.IInterceptor;
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.github.lany192.sample.UserHelper;
 
 import java.util.ArrayList;
@@ -37,10 +37,8 @@ public class LoginInterceptor implements IInterceptor {
             callback.onInterrupt(null);
             String path = postcard.getPath();
             Bundle bundle = postcard.getExtras();
-            ARouter.getInstance().build(RoutePath.APP_LOGIN)
-                    .with(bundle)
-                    .withString("path", path)
-                    .navigation();
+            bundle.putString("route_path", path);
+            AppRouter.get().skip(RoutePath.APP_LOGIN, bundle);
             return;
         }
         Log.i(TAG, "不拦截，直接通过" + postcard);
