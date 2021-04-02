@@ -45,6 +45,9 @@
         <activity
             android:name=".activity.FourActivity"
             android:label="FourActivity" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:label="LoginActivity" />
     </application>
 
 </manifest>

@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.alibaba.android.arouter.AppRouter;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.github.lany192.sample.R;
+import com.github.lany192.sample.UserHelper;
 import com.github.lany192.sample.entity.Person;
 import com.github.lany192.sample.entity.User;
 import com.klinker.android.link_builder.Link;
@@ -40,7 +41,11 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
         findViewById(R.id.button3).setOnClickListener(v ->
-                AppRouter.get().three("张三", new User("李四", 888), 18)
+                AppRouter.get().three("张三,我来至按钮", new User("李四", 888), 18)
+        );
+        findViewById(R.id.button4).setOnClickListener(v -> {
+                    UserHelper.get().setLogin(false);
+                }
         );
         Fragment fragment = AppRouter.get().getHelloFragment("张无忌");
         FragmentManager manager = getSupportFragmentManager();
