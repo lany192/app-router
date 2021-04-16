@@ -37,7 +37,7 @@ public class LoginInterceptor implements IInterceptor {
             callback.onInterrupt(null);
             String path = postcard.getPath();
             Bundle bundle = postcard.getExtras();
-            bundle.putString("route_path", path);
+            bundle.putString(RoutePath.KEY_ROUTE_PATH, path);
             AppRouter.get().skip(RoutePath.APP_LOGIN, bundle);
             return;
         }

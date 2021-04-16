@@ -70,6 +70,11 @@ public class RoutePathProcessor extends AbstractProcessor {
                     .addJavadoc("路径集合,自动生成,请勿编辑!")
                     .addModifiers(Modifier.PUBLIC);
             builder.addFields(fields);
+            builder.addField(FieldSpec
+                    .builder(String.class, "KEY_ROUTE_PATH", Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+                    .addJavadoc("登录界面需要携带的路径参数key(非界面路径)")
+                    .initializer("\"route_path\"")
+                    .build());
             JavaFile javaFile = JavaFile
                     .builder("com.alibaba.android.arouter", builder.build())
                     // 设置表示缩进的字符串
