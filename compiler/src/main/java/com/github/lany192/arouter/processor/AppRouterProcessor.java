@@ -95,7 +95,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                         }
                     }
                     builder.addCode("$T.getInstance()", routerClassName);
-                    builder.addCode("\n.build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
+                    builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                             Autowired autowired = field.getAnnotation(Autowired.class);
@@ -118,7 +118,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                         }
                     }
                     builder.addCode("return (Fragment)$T.getInstance()", routerClassName);
-                    builder.addCode("\n.build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
+                    builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                             Autowired autowired = field.getAnnotation(Autowired.class);
@@ -149,7 +149,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                         }
                     }
                     builder.addCode("$T.getInstance()", routerClassName);
-                    builder.addCode("\n.build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
+                    builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                             Autowired autowired = field.getAnnotation(Autowired.class);
@@ -173,7 +173,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                         }
                     }
                     builder.addCode("return (" + element.getSimpleName().toString() + ")$T.getInstance()", routerClassName);
-                    builder.addCode("\n.build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
+                    builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
                     for (Element field : element.getEnclosedElements()) {
                         if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                             Autowired autowired = field.getAnnotation(Autowired.class);
