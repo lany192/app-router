@@ -1,7 +1,7 @@
 package com.github.lany192.arouter.utils;
 
 public class Consts {
-    public static final String PROJECT = "AppRouter";
+    public static final String PROJECT = "\nAppRouter";
 
 
 

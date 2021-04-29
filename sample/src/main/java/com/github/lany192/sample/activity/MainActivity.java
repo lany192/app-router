@@ -47,6 +47,16 @@ public class MainActivity extends AppCompatActivity {
                     UserHelper.get().setLogin(false);
                 }
         );
+        findViewById(R.id.button5).setOnClickListener(v -> {
+                    List<User> items = new ArrayList<>();
+                    items.add(new User("战三", 123));
+                    items.add(new User("哈哈", 321));
+                    List<Person> items2 = new ArrayList<>();
+                    items2.add(new Person("2战三", 123));
+                    items2.add(new Person("2哈哈", 321));
+                    AppRouter.get().five(items, items2);
+                }
+        );
         Fragment fragment = AppRouter.get().getHelloFragment("张无忌");
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

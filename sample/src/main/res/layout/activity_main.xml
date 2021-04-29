@@ -41,7 +41,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="退出登录" />
-
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="第4个页面" />
         <FrameLayout
             android:id="@+id/fl_fragment_content"
             android:layout_width="match_parent"
