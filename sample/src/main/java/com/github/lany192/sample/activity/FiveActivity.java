@@ -33,8 +33,6 @@ public class FiveActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         TextView showText = findViewById(R.id.show_text_view);
-
-        ArrayList<User> users = (ArrayList<User>) getIntent().getParcelableExtra("users");
         showText.setText(JsonUtils.object2json(users) + "\n" + JsonUtils.object2json(persons));
     }
 

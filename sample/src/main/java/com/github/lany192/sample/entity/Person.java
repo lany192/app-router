@@ -1,6 +1,8 @@
 package com.github.lany192.sample.entity;
 
-public class Person {
+import java.io.Serializable;
+
+public class Person implements Serializable {
     private String name;
     private int id;
 
