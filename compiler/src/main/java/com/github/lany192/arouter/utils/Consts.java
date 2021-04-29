@@ -27,7 +27,7 @@ public class Consts {
     public static final String IPROVIDER = FACADE_PACKAGE + TEMPLATE_PACKAGE + ".IProvider";
 
     // Log
-    static final String PREFIX_OF_LOGGER = PROJECT + " >>> ";
+    static final String PREFIX_OF_LOGGER = PROJECT + " -> ";
 
 
     // System interface

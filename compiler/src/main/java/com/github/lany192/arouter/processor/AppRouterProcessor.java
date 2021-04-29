@@ -208,17 +208,17 @@ public class AppRouterProcessor extends AbstractProcessor {
 
         String name = Utils.toUpperCaseFirstOne(typeName);
         if (typeMirror.getKind().isPrimitive()) {
-            logger.info("字段:" + fieldName + ",基本类型:" + name);
+            logger.info("字段:" + fieldName + " -> 基本类型:" + name);
             return "\n.with" + name + "(\"" + key + "\"," + key + ")";
         } else {
             if (typeKind == SERIALIZABLE) {
-                logger.info("字段:" + fieldName + ",Serializable类型:" + name);
+                logger.info("字段:" + fieldName + " -> Serializable类型:" + name);
                 return "\n.withSerializable(\"" + key + "\",(" + typeName + ")" + key + ")";
             } else if (typeKind == PARCELABLE) {
-                logger.info("字段:" + fieldName + ",Parcelable类型:" + name);
+                logger.info("字段:" + fieldName + " -> Parcelable类型:" + name);
                 return "\n.withParcelable(\"" + key + "\",(" + typeName + ")" + key + ")";
             } else {
-                logger.info("字段:" + fieldName + ",字段类型:" + name);
+                logger.info("字段:" + fieldName + " -> 字段类型:" + name);
                 if (typeName.startsWith("java.lang") || typeName.startsWith("java.util")) {
                     //是否是泛型
                     if (!typeName.contains("<") && typeName.contains(".")) {
