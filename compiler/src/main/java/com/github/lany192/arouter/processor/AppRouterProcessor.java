@@ -16,7 +16,7 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-import com.sun.tools.internal.ws.wsdl.document.jaxws.Exception;
+import java.lang.Exception;
 
 import org.apache.commons.lang3.StringUtils;
 
