@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                     AppRouter.get().five(items, items2);
                 }
         );
-        Fragment fragment = AppRouter.get().getHelloFragment("张无忌");
+        Fragment fragment = AppRouter.get().getHello("张无忌");
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.fl_fragment_content, fragment);

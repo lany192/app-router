@@ -16,6 +16,7 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
+import com.sun.tools.internal.ws.wsdl.document.jaxws.Exception;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -107,7 +108,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                     methods.add(builder.build());
                 } else if (isFragment(element)) { // Fragment
                     MethodSpec.Builder builder = MethodSpec
-                            .methodBuilder("get" + element.getSimpleName().toString())
+                            .methodBuilder("get" + element.getSimpleName().toString().replace("Fragment", ""))
                             .addModifiers(Modifier.PUBLIC)
                             .addJavadoc("获取实例{@link " + ClassName.get((TypeElement) element) + "}");
                     Route route = element.getAnnotation(Route.class);
