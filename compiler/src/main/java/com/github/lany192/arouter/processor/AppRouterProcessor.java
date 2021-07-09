@@ -81,13 +81,11 @@ public class AppRouterProcessor extends AbstractProcessor {
         if (elements != null && !elements.isEmpty()) {
             Set<? extends Element> routeElements = roundEnv.getElementsAnnotatedWith(Route.class);
             List<MethodSpec> methods = new ArrayList<>();
-
             for (Element element : routeElements) {
                 if (isActivity(element)) { // Activity
                     methods.add(skipActivity(element));
                 } else if (isFragment(element)) { // Fragment
                     methods.add(getFragmentInstance(element));
-                    methods.add(showFragmentInstance(element));
                 } else if (types.isSubtype(element.asType(), iProvider)) {// IProvider
                     logger.info(">>> Found provider route: " + element.asType().toString() + " <<<");
                     methods.add(getProviderInstance(element));
@@ -108,41 +106,6 @@ public class AppRouterProcessor extends AbstractProcessor {
             return false;
         }
         return true;
-    }
-
-
-    /**
-     * 显示Fragment实例
-     */
-    private MethodSpec showFragmentInstance(Element element) {
-        MethodSpec.Builder builder = MethodSpec
-                .methodBuilder("show" + element.getSimpleName().toString().replace("Fragment", ""))
-                .addModifiers(Modifier.PUBLIC)
-                .addJavadoc("显示实例{@link " + ClassName.get((TypeElement) element) + "}");
-        Route route = element.getAnnotation(Route.class);
-        builder.addParameter(ParameterSpec
-                .builder(ClassName.get("androidx.fragment.app", "FragmentActivity"), "activity")
-                .addJavadoc("Activity实例\n")
-                .build());
-        for (Element field : element.getEnclosedElements()) {
-            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                Autowired autowired = field.getAnnotation(Autowired.class);
-                builder.addParameter(getParameter(field, autowired));
-            }
-        }
-
-        builder.addCode("Fragment fragment = (Fragment)$T.getInstance()", routerClassName);
-        builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
-        for (Element field : element.getEnclosedElements()) {
-            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                Autowired autowired = field.getAnnotation(Autowired.class);
-                builder.addCode(makeCode(field, autowired));
-            }
-        }
-        builder.addCode("\n.navigation();\n");
-        builder.addCode("show(activity,fragment);");
-        builder.returns(void.class);
-        return builder.build();
     }
 
     /**
@@ -248,7 +211,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                 builder.addParameter(getParameter(field, autowired));
             }
         }
-        builder.addCode("return (Fragment)$T.getInstance()", routerClassName);
+        builder.addCode("return ($T)$T.getInstance()", ClassName.get((TypeElement) element) ,routerClassName);
         builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -257,13 +220,7 @@ public class AppRouterProcessor extends AbstractProcessor {
             }
         }
         builder.addCode("\n.navigation();");
-        if (types.isSubtype(element.asType(), getTypeMirror(Consts.FRAGMENT_X))) {
-            builder.returns(ClassName.get("androidx.fragment.app", "Fragment"));
-        } else if (types.isSubtype(element.asType(), getTypeMirror(Consts.FRAGMENT_V4))) {
-            builder.returns(ClassName.get("android.support.v4.app", "Fragment"));
-        } else {
-            builder.returns(ClassName.get("android.app", "Fragment"));
-        }
+        builder.returns(ClassName.get((TypeElement) element));
         return builder.build();
     }
 
@@ -399,64 +356,6 @@ public class AppRouterProcessor extends AbstractProcessor {
                 .returns(void.class)
                 .build();
         builder.addMethod(skipMethodSpec3);
-
-        MethodSpec methodSpec3 = MethodSpec.methodBuilder("show")
-                .addJavadoc("显示Fragment")
-                .addModifiers(Modifier.PUBLIC)
-                .addParameter(ParameterSpec
-                        .builder(ClassName.get("androidx.fragment.app", "FragmentManager"), "fragmentManager")
-                        .addJavadoc("Fragment管理器\n")
-                        .build())
-                .addParameter(ParameterSpec
-                        .builder(ClassName.get("androidx.fragment.app", "Fragment"), "fragment")
-                        .addJavadoc("fragment实例\n")
-                        .build())
-                .addParameter(ParameterSpec
-                        .builder(String.class, "tag")
-                        .addJavadoc("fragment标记\n")
-                        .build())
-                .addCode("$T ft = fragmentManager.beginTransaction();\n", ClassName.get("androidx.fragment.app", "FragmentTransaction"))
-                .addCode("ft.add(fragment, tag);\n")
-                .addCode("ft.commitAllowingStateLoss();\n")
-                .returns(void.class)
-                .build();
-        builder.addMethod(methodSpec3);
-
-        MethodSpec methodSpec4 = MethodSpec.methodBuilder("show")
-                .addJavadoc("显示Fragment")
-                .addModifiers(Modifier.PUBLIC)
-                .addParameter(ParameterSpec
-                        .builder(ClassName.get("androidx.fragment.app", "FragmentManager"), "fragmentManager")
-                        .addJavadoc("Fragment管理器\n")
-                        .build())
-                .addParameter(ParameterSpec
-                        .builder(ClassName.get("androidx.fragment.app", "Fragment"), "fragment")
-                        .addJavadoc("fragment实例")
-                        .build())
-                .addStatement("show(fragmentManager, fragment, fragment.getClass().getName())")
-                .returns(void.class)
-                .build();
-        builder.addMethod(methodSpec4);
-
-        MethodSpec methodSpec5 = MethodSpec.methodBuilder("show")
-                .addJavadoc("显示Fragment")
-                .addModifiers(Modifier.PUBLIC)
-                .addParameter(ParameterSpec
-                        .builder(ClassName.get("androidx.fragment.app", "FragmentActivity"), "activity")
-                        .addJavadoc("Activity实例\n")
-                        .build())
-                .addParameter(ParameterSpec
-                        .builder(ClassName.get("androidx.fragment.app", "Fragment"), "fragment")
-                        .addJavadoc("fragment实例")
-                        .build())
-                .addCode("if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) {\n")
-                .addCode("    show(activity.getSupportFragmentManager(), fragment, fragment.getClass().getName());\n")
-                .addCode("} else {\n")
-                .addCode("    $T.e(TAG,\"Fragment宿主不存在或者不可用，不能调起对话框\");\n", ClassName.get("android.util", "Log"))
-                .addCode("}\n")
-                .returns(void.class)
-                .build();
-        builder.addMethod(methodSpec5);
 
         for (MethodSpec method : methods) {
             builder.addMethod(method);
