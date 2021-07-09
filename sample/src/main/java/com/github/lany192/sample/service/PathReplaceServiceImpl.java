@@ -46,7 +46,7 @@ public class PathReplaceServiceImpl implements PathReplaceService {
             return false;
         }
         for (String key : map.keySet()) {
-            if (key.toLowerCase().contains(host.toLowerCase())) {
+            if (key.toLowerCase().equals(host.toLowerCase())) {
                 return true;
             }
         }
@@ -61,7 +61,7 @@ public class PathReplaceServiceImpl implements PathReplaceService {
      */
     private String getNewHostByOldHost(String host) {
         for (String key : map.keySet()) {
-            if (key.toLowerCase().contains(host.toLowerCase())) {
+            if (key.toLowerCase().equals(host.toLowerCase())) {
                 return map.get(key);
             }
         }
@@ -84,24 +84,43 @@ public class PathReplaceServiceImpl implements PathReplaceService {
             } else {
                 host = path.substring(beginIndex + 2);
             }
-            Log.i(TAG, "host: " + host);
             if (checkHost(host)) {
                 String newHost = getNewHostByOldHost(host);
-                Log.i(TAG, "替换前: " + path);
                 if (path.contains("?") && newHost.contains("?")) {
                     path = path.replace(host + "?", newHost + "&");
                 } else {
                     path = path.replace(host, newHost);
                 }
-                Log.i(TAG, "替换后: " + path);
             } else {
-                //TODO 如果不符合格式的协议跳转
-                if (host.contains("//")) {
-
-                } else {
-
+                //只有斜杆开头的才是符合要求的，不符合要求的自动添加一个error，用于防止报错
+                if (!host.startsWith("/")) {
+                    path = path.replace(host, "/error/" + host);
+//                    log.i("协议不符合规则,映射表和自定义协议中都找不到:" + path);
                 }
             }
+            return path;
+        } else {
+            return checkPath(path);
+        }
+    }
+
+    /**
+     * 提前检查路径是否合理,避免ARouter报错，检查规则参考ARouter内部判断
+     */
+    private String checkPath(String path) {
+        if (TextUtils.isEmpty(path) || !path.startsWith("/")) {
+//            log.e("协议不符合规则，重置跳转到主界面，原路径：" + path);
+            return "/error/" + path;
+        }
+        try {
+            String group = path.substring(1, path.indexOf("/", 1));
+            if (TextUtils.isEmpty(group)) {
+//                log.e("协议不符合规则，重置跳转到主界面，原路径：" + path);
+                return "/error/" + path;
+            }
+        } catch (Exception e) {
+//            log.e("协议不符合规则，重置跳转到主界面，原路径：" + path);
+            return "/error/" + path;
         }
         return path;
     }

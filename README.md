@@ -11,7 +11,7 @@
     }
 # app模块build.gradle引入 
     dependencies {
-        annotationProcessor 'com.github.lany192:app-router:1.0.0'
+        annotationProcessor 'com.github.lany192:app-router:1.1.2'
     }
 
 ### 调用方法，编译后会自动生成AppRouter类，收集了使用了@Route注解的控件调整方法
@@ -21,3 +21,5 @@
     
     //获取HelloFragment对象实例
     Fragment fragment = AppRouter.get().getHelloFragment("张无忌");
+    
+#反馈  如有任何问题或者疑问，欢迎提问 https://github.com/lany192/app-router/issues

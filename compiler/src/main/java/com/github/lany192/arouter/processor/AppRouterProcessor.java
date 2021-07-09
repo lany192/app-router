@@ -273,9 +273,8 @@ public class AppRouterProcessor extends AbstractProcessor {
 
         ClassName routerType = ClassName.get("com.alibaba.android.arouter", "AppRouter");
 
-
-        FieldSpec fieldSpec = FieldSpec.builder(routerType, "instance", Modifier.VOLATILE, Modifier.STATIC, Modifier.PRIVATE).build();
-        builder.addField(fieldSpec);
+        builder.addField(FieldSpec.builder(String.class, "TAG", Modifier.FINAL, Modifier.PRIVATE).initializer("\"AppRouter\"").build());
+        builder.addField(FieldSpec.builder(routerType, "instance", Modifier.VOLATILE, Modifier.STATIC, Modifier.PRIVATE).build());
 
         builder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build());
 
@@ -333,6 +332,64 @@ public class AppRouterProcessor extends AbstractProcessor {
                 .returns(void.class)
                 .build();
         builder.addMethod(skipMethodSpec3);
+
+        MethodSpec methodSpec3 = MethodSpec.methodBuilder("show")
+                .addJavadoc("显示Fragment")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(ParameterSpec
+                        .builder(ClassName.get("androidx.fragment.app", "FragmentManager"), "fragmentManager")
+                        .addJavadoc("Fragment管理器\n")
+                        .build())
+                .addParameter(ParameterSpec
+                        .builder(ClassName.get("androidx.fragment.app", "Fragment"), "fragment")
+                        .addJavadoc("fragment实例\n")
+                        .build())
+                .addParameter(ParameterSpec
+                        .builder(String.class, "tag")
+                        .addJavadoc("fragment标记\n")
+                        .build())
+                .addCode("$T ft = fragmentManager.beginTransaction();\n", ClassName.get("androidx.fragment.app", "FragmentTransaction"))
+                .addCode("ft.add(fragment, tag);\n")
+                .addCode("ft.commitAllowingStateLoss();\n")
+                .returns(void.class)
+                .build();
+        builder.addMethod(methodSpec3);
+
+        MethodSpec methodSpec4 = MethodSpec.methodBuilder("show")
+                .addJavadoc("显示Fragment")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(ParameterSpec
+                        .builder(ClassName.get("androidx.fragment.app", "FragmentManager"), "fragmentManager")
+                        .addJavadoc("Fragment管理器\n")
+                        .build())
+                .addParameter(ParameterSpec
+                        .builder(ClassName.get("androidx.fragment.app", "Fragment"), "fragment")
+                        .addJavadoc("fragment实例")
+                        .build())
+                .addStatement("show(fragmentManager, fragment, fragment.getClass().getName())")
+                .returns(void.class)
+                .build();
+        builder.addMethod(methodSpec4);
+
+        MethodSpec methodSpec5 = MethodSpec.methodBuilder("show")
+                .addJavadoc("显示Fragment")
+                .addModifiers(Modifier.PUBLIC)
+                .addParameter(ParameterSpec
+                        .builder(ClassName.get("androidx.fragment.app", "FragmentActivity"), "activity")
+                        .addJavadoc("Activity实例\n")
+                        .build())
+                .addParameter(ParameterSpec
+                        .builder(ClassName.get("androidx.fragment.app", "Fragment"), "fragment")
+                        .addJavadoc("fragment实例")
+                        .build())
+                .addCode("if (activity != null && !activity.isFinishing() && !activity.isDestroyed()) {\n")
+                .addCode("    show(activity.getSupportFragmentManager(), fragment, fragment.getClass().getName());\n")
+                .addCode("} else {\n")
+                .addCode("    $T.e(TAG,\"Fragment宿主不存在或者不可用，不能调起对话框\");\n", ClassName.get("android.util", "Log"))
+                .addCode("}\n")
+                .returns(void.class)
+                .build();
+        builder.addMethod(methodSpec5);
 
         for (MethodSpec method : methods) {
             builder.addMethod(method);
