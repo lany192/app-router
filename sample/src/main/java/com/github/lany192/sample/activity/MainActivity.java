@@ -57,11 +57,13 @@ public class MainActivity extends AppCompatActivity {
                     AppRouter.get().five(items, items2);
                 }
         );
-        Fragment fragment = AppRouter.get().getHello("张无忌");
-        FragmentManager manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.add(R.id.fl_fragment_content, fragment);
-        transaction.commit();
+        AppRouter.get().showHello(this,"张无忌","哈哈");
+
+//        Fragment fragment = AppRouter.get().getHello("张无忌","哈哈");
+//        FragmentManager manager = getSupportFragmentManager();
+//        FragmentTransaction transaction = manager.beginTransaction();
+//        transaction.add(R.id.fl_fragment_content, fragment);
+//        transaction.commit();
 
         String link1 = "demo://m.test.com/app/one";
         String link2 = "demo://m.test.com/app/two";

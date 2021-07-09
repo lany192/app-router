@@ -18,6 +18,8 @@ import com.github.lany192.sample.R;
 public class HelloFragment extends Fragment {
     @Autowired(name = "username", desc = "名称")
     String name;
+    @Autowired(name = "hello", desc = "哈哈")
+    String hello;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,7 +31,7 @@ public class HelloFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_hello, null);
         TextView showText = view.findViewById(R.id.textView);
-        showText.setText("姓名：" + name);
+        showText.setText(hello + "姓名：" + name);
         return view;
     }
 }

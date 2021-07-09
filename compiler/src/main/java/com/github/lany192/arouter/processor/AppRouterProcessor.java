@@ -87,6 +87,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                     methods.add(skipActivity(element));
                 } else if (isFragment(element)) { // Fragment
                     methods.add(getFragmentInstance(element));
+                    methods.add(showFragmentInstance(element));
                 } else if (types.isSubtype(element.asType(), iProvider)) {// IProvider
                     logger.info(">>> Found provider route: " + element.asType().toString() + " <<<");
                     methods.add(getProviderInstance(element));
@@ -107,6 +108,41 @@ public class AppRouterProcessor extends AbstractProcessor {
             return false;
         }
         return true;
+    }
+
+
+    /**
+     * 显示Fragment实例
+     */
+    private MethodSpec showFragmentInstance(Element element) {
+        MethodSpec.Builder builder = MethodSpec
+                .methodBuilder("show" + element.getSimpleName().toString().replace("Fragment", ""))
+                .addModifiers(Modifier.PUBLIC)
+                .addJavadoc("显示实例{@link " + ClassName.get((TypeElement) element) + "}");
+        Route route = element.getAnnotation(Route.class);
+        builder.addParameter(ParameterSpec
+                .builder(ClassName.get("androidx.fragment.app", "FragmentActivity"), "activity")
+                .addJavadoc("Activity实例\n")
+                .build());
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                builder.addParameter(getParameter(field, autowired));
+            }
+        }
+
+        builder.addCode("Fragment fragment = (Fragment)$T.getInstance()", routerClassName);
+        builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                builder.addCode(makeCode(field, autowired));
+            }
+        }
+        builder.addCode("\n.navigation();\n");
+        builder.addCode("show(activity,fragment);");
+        builder.returns(void.class);
+        return builder.build();
     }
 
     /**
@@ -195,6 +231,7 @@ public class AppRouterProcessor extends AbstractProcessor {
         builder.returns(TypeName.get(element.asType()));
         return builder.build();
     }
+
 
     /**
      * 获取Fragment实例方法
