@@ -48,6 +48,8 @@ public class AppRouterProcessor extends AbstractProcessor {
     private Types types;
     private TypeMirror iProvider = null;
     private TypeUtils typeUtils;
+    private ClassName routerClassName = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
+    private ClassName routePathClassName = ClassName.get("com.alibaba.android.arouter", "RoutePath");
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -72,118 +74,25 @@ public class AppRouterProcessor extends AbstractProcessor {
         return set;
     }
 
+
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Route.class);
         if (elements != null && !elements.isEmpty()) {
             Set<? extends Element> routeElements = roundEnv.getElementsAnnotatedWith(Route.class);
             List<MethodSpec> methods = new ArrayList<>();
-            ClassName routerClassName = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
-            ClassName routePathClassName = ClassName.get("com.alibaba.android.arouter", "RoutePath");
+
             for (Element element : routeElements) {
                 if (isActivity(element)) { // Activity
-                    String methodName = Utils.toLowerCaseFirstOne(element.getSimpleName().toString().replace("Activity", ""));
-                    MethodSpec.Builder builder = MethodSpec
-                            .methodBuilder(methodName)
-                            .addModifiers(Modifier.PUBLIC)
-                            .addJavadoc("跳转到{@link " + ClassName.get((TypeElement) element) + "}");
-                    Route route = element.getAnnotation(Route.class);
-                    for (Element field : element.getEnclosedElements()) {
-                        if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                            Autowired autowired = field.getAnnotation(Autowired.class);
-//                        logger.info("目标类:" + element.getSimpleName() + ",路径:" + route.path() + "字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString() + "，注释:" + autowired.desc() + "，必选:" + autowired.required());
-                            builder.addParameter(getParameter(field, autowired));
-                        }
-                    }
-                    builder.addCode("$T.getInstance()", routerClassName);
-                    builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
-                    for (Element field : element.getEnclosedElements()) {
-                        if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                            Autowired autowired = field.getAnnotation(Autowired.class);
-                            builder.addCode(makeCode(field, autowired));
-                        }
-                    }
-                    builder.addCode("\n.navigation();");
-                    builder.returns(void.class);
-                    methods.add(builder.build());
+                    methods.add(skipActivity(element));
                 } else if (isFragment(element)) { // Fragment
-                    MethodSpec.Builder builder = MethodSpec
-                            .methodBuilder("get" + element.getSimpleName().toString().replace("Fragment", ""))
-                            .addModifiers(Modifier.PUBLIC)
-                            .addJavadoc("获取实例{@link " + ClassName.get((TypeElement) element) + "}");
-                    Route route = element.getAnnotation(Route.class);
-                    for (Element field : element.getEnclosedElements()) {
-                        if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                            Autowired autowired = field.getAnnotation(Autowired.class);
-                            builder.addParameter(getParameter(field, autowired));
-                        }
-                    }
-                    builder.addCode("return (Fragment)$T.getInstance()", routerClassName);
-                    builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
-                    for (Element field : element.getEnclosedElements()) {
-                        if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                            Autowired autowired = field.getAnnotation(Autowired.class);
-                            builder.addCode(makeCode(field, autowired));
-                        }
-                    }
-                    builder.addCode("\n.navigation();");
-                    if (types.isSubtype(element.asType(), getTypeMirror(Consts.FRAGMENT_X))) {
-                        builder.returns(ClassName.get("androidx.fragment.app", "Fragment"));
-                    } else if (types.isSubtype(element.asType(), getTypeMirror(Consts.FRAGMENT_V4))) {
-                        builder.returns(ClassName.get("android.support.v4.app", "Fragment"));
-                    } else {
-                        builder.returns(ClassName.get("android.app", "Fragment"));
-                    }
-                    methods.add(builder.build());
+                    methods.add(getFragmentInstance(element));
                 } else if (types.isSubtype(element.asType(), iProvider)) {// IProvider
                     logger.info(">>> Found provider route: " + element.asType().toString() + " <<<");
-                    String methodName = Utils.toLowerCaseFirstOne(element.getSimpleName().toString());
-                    MethodSpec.Builder builder = MethodSpec
-                            .methodBuilder(methodName)
-                            .addModifiers(Modifier.PUBLIC)
-                            .addJavadoc("跳转到{@link " + ClassName.get((TypeElement) element) + "}");
-                    Route route = element.getAnnotation(Route.class);
-                    for (Element field : element.getEnclosedElements()) {
-                        if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                            Autowired autowired = field.getAnnotation(Autowired.class);
-                            builder.addParameter(getParameter(field, autowired));
-                        }
-                    }
-                    builder.addCode("$T.getInstance()", routerClassName);
-                    builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
-                    for (Element field : element.getEnclosedElements()) {
-                        if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                            Autowired autowired = field.getAnnotation(Autowired.class);
-                            builder.addCode(makeCode(field, autowired));
-                        }
-                    }
-                    builder.addCode("\n.navigation();");
-                    builder.returns(void.class);
-                    methods.add(builder.build());
+                    methods.add(getProviderInstance(element));
                 } else if (types.isSubtype(element.asType(), getTypeMirror(Consts.SERVICE))) {// Service
                     logger.info(">>> Found service route: " + element.asType().toString() + " <<<");
-                    MethodSpec.Builder builder = MethodSpec
-                            .methodBuilder("get" + element.getSimpleName().toString())
-                            .addModifiers(Modifier.PUBLIC)
-                            .addJavadoc("获取{@link " + ClassName.get((TypeElement) element) + "}");
-                    Route route = element.getAnnotation(Route.class);
-                    for (Element field : element.getEnclosedElements()) {
-                        if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                            Autowired autowired = field.getAnnotation(Autowired.class);
-                            builder.addParameter(getParameter(field, autowired));
-                        }
-                    }
-                    builder.addCode("return (" + element.getSimpleName().toString() + ")$T.getInstance()", routerClassName);
-                    builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
-                    for (Element field : element.getEnclosedElements()) {
-                        if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                            Autowired autowired = field.getAnnotation(Autowired.class);
-                            builder.addCode(makeCode(field, autowired));
-                        }
-                    }
-                    builder.addCode("\n.navigation();");
-                    builder.returns(TypeName.get(element.asType()));
-                    methods.add(builder.build());
+                    methods.add(getServiceInstance(element));
                 } else {
                     throw new RuntimeException("The @Route is marked on unsupported class, look at [" + element.asType().toString() + "].");
                 }
@@ -198,6 +107,127 @@ public class AppRouterProcessor extends AbstractProcessor {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 跳转Activity方法
+     */
+    private MethodSpec skipActivity(Element element) {
+        String methodName = Utils.toLowerCaseFirstOne(element.getSimpleName().toString().replace("Activity", ""));
+        MethodSpec.Builder builder = MethodSpec
+                .methodBuilder(methodName)
+                .addModifiers(Modifier.PUBLIC)
+                .addJavadoc("跳转到{@link " + ClassName.get((TypeElement) element) + "}");
+        Route route = element.getAnnotation(Route.class);
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+//                        logger.info("目标类:" + element.getSimpleName() + ",路径:" + route.path() + "字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString() + "，注释:" + autowired.desc() + "，必选:" + autowired.required());
+                builder.addParameter(getParameter(field, autowired));
+            }
+        }
+        builder.addCode("$T.getInstance()", routerClassName);
+        builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                builder.addCode(makeCode(field, autowired));
+            }
+        }
+        builder.addCode("\n.navigation();");
+        builder.returns(void.class);
+        return builder.build();
+    }
+
+    /**
+     * 获取Provider实例方法
+     */
+    private MethodSpec getProviderInstance(Element element) {
+        String methodName = Utils.toLowerCaseFirstOne(element.getSimpleName().toString());
+        MethodSpec.Builder builder = MethodSpec
+                .methodBuilder(methodName)
+                .addModifiers(Modifier.PUBLIC)
+                .addJavadoc("跳转到{@link " + ClassName.get((TypeElement) element) + "}");
+        Route route = element.getAnnotation(Route.class);
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                builder.addParameter(getParameter(field, autowired));
+            }
+        }
+        builder.addCode("$T.getInstance()", routerClassName);
+        builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                builder.addCode(makeCode(field, autowired));
+            }
+        }
+        builder.addCode("\n.navigation();");
+        builder.returns(void.class);
+        return builder.build();
+    }
+
+    /**
+     * 获取Service实例方法
+     */
+    private MethodSpec getServiceInstance(Element element) {
+        MethodSpec.Builder builder = MethodSpec
+                .methodBuilder("get" + element.getSimpleName().toString())
+                .addModifiers(Modifier.PUBLIC)
+                .addJavadoc("获取{@link " + ClassName.get((TypeElement) element) + "}");
+        Route route = element.getAnnotation(Route.class);
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                builder.addParameter(getParameter(field, autowired));
+            }
+        }
+        builder.addCode("return (" + element.getSimpleName().toString() + ")$T.getInstance()", routerClassName);
+        builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                builder.addCode(makeCode(field, autowired));
+            }
+        }
+        builder.addCode("\n.navigation();");
+        builder.returns(TypeName.get(element.asType()));
+        return builder.build();
+    }
+
+    /**
+     * 获取Fragment实例方法
+     */
+    private MethodSpec getFragmentInstance(Element element) {
+        MethodSpec.Builder builder = MethodSpec
+                .methodBuilder("get" + element.getSimpleName().toString().replace("Fragment", ""))
+                .addModifiers(Modifier.PUBLIC)
+                .addJavadoc("获取实例{@link " + ClassName.get((TypeElement) element) + "}");
+        Route route = element.getAnnotation(Route.class);
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                builder.addParameter(getParameter(field, autowired));
+            }
+        }
+        builder.addCode("return (Fragment)$T.getInstance()", routerClassName);
+        builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                builder.addCode(makeCode(field, autowired));
+            }
+        }
+        builder.addCode("\n.navigation();");
+        if (types.isSubtype(element.asType(), getTypeMirror(Consts.FRAGMENT_X))) {
+            builder.returns(ClassName.get("androidx.fragment.app", "Fragment"));
+        } else if (types.isSubtype(element.asType(), getTypeMirror(Consts.FRAGMENT_V4))) {
+            builder.returns(ClassName.get("android.support.v4.app", "Fragment"));
+        } else {
+            builder.returns(ClassName.get("android.app", "Fragment"));
+        }
+        return builder.build();
     }
 
     private String makeCode(Element field, Autowired autowired) {
