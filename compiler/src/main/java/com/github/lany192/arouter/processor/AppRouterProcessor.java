@@ -297,7 +297,6 @@ public class AppRouterProcessor extends AbstractProcessor {
 
         ClassName routerType = ClassName.get("com.alibaba.android.arouter", "AppRouter");
 
-        builder.addField(FieldSpec.builder(String.class, "TAG", Modifier.FINAL, Modifier.PRIVATE).initializer("\"AppRouter\"").build());
         builder.addField(FieldSpec.builder(routerType, "instance", Modifier.VOLATILE, Modifier.STATIC, Modifier.PRIVATE).build());
 
         builder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build());
