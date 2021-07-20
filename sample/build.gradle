@@ -46,9 +46,9 @@ dependencies {
     implementation 'com.klinkerapps:link_builder:2.0.5'
 
     //这个要放在arouter-compiler的前面
-//    kapt project(path: ':compiler')
-    kapt 'com.github.lany192:app-router:1.1.4'
+    kapt project(path: ':compiler')
+//    kapt 'com.github.lany192:app-router:1.1.7'
     //界面路由 https://github.com/alibaba/ARouter
-    implementation 'com.alibaba:arouter-api:1.5.1'
-    kapt 'com.alibaba:arouter-compiler:1.5.1'
+    implementation 'com.alibaba:arouter-api:1.5.2'
+    kapt 'com.alibaba:arouter-compiler:1.5.2'
 }
