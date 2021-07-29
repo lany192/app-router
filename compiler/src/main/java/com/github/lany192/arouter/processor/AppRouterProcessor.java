@@ -1,5 +1,8 @@
 package com.github.lany192.arouter.processor;
 
+import static com.alibaba.android.arouter.facade.enums.TypeKind.PARCELABLE;
+import static com.alibaba.android.arouter.facade.enums.TypeKind.SERIALIZABLE;
+
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.enums.TypeKind;
@@ -16,7 +19,6 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
-import java.lang.Exception;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -36,9 +38,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
-import static com.alibaba.android.arouter.facade.enums.TypeKind.PARCELABLE;
-import static com.alibaba.android.arouter.facade.enums.TypeKind.SERIALIZABLE;
-
 /**
  * @author Administrator
  */
@@ -48,8 +47,8 @@ public class AppRouterProcessor extends AbstractProcessor {
     private Types types;
     private TypeMirror iProvider = null;
     private TypeUtils typeUtils;
-    private ClassName routerClassName = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
-    private ClassName routePathClassName = ClassName.get("com.alibaba.android.arouter", "RoutePath");
+    private final ClassName routerClassName = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
+    private final ClassName routePathClassName = ClassName.get("com.alibaba.android.arouter", "RoutePath");
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -73,7 +72,6 @@ public class AppRouterProcessor extends AbstractProcessor {
         set.add(Autowired.class.getCanonicalName());
         return set;
     }
-
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -195,7 +193,6 @@ public class AppRouterProcessor extends AbstractProcessor {
         return builder.build();
     }
 
-
     /**
      * 获取Fragment实例方法
      */
@@ -211,7 +208,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                 builder.addParameter(getParameter(field, autowired));
             }
         }
-        builder.addCode("return ($T)$T.getInstance()", ClassName.get((TypeElement) element) ,routerClassName);
+        builder.addCode("return ($T)$T.getInstance()", ClassName.get((TypeElement) element), routerClassName);
         builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -366,7 +363,6 @@ public class AppRouterProcessor extends AbstractProcessor {
                 .build();
         javaFile.writeTo(processingEnv.getFiler());
     }
-
 
     private TypeMirror getTypeMirror(String name) {
         return processingEnv.getElementUtils().getTypeElement(name).asType();
