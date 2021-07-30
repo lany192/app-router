@@ -1,9 +1,9 @@
-package com.github.lany192.arouter.utils;
+package com.github.lany192.arouter;
+
+import com.squareup.javapoet.ClassName;
 
 public class Consts {
     public static final String PROJECT = "\nAppRouter";
-
-
 
     // Java type
     private static final String LANG = "java.lang";

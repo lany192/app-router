@@ -1,4 +1,4 @@
-package com.github.lany192.arouter.utils;
+package com.github.lany192.arouter;
 
 
 import com.alibaba.android.arouter.facade.enums.TypeKind;
@@ -8,7 +8,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
-import static com.github.lany192.arouter.utils.Consts.*;
+import static com.github.lany192.arouter.Consts.*;
 
 public class TypeUtils {
 
