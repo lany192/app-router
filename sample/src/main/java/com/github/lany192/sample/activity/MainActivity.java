@@ -34,27 +34,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.button1).setOnClickListener(v ->
-                AppRouter.get().one(66, true, 10.5f, 'w', "哈哈", (byte) 1, "流利", new NavigationCallback() {
-                    @Override
-                    public void onFound(Postcard postcard) {
+                AppRouter.get().getOnePostcard(66, true, 10.5f, 'w', "哈哈", (byte) 1, "流利")
+                        .navigation(null, new NavigationCallback() {
+                            @Override
+                            public void onFound(Postcard postcard) {
 
-                    }
+                            }
 
-                    @Override
-                    public void onLost(Postcard postcard) {
+                            @Override
+                            public void onLost(Postcard postcard) {
 
-                    }
+                            }
 
-                    @Override
-                    public void onArrival(Postcard postcard) {
-                        Toast.makeText(MainActivity.this, "到达", Toast.LENGTH_LONG).show();
-                    }
+                            @Override
+                            public void onArrival(Postcard postcard) {
+                                Toast.makeText(MainActivity.this, "到达", Toast.LENGTH_LONG).show();
+                            }
 
-                    @Override
-                    public void onInterrupt(Postcard postcard) {
+                            @Override
+                            public void onInterrupt(Postcard postcard) {
 
-                    }
-                })
+                            }
+                        })
         );
         findViewById(R.id.button2).setOnClickListener(v -> {
                     List<String> items = new ArrayList<>();
