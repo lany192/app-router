@@ -6,9 +6,9 @@ import static com.alibaba.android.arouter.facade.enums.TypeKind.SERIALIZABLE;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.enums.TypeKind;
-import com.github.lany192.arouter.OtherUtils;
 import com.github.lany192.arouter.Consts;
 import com.github.lany192.arouter.Logger;
+import com.github.lany192.arouter.OtherUtils;
 import com.github.lany192.arouter.TypeUtils;
 import com.github.lany192.arouter.Utils;
 import com.google.auto.service.AutoService;
@@ -49,6 +49,7 @@ public class AppRouterProcessor extends AbstractProcessor {
     private TypeUtils typeUtils;
     private final ClassName routerClassName = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
     private final ClassName routePathClassName = ClassName.get("com.alibaba.android.arouter", "RoutePath");
+    private final ClassName navigationCallbackClassName = ClassName.get("com.alibaba.android.arouter.facade.callback", "NavigationCallback");
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -82,6 +83,7 @@ public class AppRouterProcessor extends AbstractProcessor {
             for (Element element : routeElements) {
                 if (isActivity(element)) { // Activity
                     methods.add(skipActivity(element));
+                    methods.add(skipActivity2(element));
                 } else if (isFragment(element)) { // Fragment
                     methods.add(getFragmentInstance(element));
                 } else if (types.isSubtype(element.asType(), iProvider)) {// IProvider
@@ -109,6 +111,36 @@ public class AppRouterProcessor extends AbstractProcessor {
     /**
      * 跳转Activity方法
      */
+    private MethodSpec skipActivity2(Element element) {
+        String methodName = Utils.toLowerCaseFirstOne(element.getSimpleName().toString().replace("Activity", ""));
+        MethodSpec.Builder builder = MethodSpec
+                .methodBuilder(methodName)
+                .addModifiers(Modifier.PUBLIC)
+                .addJavadoc("跳转到{@link " + ClassName.get((TypeElement) element) + "}");
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                builder.addParameter(OtherUtils.getParameter(field, autowired));
+            }
+        }
+        builder.addCode(methodName + "(");
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                String fieldName = field.getSimpleName().toString();
+                String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
+                builder.addCode(key);
+                builder.addCode(",");
+            }
+        }
+        builder.addCode("null);");
+        builder.returns(void.class);
+        return builder.build();
+    }
+
+    /**
+     * 跳转Activity方法
+     */
     private MethodSpec skipActivity(Element element) {
         String methodName = Utils.toLowerCaseFirstOne(element.getSimpleName().toString().replace("Activity", ""));
         MethodSpec.Builder builder = MethodSpec
@@ -123,6 +155,8 @@ public class AppRouterProcessor extends AbstractProcessor {
                 builder.addParameter(OtherUtils.getParameter(field, autowired));
             }
         }
+        builder.addParameter(ParameterSpec.builder(navigationCallbackClassName, "navigationCallback").build());
+
         builder.addCode("$T.getInstance()", routerClassName);
         builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
         for (Element field : element.getEnclosedElements()) {
@@ -131,7 +165,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                 builder.addCode(makeCode(field, autowired));
             }
         }
-        builder.addCode("\n.navigation();");
+        builder.addCode("\n.navigation(null, navigationCallback);");
         builder.returns(void.class);
         return builder.build();
     }

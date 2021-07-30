@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -11,7 +12,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.alibaba.android.arouter.AppRouter;
+import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.facade.callback.NavigationCallback;
 import com.github.lany192.sample.R;
 import com.github.lany192.sample.UserHelper;
 import com.github.lany192.sample.entity.Person;
@@ -31,7 +34,27 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.button1).setOnClickListener(v ->
-                AppRouter.get().one(66, true, 10.5f, 'w', "哈哈", (byte) 1, "流利")
+                AppRouter.get().one(66, true, 10.5f, 'w', "哈哈", (byte) 1, "流利", new NavigationCallback() {
+                    @Override
+                    public void onFound(Postcard postcard) {
+
+                    }
+
+                    @Override
+                    public void onLost(Postcard postcard) {
+
+                    }
+
+                    @Override
+                    public void onArrival(Postcard postcard) {
+                        Toast.makeText(MainActivity.this, "到达", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onInterrupt(Postcard postcard) {
+
+                    }
+                })
         );
         findViewById(R.id.button2).setOnClickListener(v -> {
                     List<String> items = new ArrayList<>();
@@ -57,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                     AppRouter.get().five(items, items2);
                 }
         );
-        Fragment fragment = AppRouter.get().getHello("张无忌","哈哈");
+        Fragment fragment = AppRouter.get().getHello("张无忌", "哈哈");
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.fl_fragment_content, fragment);
