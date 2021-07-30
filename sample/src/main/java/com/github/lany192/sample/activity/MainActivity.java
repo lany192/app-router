@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.button1).setOnClickListener(v ->
-                AppRouter.get().getOnePostcard(66, true, 10.5f, 'w', "哈哈", (byte) 1, "流利")
+                AppRouter.get().getOne(66, true, 10.5f, 'w', "哈哈", (byte) 1, "流利")
                         .navigation(null, new NavigationCallback() {
                             @Override
                             public void onFound(Postcard postcard) {

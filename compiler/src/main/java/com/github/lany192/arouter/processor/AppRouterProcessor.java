@@ -125,7 +125,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                 builder.addParameter(OtherUtils.getParameter(field, autowired));
             }
         }
-        builder.addCode("get" + simpleName + "Postcard(");
+        builder.addCode("get" + simpleName + "(");
 
         List<String> keys = new ArrayList<>();
         for (Element field : element.getEnclosedElements()) {
@@ -154,7 +154,7 @@ public class AppRouterProcessor extends AbstractProcessor {
     private MethodSpec getPostcard(Element element) {
         String methodName = element.getSimpleName().toString().replace("Activity", "");
         MethodSpec.Builder builder = MethodSpec
-                .methodBuilder("get" + methodName + "Postcard")
+                .methodBuilder("get" + methodName )
                 .addModifiers(Modifier.PUBLIC)
                 .addJavadoc("获取Postcard实例 {@link " + ClassName.get((TypeElement) element) + "}");
         Route route = element.getAnnotation(Route.class);
