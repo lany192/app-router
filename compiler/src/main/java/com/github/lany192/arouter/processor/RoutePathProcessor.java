@@ -1,7 +1,7 @@
 package com.github.lany192.arouter.processor;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.github.lany192.arouter.utils.Logger;
+import com.github.lany192.arouter.Logger;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;

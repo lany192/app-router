@@ -6,17 +6,17 @@ import static com.alibaba.android.arouter.facade.enums.TypeKind.SERIALIZABLE;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.enums.TypeKind;
-import com.github.lany192.arouter.utils.Consts;
-import com.github.lany192.arouter.utils.Logger;
-import com.github.lany192.arouter.utils.TypeUtils;
-import com.github.lany192.arouter.utils.Utils;
+import com.github.lany192.arouter.OtherUtils;
+import com.github.lany192.arouter.Consts;
+import com.github.lany192.arouter.Logger;
+import com.github.lany192.arouter.TypeUtils;
+import com.github.lany192.arouter.Utils;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
-import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
@@ -120,7 +120,7 @@ public class AppRouterProcessor extends AbstractProcessor {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                 Autowired autowired = field.getAnnotation(Autowired.class);
 //                        logger.info("目标类:" + element.getSimpleName() + ",路径:" + route.path() + "字段名:" + field.getSimpleName() + " ,类型：" + field.asType().toString() + "，注释:" + autowired.desc() + "，必选:" + autowired.required());
-                builder.addParameter(getParameter(field, autowired));
+                builder.addParameter(OtherUtils.getParameter(field, autowired));
             }
         }
         builder.addCode("$T.getInstance()", routerClassName);
@@ -149,7 +149,7 @@ public class AppRouterProcessor extends AbstractProcessor {
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                 Autowired autowired = field.getAnnotation(Autowired.class);
-                builder.addParameter(getParameter(field, autowired));
+                builder.addParameter(OtherUtils.getParameter(field, autowired));
             }
         }
         builder.addCode("$T.getInstance()", routerClassName);
@@ -177,7 +177,7 @@ public class AppRouterProcessor extends AbstractProcessor {
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                 Autowired autowired = field.getAnnotation(Autowired.class);
-                builder.addParameter(getParameter(field, autowired));
+                builder.addParameter(OtherUtils.getParameter(field, autowired));
             }
         }
         builder.addCode("return (" + element.getSimpleName().toString() + ")$T.getInstance()", routerClassName);
@@ -205,7 +205,7 @@ public class AppRouterProcessor extends AbstractProcessor {
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                 Autowired autowired = field.getAnnotation(Autowired.class);
-                builder.addParameter(getParameter(field, autowired));
+                builder.addParameter(OtherUtils.getParameter(field, autowired));
             }
         }
         builder.addCode("return ($T)$T.getInstance()", ClassName.get((TypeElement) element), routerClassName);
@@ -252,39 +252,6 @@ public class AppRouterProcessor extends AbstractProcessor {
                 return "\n.withObject(\"" + key + "\"," + key + ")";
             }
         }
-    }
-
-    private ParameterSpec getParameter(Element field, Autowired autowired) {
-        String fieldName = field.getSimpleName().toString();
-        String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
-        String typeName = field.asType().toString();
-        ParameterSpec.Builder builder;
-        TypeMirror typeMirror = field.asType();
-//        logger.info("字段:" + fieldName + ",类型:" + typeName);
-        //是否原始类型
-        if (typeMirror.getKind().isPrimitive()) {
-            builder = ParameterSpec.builder(TypeName.get(typeMirror), key);
-        } else {
-            //是否是泛型
-            if (typeName.contains("<") && typeName.contains(">")) {
-                int startIndex = typeName.indexOf("<");
-                int endIndex = typeName.indexOf(">");
-                String tmp = typeName.substring(startIndex + 1, endIndex);
-                int index = tmp.lastIndexOf(".");
-                ClassName className = ClassName.get(tmp.substring(0, index), tmp.substring(index + 1));
-                ClassName list = ClassName.get("java.util", "List");
-                builder = ParameterSpec.builder(ParameterizedTypeName.get(list, className), key);
-            } else {
-                if (typeName.contains(".")) {
-                    int index = typeName.lastIndexOf(".");
-                    ClassName className = ClassName.get(typeName.substring(0, index), typeName.substring(index + 1));
-                    builder = ParameterSpec.builder(className, key);
-                } else {
-                    builder = ParameterSpec.builder(Object.class, key);
-                }
-            }
-        }
-        return builder.addJavadoc(autowired.desc() + "\n").build();
     }
 
     private void createRouterHelper(List<MethodSpec> methods) throws Exception {

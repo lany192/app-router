@@ -1,4 +1,4 @@
-package com.github.lany192.arouter.utils;
+package com.github.lany192.arouter;
 
 import org.apache.commons.lang3.StringUtils;
 
