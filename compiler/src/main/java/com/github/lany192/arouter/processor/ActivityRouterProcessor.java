@@ -19,7 +19,9 @@ import com.squareup.javapoet.TypeSpec;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -34,7 +36,17 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
 /**
- * @author Administrator
+public static void skip(String protocol, int type) {
+        build(protocol, type).navigation();
+        }
+
+public static void skip(String protocol, int type, NavigationCallback navigationCallback) {
+        build(protocol, type).navigation(null, navigationCallback);
+        }
+
+public static void skip(String protocol, int type, NavigationCallback navigationCallback) {
+        build(protocol, type).navigation(null, navigationCallback);
+        }
  */
 @AutoService(Processor.class)
 public class ActivityRouterProcessor extends AbstractProcessor {
@@ -77,8 +89,10 @@ public class ActivityRouterProcessor extends AbstractProcessor {
             for (Element element : routeElements) {
                 if (isActivity(element)) { // Activity
                     try {
-                        MethodSpec methodSpec = createBuilder(element);
-                        createRouterHelper(element, methodSpec);
+                        List<MethodSpec> methods = new ArrayList<>();
+                        methods.add(createBuilder(element));
+                        methods.add(createSkip(element));
+                        createRouterHelper(element, methods);
                     } catch (Exception e) {
                         logger.error(e);
                     }
@@ -90,6 +104,42 @@ public class ActivityRouterProcessor extends AbstractProcessor {
         }
         return true;
     }
+    /**
+     * 跳转Activity方法
+     */
+    private MethodSpec createSkip(Element element) {
+        MethodSpec.Builder builder = MethodSpec
+                .methodBuilder("skip")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addJavadoc("跳转到{@link " + ClassName.get((TypeElement) element) + "}");
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                builder.addParameter(OtherUtils.getParameter(field, autowired));
+            }
+        }
+        builder.addCode("build(");
+
+        List<String> keys = new ArrayList<>();
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                String fieldName = field.getSimpleName().toString();
+                String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
+                keys.add(key);
+            }
+        }
+        for (int i = 0; i < keys.size(); i++) {
+            String key = keys.get(i);
+            builder.addCode(key);
+            if (i != keys.size() - 1) {
+                builder.addCode(",");
+            }
+        }
+        builder.addCode(").navigation();");
+        builder.returns(void.class);
+        return builder.build();
+    }
 
     /**
      * 跳转Activity方法
@@ -98,7 +148,7 @@ public class ActivityRouterProcessor extends AbstractProcessor {
         MethodSpec.Builder builder = MethodSpec
                 .methodBuilder("build")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addJavadoc("构建Builder实例");
+                .addJavadoc("构建Postcard");
         Route route = element.getAnnotation(Route.class);
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -153,13 +203,14 @@ public class ActivityRouterProcessor extends AbstractProcessor {
         }
     }
 
-    private void createRouterHelper(Element element, MethodSpec methodSpec) throws Exception {
+    private void createRouterHelper(Element element, List<MethodSpec> methods) throws Exception {
         String simpleName = element.getSimpleName().toString().replace("Activity", "");
         TypeSpec.Builder builder = TypeSpec.classBuilder(simpleName + "Router")
                 .addJavadoc("自动生成,请勿编辑!\n{@link " + ClassName.get((TypeElement) element) + "}")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-        builder.addMethod(methodSpec);
-
+        for (MethodSpec method : methods) {
+            builder.addMethod(method);
+        }
         JavaFile javaFile = JavaFile
                 .builder(ClassName.get((TypeElement) element).packageName(), builder.build())
                 // 设置表示缩进的字符串
