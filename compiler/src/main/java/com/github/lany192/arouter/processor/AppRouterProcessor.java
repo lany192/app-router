@@ -83,7 +83,6 @@ public class AppRouterProcessor extends AbstractProcessor {
             List<MethodSpec> methods = new ArrayList<>();
             for (Element element : routeElements) {
                 if (isActivity(element)) { // Activity
-                    methods.add(getPostcard(element));
                     methods.add(skipActivity(element));
                 } else if (isFragment(element)) { // Fragment
                     methods.add(getFragmentInstance(element));
@@ -125,7 +124,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                 builder.addParameter(OtherUtils.getParameter(field, autowired));
             }
         }
-        builder.addCode("get" + simpleName + "(");
+        builder.addCode("$T.build(", ClassName.get(ClassName.get((TypeElement) element).packageName(), element.getSimpleName() + "Builder"));
 
         List<String> keys = new ArrayList<>();
         for (Element field : element.getEnclosedElements()) {
@@ -145,36 +144,6 @@ public class AppRouterProcessor extends AbstractProcessor {
         }
         builder.addCode(").navigation();");
         builder.returns(void.class);
-        return builder.build();
-    }
-
-    /**
-     * 跳转Activity方法
-     */
-    private MethodSpec getPostcard(Element element) {
-        String methodName = element.getSimpleName().toString().replace("Activity", "");
-        MethodSpec.Builder builder = MethodSpec
-                .methodBuilder("get" + methodName )
-                .addModifiers(Modifier.PUBLIC)
-                .addJavadoc("获取Postcard实例 {@link " + ClassName.get((TypeElement) element) + "}");
-        Route route = element.getAnnotation(Route.class);
-        for (Element field : element.getEnclosedElements()) {
-            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                Autowired autowired = field.getAnnotation(Autowired.class);
-                builder.addParameter(OtherUtils.getParameter(field, autowired));
-            }
-        }
-
-        builder.addCode("return $T.getInstance()", routerClassName);
-        builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
-        for (Element field : element.getEnclosedElements()) {
-            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                Autowired autowired = field.getAnnotation(Autowired.class);
-                builder.addCode(makeCode(field, autowired));
-            }
-        }
-        builder.addCode(";");
-        builder.returns(postcardClassName);
         return builder.build();
     }
 
@@ -299,7 +268,7 @@ public class AppRouterProcessor extends AbstractProcessor {
     private void createRouterHelper(List<MethodSpec> methods) throws Exception {
         TypeSpec.Builder builder = TypeSpec.classBuilder("AppRouter")
                 .addJavadoc("路由助手,自动生成,请勿编辑!")
-                .addModifiers(Modifier.PUBLIC);
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
         ClassName routerType = ClassName.get("com.alibaba.android.arouter", "AppRouter");
 

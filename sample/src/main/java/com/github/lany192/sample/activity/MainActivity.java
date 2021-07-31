@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.button1).setOnClickListener(v ->
-                AppRouter.get().getOne(66, true, 10.5f, 'w', "哈哈", (byte) 1, "流利")
+                OneActivityBuilder.build(66, true, 10.5f, 'w', "哈哈", (byte) 1, "流利")
                         .navigation(null, new NavigationCallback() {
                             @Override
                             public void onFound(Postcard postcard) {
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                     List<Person> items2 = new ArrayList<>();
                     items2.add(new Person("2战三", 123));
                     items2.add(new Person("2哈哈", 321));
-                    AppRouter.get().five(items, items2);
+                    FiveActivityBuilder.build(items, items2).navigation();
                 }
         );
         Fragment fragment = AppRouter.get().getHello("张无忌", "哈哈");

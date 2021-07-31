@@ -37,7 +37,7 @@ import javax.lang.model.util.Types;
  * @author Administrator
  */
 @AutoService(Processor.class)
-public class PostcardProcessor extends AbstractProcessor {
+public class BuilderProcessor extends AbstractProcessor {
     private Logger logger;
     private Types types;
     private TypeMirror iProvider = null;
@@ -77,7 +77,7 @@ public class PostcardProcessor extends AbstractProcessor {
             for (Element element : routeElements) {
                 if (isActivity(element)) { // Activity
                     try {
-                        MethodSpec methodSpec = createPostcard(element);
+                        MethodSpec methodSpec = createBuilder(element);
                         createRouterHelper(element, methodSpec);
                     } catch (Exception e) {
                         logger.error(e);
@@ -94,11 +94,11 @@ public class PostcardProcessor extends AbstractProcessor {
     /**
      * 跳转Activity方法
      */
-    private MethodSpec createPostcard(Element element) {
+    private MethodSpec createBuilder(Element element) {
         MethodSpec.Builder builder = MethodSpec
                 .methodBuilder("build")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addJavadoc("构建Postcard实例");
+                .addJavadoc("构建Builder实例");
         Route route = element.getAnnotation(Route.class);
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -154,7 +154,7 @@ public class PostcardProcessor extends AbstractProcessor {
     }
 
     private void createRouterHelper(Element element, MethodSpec methodSpec) throws Exception {
-        TypeSpec.Builder builder = TypeSpec.classBuilder(element.getSimpleName() + "Postcard")
+        TypeSpec.Builder builder = TypeSpec.classBuilder(element.getSimpleName() + "Builder")
                 .addJavadoc("自动生成,请勿编辑!\n{@link " + ClassName.get((TypeElement) element) + "}")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         builder.addMethod(methodSpec);
