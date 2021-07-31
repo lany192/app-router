@@ -22,7 +22,9 @@ tasks.withType(JavaCompile) {
 afterEvaluate {
     publishing {
         publications {
-            release(MavenPublication) {
+            maven(MavenPublication) {
+                groupId = 'com.github.lany192'
+                artifactId = 'app-router'
                 from components.java
                 pom {
                     licenses {
