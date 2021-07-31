@@ -92,7 +92,7 @@ public class ActivityRouterProcessor extends AbstractProcessor {
                         List<MethodSpec> methods = new ArrayList<>();
                         methods.add(createBuilder(element));
                         methods.add(createSkip(element));
-                        createRouterHelper(element, methods);
+                        createRouterFile(element, methods);
                     } catch (Exception e) {
                         logger.error(e);
                     }
@@ -203,11 +203,11 @@ public class ActivityRouterProcessor extends AbstractProcessor {
         }
     }
 
-    private void createRouterHelper(Element element, List<MethodSpec> methods) throws Exception {
+    private void createRouterFile(Element element, List<MethodSpec> methods) throws Exception {
         String simpleName = element.getSimpleName().toString().replace("Activity", "");
         TypeSpec.Builder builder = TypeSpec.classBuilder(simpleName + "Router")
                 .addJavadoc("自动生成,请勿编辑!\n{@link " + ClassName.get((TypeElement) element) + "}")
-                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+                .addModifiers(Modifier.PUBLIC);
         for (MethodSpec method : methods) {
             builder.addMethod(method);
         }
