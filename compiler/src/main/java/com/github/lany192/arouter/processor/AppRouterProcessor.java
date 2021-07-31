@@ -124,7 +124,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                 builder.addParameter(OtherUtils.getParameter(field, autowired));
             }
         }
-        builder.addCode("$T.build(", ClassName.get(ClassName.get((TypeElement) element).packageName(), element.getSimpleName() + "Builder"));
+        builder.addCode("$T.build(", ClassName.get(ClassName.get((TypeElement) element).packageName(), simpleName + "Router"));
 
         List<String> keys = new ArrayList<>();
         for (Element field : element.getEnclosedElements()) {

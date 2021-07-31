@@ -37,7 +37,7 @@ import javax.lang.model.util.Types;
  * @author Administrator
  */
 @AutoService(Processor.class)
-public class BuilderProcessor extends AbstractProcessor {
+public class ActivityRouterProcessor extends AbstractProcessor {
     private Logger logger;
     private Types types;
     private TypeMirror iProvider = null;
@@ -154,7 +154,8 @@ public class BuilderProcessor extends AbstractProcessor {
     }
 
     private void createRouterHelper(Element element, MethodSpec methodSpec) throws Exception {
-        TypeSpec.Builder builder = TypeSpec.classBuilder(element.getSimpleName() + "Builder")
+        String simpleName = element.getSimpleName().toString().replace("Activity", "");
+        TypeSpec.Builder builder = TypeSpec.classBuilder(simpleName + "Router")
                 .addJavadoc("自动生成,请勿编辑!\n{@link " + ClassName.get((TypeElement) element) + "}")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         builder.addMethod(methodSpec);
