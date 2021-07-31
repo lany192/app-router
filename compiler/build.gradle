@@ -10,11 +10,11 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'com.alibaba:fastjson:1.2.76'
 }
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
 
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"
-
-//编译JAVA文件时采用UTF-8
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
@@ -38,3 +38,4 @@ afterEvaluate {
         }
     }
 }
+
