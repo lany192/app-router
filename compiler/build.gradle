@@ -25,6 +25,7 @@ afterEvaluate {
             maven(MavenPublication) {
                 groupId = 'com.github.lany192'
                 artifactId = 'app-router'
+                version = '1.2.1'
                 from components.java
                 pom {
                     licenses {
