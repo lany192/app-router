@@ -44,7 +44,7 @@ public class ActivityRouterProcessor extends AbstractProcessor {
     private Types types;
     private TypeMirror iProvider = null;
     private TypeUtils typeUtils;
-    private final ClassName routerClassName = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
+    private final ClassName arouterClassName = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
     private final ClassName routePathClassName = ClassName.get("com.alibaba.android.arouter", "RoutePath");
     private final ClassName postcardClass = ClassName.get("com.alibaba.android.arouter.facade", "Postcard");
 
@@ -206,7 +206,7 @@ public class ActivityRouterProcessor extends AbstractProcessor {
                 .addJavadoc("跳转界面");
         Route route = element.getAnnotation(Route.class);
         String path = route.path().replace("/", "_").toUpperCase().substring(1);
-        builder.addCode("$T postcard = $T.getInstance().build($T." + path + ");", postcardClass, routerClassName, routePathClassName);
+        builder.addCode("$T postcard = $T.getInstance().build($T." + path + ");", postcardClass, arouterClassName, routePathClassName);
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                 Autowired autowired = field.getAnnotation(Autowired.class);
