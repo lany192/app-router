@@ -18,9 +18,9 @@ import java.util.ArrayList;
 
 @Route(path = "/app/five")
 public class FiveActivity extends AppCompatActivity {
-    @Autowired(name = "users", desc = "用户")
+    @Autowired(name = "users", desc = "用户a")
     ArrayList<User> users;
-    @Autowired(name = "persons", desc = "用户")
+    @Autowired(name = "persons", desc = "用户b")
     ArrayList<Person> persons;
 
     @Override

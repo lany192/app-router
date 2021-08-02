@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                         .data2("哈哈")
                         .data3((byte) 1)
                         .data4("流利")
-                        .callback(new NavigationCallback() {
+                        .build(new NavigationCallback() {
                             @Override
                             public void onFound(Postcard postcard) {
 
@@ -64,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
 
                             }
                         })
-                        .build()
         );
         findViewById(R.id.button2).setOnClickListener(v -> {
                     List<String> items = new ArrayList<>();
