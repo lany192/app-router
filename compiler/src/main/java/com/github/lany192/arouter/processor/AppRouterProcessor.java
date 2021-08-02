@@ -199,26 +199,30 @@ public class AppRouterProcessor extends AbstractProcessor {
      * 获取Fragment实例方法
      */
     private MethodSpec getFragmentInstance(Element element) {
+        String simpleName = element.getSimpleName().toString().replace("Fragment", "");
         MethodSpec.Builder builder = MethodSpec
-                .methodBuilder("get" + element.getSimpleName().toString().replace("Fragment", ""))
+                .methodBuilder("get" + simpleName)
                 .addModifiers(Modifier.PUBLIC)
                 .addJavadoc("获取实例{@link " + ClassName.get((TypeElement) element) + "}");
-        Route route = element.getAnnotation(Route.class);
+
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                 Autowired autowired = field.getAnnotation(Autowired.class);
                 builder.addParameter(OtherUtils.getParameter(field, autowired));
             }
         }
-        builder.addCode("return ($T)$T.getInstance()", ClassName.get((TypeElement) element), arouterClassName);
-        builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
+        builder.addCode("return $T.builder()", ClassName.get(ClassName.get((TypeElement) element).packageName(), simpleName + "Builder"));
+
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                 Autowired autowired = field.getAnnotation(Autowired.class);
-                builder.addCode(makeCode(field, autowired));
+                String fieldName = field.getSimpleName().toString();
+                String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
+                builder.addCode("." + key + "(" + key + ")");
             }
         }
-        builder.addCode("\n.navigation();");
+
+        builder.addCode(".build();");
         builder.returns(ClassName.get((TypeElement) element));
         return builder.build();
     }
