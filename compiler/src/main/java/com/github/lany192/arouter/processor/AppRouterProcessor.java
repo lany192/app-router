@@ -263,7 +263,7 @@ public class AppRouterProcessor extends AbstractProcessor {
     private void createRouterHelper(List<MethodSpec> methods) throws Exception {
         TypeSpec.Builder builder = TypeSpec.classBuilder("AppRouter")
                 .addJavadoc("路由助手,自动生成,请勿编辑!")
-                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+                .addModifiers(Modifier.PUBLIC);
 
         ClassName routerType = ClassName.get("com.alibaba.android.arouter", "AppRouter");
 
