@@ -15,6 +15,7 @@ import com.alibaba.android.arouter.AppRouter;
 import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.callback.NavigationCallback;
+import com.github.lany192.sample.HelloRouter;
 import com.github.lany192.sample.R;
 import com.github.lany192.sample.UserHelper;
 import com.github.lany192.sample.entity.Person;
@@ -34,8 +35,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.button1).setOnClickListener(v ->
-                OneRouter.build(66, true, 10.5f, 'w', "哈哈", (byte) 1, "流利")
-                        .navigation(null, new NavigationCallback() {
+                OneRouter.builder()
+                        .isFans(true)
+                        .ownerId(789)
+                        .money(10.5f)
+                        .data1( 'w')
+                        .data2("哈哈")
+                        .data3((byte) 1)
+                        .data4("流利")
+                        .callback(new NavigationCallback() {
                             @Override
                             public void onFound(Postcard postcard) {
 
@@ -56,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
                             }
                         })
+                        .build()
         );
         findViewById(R.id.button2).setOnClickListener(v -> {
                     List<String> items = new ArrayList<>();
@@ -78,7 +87,33 @@ public class MainActivity extends AppCompatActivity {
                     List<Person> items2 = new ArrayList<>();
                     items2.add(new Person("2战三", 123));
                     items2.add(new Person("2哈哈", 321));
-                    FiveRouter.build(items, items2).navigation();
+//                    FiveRouter.build(items, items2).navigation();
+
+                    HelloRouter.builder()
+                            .users(items)
+                            .persons(items2)
+                            .callback(new NavigationCallback() {
+                                @Override
+                                public void onFound(Postcard postcard) {
+
+                                }
+
+                                @Override
+                                public void onLost(Postcard postcard) {
+
+                                }
+
+                                @Override
+                                public void onArrival(Postcard postcard) {
+
+                                }
+
+                                @Override
+                                public void onInterrupt(Postcard postcard) {
+
+                                }
+                            })
+                            .build();
                 }
         );
         Fragment fragment = AppRouter.get().getHello("张无忌", "哈哈");

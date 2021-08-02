@@ -11,7 +11,7 @@
     }
 # app模块build.gradle引入 
     dependencies {
-        annotationProcessor 'com.github.lany192:app-router:1.1.7'
+        annotationProcessor 'com.github.lany192:app-router:+'
     }
 
 ### 调用方法，编译后会自动生成AppRouter类，收集了使用了@Route注解的控件调整方法
