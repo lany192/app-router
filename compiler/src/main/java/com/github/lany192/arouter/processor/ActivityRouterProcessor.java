@@ -260,7 +260,7 @@ public class ActivityRouterProcessor extends AbstractProcessor {
         String simpleName = element.getSimpleName().toString().replace("Activity", "");
 
         ClassName routerType = ClassName.get(ClassName.get((TypeElement) element).packageName(), simpleName + "Router");
-        ClassName callbackClass = ClassName.get("com.alibaba.android.arouter.facade.callback", "NavigationCallback");
+        ClassName callbackClass = ClassName.get("com.alibaba.android.arouter.facade.callback", "NavCallback");
 
         TypeSpec.Builder builder = TypeSpec.classBuilder(simpleName + "Router")
                 .addJavadoc("自动生成,请勿编辑!\n{@link " + ClassName.get((TypeElement) element) + "}")

@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.alibaba.android.arouter.AppRouter;
 import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.alibaba.android.arouter.facade.callback.NavCallback;
 import com.alibaba.android.arouter.facade.callback.NavigationCallback;
 import com.github.lany192.sample.HelloRouter;
 import com.github.lany192.sample.R;
@@ -43,25 +44,11 @@ public class MainActivity extends AppCompatActivity {
                         .data2("哈哈")
                         .data3((byte) 1)
                         .data4("流利")
-                        .build(new NavigationCallback() {
-                            @Override
-                            public void onFound(Postcard postcard) {
-
-                            }
-
-                            @Override
-                            public void onLost(Postcard postcard) {
-
-                            }
+                        .build(new NavCallback() {
 
                             @Override
                             public void onArrival(Postcard postcard) {
                                 Toast.makeText(MainActivity.this, "到达", Toast.LENGTH_LONG).show();
-                            }
-
-                            @Override
-                            public void onInterrupt(Postcard postcard) {
-
                             }
                         })
         );
