@@ -111,7 +111,7 @@ public class FragmentRouterProcessor extends AbstractProcessor {
                 builder.addCode(makeCode(field, autowired));
             }
         }
-        builder.addCode("\nreturn ($T)postcard.navigation();",ClassName.get((TypeElement) element));
+        builder.addCode("\nreturn ($T) postcard.navigation();",ClassName.get((TypeElement) element));
         builder.returns(ClassName.get((TypeElement) element));
         return builder.build();
     }
@@ -230,15 +230,15 @@ public class FragmentRouterProcessor extends AbstractProcessor {
         String code = "";
         if (typeMirror.getKind().isPrimitive()) {
             logger.info("字段:" + fieldName + " -> 基本类型:" + name);
-            code += "\npostcard.with" + name + "(\"" + key + "\"," + key + ");";
+            code += "\npostcard.with" + name + "(\"" + key + "\", " + key + ");";
         } else {
             code = "\nif (" + key + " != null) {";
             if (typeKind == SERIALIZABLE) {
                 logger.info("字段:" + fieldName + " -> Serializable类型:" + name);
-                code += "\n    postcard.withSerializable(\"" + key + "\",(" + typeName + ")" + key + ");";
+                code += "\n    postcard.withSerializable(\"" + key + "\", (" + typeName + ")" + key + ");";
             } else if (typeKind == PARCELABLE) {
                 logger.info("字段:" + fieldName + " -> Parcelable类型:" + name);
-                code += "\n    postcard.withParcelable(\"" + key + "\",(" + typeName + ")" + key + ");";
+                code += "\n    postcard.withParcelable(\"" + key + "\", (" + typeName + ")" + key + ");";
             } else {
                 logger.info("字段:" + fieldName + " -> 字段类型:" + name);
                 if (typeName.startsWith("java.lang") || typeName.startsWith("java.util")) {
@@ -246,10 +246,10 @@ public class FragmentRouterProcessor extends AbstractProcessor {
                     if (!typeName.contains("<") && typeName.contains(".")) {
                         int index = typeName.lastIndexOf(".");
                         name = Utils.toUpperCaseFirstOne(typeName.substring(index + 1));
-                        code += "\n    postcard.with" + name + "(\"" + key + "\"," + key + ");";
+                        code += "\n    postcard.with" + name + "(\"" + key + "\", " + key + ");";
                     }
                 } else {
-                    code += "\n    postcard.withObject(\"" + key + "\"," + key + ");";
+                    code += "\n    postcard.withObject(\"" + key + "\", " + key + ");";
                 }
             }
             code += "\n}";
