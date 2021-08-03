@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class FiveActivity extends AppCompatActivity {
     @Autowired(name = "users", desc = "用户a")
     ArrayList<User> users;
-    @Autowired(name = "persons", desc = "用户b")
+    @Autowired(name = "persons_items", desc = "用户b")
     ArrayList<Person> persons;
 
     @Override

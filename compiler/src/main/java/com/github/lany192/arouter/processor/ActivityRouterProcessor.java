@@ -130,7 +130,7 @@ public class ActivityRouterProcessor extends AbstractProcessor {
                 TypeMirror typeMirror = field.asType();
                 String typeName = field.asType().toString();
 
-                MethodSpec.Builder builder = MethodSpec.methodBuilder(key);
+                MethodSpec.Builder builder = MethodSpec.methodBuilder(Utils.line2hump(key));
                 builder.addModifiers(Modifier.PUBLIC);
                 ParameterSpec parameterSpec;
 

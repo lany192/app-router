@@ -129,7 +129,7 @@ public class AppRouterProcessor extends AbstractProcessor {
                 Autowired autowired = field.getAnnotation(Autowired.class);
                 String fieldName = field.getSimpleName().toString();
                 String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
-                builder.addCode("." + key + "(" + key + ")");
+                builder.addCode("." + Utils.line2hump(key) + "(" + key + ")");
             }
         }
 
