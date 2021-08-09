@@ -18,7 +18,7 @@ import com.github.lany192.sample.R;
 public class HelloFragment extends Fragment {
     @Autowired(name = "username", desc = "名称")
     String name;
-    @Autowired(name = "hello", desc = "哈哈")
+    @Autowired(name = "hello_lany", desc = "哈哈")
     String hello;
 
     @Override
