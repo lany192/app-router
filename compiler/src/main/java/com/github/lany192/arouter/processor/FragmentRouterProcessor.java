@@ -115,12 +115,12 @@ public class FragmentRouterProcessor extends AbstractProcessor {
                 builder.addCode(makeCode(field, autowired));
             }
         }
-        builder.addCode("\nreturn ($T) postcard.navigation();",ClassName.get((TypeElement) element));
+        builder.addCode("\nreturn ($T) postcard.navigation();", ClassName.get((TypeElement) element));
         builder.returns(ClassName.get((TypeElement) element));
         return builder.build();
     }
 
-    private ClassName getFragmentBuilderName(Element element){
+    private ClassName getFragmentBuilderName(Element element) {
         String simpleName = element.getSimpleName().toString().replace("Fragment", "");
         return ClassName.get(ClassName.get((TypeElement) element).packageName(), simpleName + "Builder");
     }
@@ -251,6 +251,8 @@ public class FragmentRouterProcessor extends AbstractProcessor {
                         int index = typeName.lastIndexOf(".");
                         name = Utils.toUpperCaseFirstOne(typeName.substring(index + 1));
                         code += "\n    postcard.with" + name + "(\"" + key + "\", " + key + ");";
+                    } else {
+                        code += "\n    postcard.withObject(\"" + key + "\", " + key + ");";
                     }
                 } else {
                     code += "\n    postcard.withObject(\"" + key + "\", " + key + ");";
@@ -264,7 +266,8 @@ public class FragmentRouterProcessor extends AbstractProcessor {
     private void createFragmentBuilder(Element element, List<MethodSpec> methods) throws Exception {
         ClassName className = getFragmentBuilderName(element);
 
-        String simpleName = element.getSimpleName().toString().replace("Fragment", "");;
+        String simpleName = element.getSimpleName().toString().replace("Fragment", "");
+        ;
 
         TypeSpec.Builder builder = TypeSpec.classBuilder(simpleName + "Builder")
                 .addJavadoc("自动生成,请勿编辑!\n{@link " + ClassName.get((TypeElement) element) + "}")
