@@ -20,6 +20,9 @@ import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessor;
+import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -42,6 +45,7 @@ import javax.lang.model.util.Types;
  * @author Administrator
  */
 @AutoService(Processor.class)
+@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.DYNAMIC)
 public class AppRouterProcessor extends AbstractProcessor {
     private Logger logger;
     private Types types;
