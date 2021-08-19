@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
                         .isFans(true)
                         .ownerId(789)
                         .money(10.5f)
-                        .data1( 'w')
+                        .data1('w')
                         .data2("哈哈")
                         .data3((byte) 1)
                         .data4("流利")
@@ -102,7 +102,9 @@ public class MainActivity extends AppCompatActivity {
                             .build();
                 }
         );
-        Fragment fragment = AppRouter.get().getHello("张无忌", "哈哈");
+        List<String> items = new ArrayList<>();
+        items.add("张三");
+        Fragment fragment = AppRouter.get().getHello("张无忌", "哈哈", items);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.fl_fragment_content, fragment);

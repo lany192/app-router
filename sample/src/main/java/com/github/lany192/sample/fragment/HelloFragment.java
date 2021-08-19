@@ -14,12 +14,17 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
 import com.github.lany192.sample.R;
 
+import java.util.List;
+
 @Route(path = "/app/hello")
 public class HelloFragment extends Fragment {
     @Autowired(name = "username", desc = "名称")
     String name;
     @Autowired(name = "hello_lany", desc = "哈哈")
     String hello;
+
+    @Autowired(name = "items", desc = "哈2哈")
+    List<String> items;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
