@@ -51,6 +51,7 @@ public class ActivityRouterProcessor extends AbstractProcessor {
     private final ClassName arouterClassName = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
     private final ClassName routePathClassName = ClassName.get("com.alibaba.android.arouter", "RoutePath");
     private final ClassName postcardClass = ClassName.get("com.alibaba.android.arouter.facade", "Postcard");
+    private final ClassName uriClass = ClassName.get("android.net", "Uri");
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -302,6 +303,13 @@ public class ActivityRouterProcessor extends AbstractProcessor {
                 .addJavadoc("跳转到目标界面")
                 .addCode("postcard().navigation();")
                 .returns(void.class)
+                .build());
+        builder.addMethod(MethodSpec
+                .methodBuilder("getUri")
+                .addModifiers(Modifier.PUBLIC)
+                .addJavadoc("获取Uri")
+                .addCode("return postcard().getUri();")
+                .returns(uriClass)
                 .build());
         JavaFile javaFile = JavaFile
                 .builder(ClassName.get((TypeElement) element).packageName(), builder.build())
