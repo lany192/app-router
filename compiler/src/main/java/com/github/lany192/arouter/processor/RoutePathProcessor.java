@@ -29,7 +29,7 @@ import javax.lang.model.element.TypeElement;
  * @author Administrator
  */
 @AutoService(Processor.class)
-@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.DYNAMIC)
+@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
 public class RoutePathProcessor extends AbstractProcessor {
     private Logger logger;
 

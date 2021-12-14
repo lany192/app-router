@@ -45,7 +45,7 @@ import javax.lang.model.util.Types;
  * @author Administrator
  */
 @AutoService(Processor.class)
-@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.DYNAMIC)
+@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
 public class AppRouterProcessor extends AbstractProcessor {
     private Logger logger;
     private Types types;

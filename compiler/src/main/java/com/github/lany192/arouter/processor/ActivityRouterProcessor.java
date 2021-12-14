@@ -42,7 +42,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
 @AutoService(Processor.class)
-@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.DYNAMIC)
+@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
 public class ActivityRouterProcessor extends AbstractProcessor {
     private Logger logger;
     private Types types;
