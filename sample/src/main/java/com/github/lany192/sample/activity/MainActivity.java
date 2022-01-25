@@ -56,11 +56,11 @@ public class MainActivity extends AppCompatActivity {
                     List<String> items = new ArrayList<>();
                     items.add("张三");
                     items.add("王五");
-                    AppRouter.get().two(88, "这是一个标题", 8.68, items, (short) 9, new Person("王武", 89));
+                    AppRouter.startTwo(88, "这是一个标题", 8.68, items, (short) 9, new Person("王武", 89));
                 }
         );
         findViewById(R.id.button3).setOnClickListener(v ->
-                AppRouter.get().three("张三,我来至按钮", new User("李四", 888), 18)
+                AppRouter.startThree("张三,我来至按钮", new User("李四", 888), 18)
         );
         findViewById(R.id.button4).setOnClickListener(v -> {
                     UserHelper.get().setLogin(false);
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         );
         List<String> items = new ArrayList<>();
         items.add("张三");
-        Fragment fragment = AppRouter.get().getHello("张无忌", "哈哈", items);
+        Fragment fragment = AppRouter.getHello("张无忌", "哈哈", items);
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.fl_fragment_content, fragment);
@@ -126,27 +126,27 @@ public class MainActivity extends AppCompatActivity {
                 .addLink(new Link(link1)
                         .setTextColor(Color.BLUE)
                         .setOnClickListener(clickedText -> {
-                            AppRouter.get().skip(Uri.parse(clickedText));
+                            AppRouter.skip(Uri.parse(clickedText));
                         }))
                 .addLink(new Link(link2)
                         .setTextColor(Color.BLUE)
                         .setOnClickListener(clickedText -> {
-                            AppRouter.get().skip(Uri.parse(clickedText));
+                            AppRouter.skip(Uri.parse(clickedText));
                         }))
                 .addLink(new Link(link3)
                         .setTextColor(Color.BLUE)
                         .setOnClickListener(clickedText -> {
-                            AppRouter.get().skip(Uri.parse(clickedText));
+                            AppRouter.skip(Uri.parse(clickedText));
                         }))
                 .addLink(new Link(link4)
                         .setTextColor(Color.BLUE)
                         .setOnClickListener(clickedText -> {
-                            AppRouter.get().skip(Uri.parse(clickedText));
+                            AppRouter.skip(Uri.parse(clickedText));
                         }))
                 .addLink(new Link(link5)
                         .setTextColor(Color.BLUE)
                         .setOnClickListener(clickedText -> {
-                            AppRouter.get().skip(Uri.parse(clickedText));
+                            AppRouter.skip(Uri.parse(clickedText));
                         }))
                 .build());
         demoText.setMovementMethod(TouchableMovementMethod.getInstance());

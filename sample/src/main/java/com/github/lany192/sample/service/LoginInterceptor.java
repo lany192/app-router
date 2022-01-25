@@ -38,7 +38,7 @@ public class LoginInterceptor implements IInterceptor {
             String path = postcard.getPath();
             Bundle bundle = postcard.getExtras();
             bundle.putString(RoutePath.KEY_ROUTE_PATH, path);
-            AppRouter.get().skip(RoutePath.APP_LOGIN, bundle);
+            AppRouter.skip(RoutePath.APP_LOGIN, bundle);
             return;
         }
         Log.i(TAG, "不拦截，直接通过" + postcard);

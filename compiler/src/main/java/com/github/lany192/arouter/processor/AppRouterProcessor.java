@@ -13,7 +13,6 @@ import com.github.lany192.arouter.TypeUtils;
 import com.github.lany192.arouter.Utils;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
@@ -90,10 +89,10 @@ public class AppRouterProcessor extends AbstractProcessor {
                     methods.add(getFragmentInstance(element));
                 } else if (types.isSubtype(element.asType(), iProvider)) {// IProvider
                     logger.info(">>> Found provider route: " + element.asType().toString() + " <<<");
-                    methods.add(getProviderInstance(element));
+                    //methods.add(getProviderInstance(element));
                 } else if (types.isSubtype(element.asType(), getTypeMirror(Consts.SERVICE))) {// Service
                     logger.info(">>> Found service route: " + element.asType().toString() + " <<<");
-                    methods.add(getServiceInstance(element));
+                    //methods.add(getServiceInstance(element));
                 } else {
                     throw new RuntimeException("The @Route is marked on unsupported class, look at [" + element.asType().toString() + "].");
                 }
@@ -117,8 +116,8 @@ public class AppRouterProcessor extends AbstractProcessor {
         String simpleName = element.getSimpleName().toString().replace("Activity", "");
         String methodName = Utils.toLowerCaseFirstOne(simpleName);
         MethodSpec.Builder builder = MethodSpec
-                .methodBuilder(methodName)
-                .addModifiers(Modifier.PUBLIC)
+                .methodBuilder("start" + simpleName)
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addJavadoc("跳转到{@link " + ClassName.get((TypeElement) element) + "}");
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -149,7 +148,7 @@ public class AppRouterProcessor extends AbstractProcessor {
         String methodName = Utils.toLowerCaseFirstOne(element.getSimpleName().toString());
         MethodSpec.Builder builder = MethodSpec
                 .methodBuilder(methodName)
-                .addModifiers(Modifier.PUBLIC)
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addJavadoc("跳转到{@link " + ClassName.get((TypeElement) element) + "}");
         Route route = element.getAnnotation(Route.class);
         for (Element field : element.getEnclosedElements()) {
@@ -177,7 +176,7 @@ public class AppRouterProcessor extends AbstractProcessor {
     private MethodSpec getServiceInstance(Element element) {
         MethodSpec.Builder builder = MethodSpec
                 .methodBuilder("get" + element.getSimpleName().toString())
-                .addModifiers(Modifier.PUBLIC)
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addJavadoc("获取{@link " + ClassName.get((TypeElement) element) + "}");
         Route route = element.getAnnotation(Route.class);
         for (Element field : element.getEnclosedElements()) {
@@ -206,7 +205,7 @@ public class AppRouterProcessor extends AbstractProcessor {
         String simpleName = element.getSimpleName().toString().replace("Fragment", "");
         MethodSpec.Builder builder = MethodSpec
                 .methodBuilder("get" + simpleName)
-                .addModifiers(Modifier.PUBLIC)
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addJavadoc("获取实例{@link " + ClassName.get((TypeElement) element) + "}");
 
         for (Element field : element.getEnclosedElements()) {
@@ -269,34 +268,31 @@ public class AppRouterProcessor extends AbstractProcessor {
                 .addJavadoc("路由助手,自动生成,请勿编辑!")
                 .addModifiers(Modifier.PUBLIC);
 
-        ClassName routerType = ClassName.get("com.alibaba.android.arouter", "AppRouter");
-
-        builder.addField(FieldSpec.builder(routerType, "instance", Modifier.VOLATILE, Modifier.STATIC, Modifier.PRIVATE).build());
-
-        builder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build());
-
-        MethodSpec getMethodSpec = MethodSpec.methodBuilder("get")
-                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .beginControlFlow("if (instance == null) ")
-                .beginControlFlow("synchronized (AppRouter.class) ")
-                .beginControlFlow("if (instance == null) ")
-                .addCode("instance = new AppRouter();")
-                .endControlFlow()
-                .endControlFlow()
-                .endControlFlow()
-                .addCode("return instance;")
-                .returns(routerType)
-                .build();
-        builder.addMethod(getMethodSpec);
+//        ClassName routerType = ClassName.get("com.alibaba.android.arouter", "AppRouter");
+//        builder.addField(FieldSpec.builder(routerType, "instance", Modifier.VOLATILE, Modifier.STATIC, Modifier.PRIVATE).build());
+//        builder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build());
+//        MethodSpec getMethodSpec = MethodSpec.methodBuilder("get")
+//                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+//                .beginControlFlow("if (instance == null) ")
+//                .beginControlFlow("synchronized (AppRouter.class) ")
+//                .beginControlFlow("if (instance == null) ")
+//                .addCode("instance = new AppRouter();")
+//                .endControlFlow()
+//                .endControlFlow()
+//                .endControlFlow()
+//                .addCode("return instance;")
+//                .returns(routerType)
+//                .build();
+//        builder.addMethod(getMethodSpec);
 
         MethodSpec skipMethodSpec = MethodSpec.methodBuilder("skip")
                 .addJavadoc("通用跳转")
-                .addModifiers(Modifier.PUBLIC)
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addParameter(ParameterSpec
                         .builder(String.class, "path")
                         .addJavadoc("路由路径")
                         .build())
-                .addStatement("ARouter.getInstance().build(path).navigation()")
+                .addStatement("$T.getInstance().build(path).navigation()", arouterClassName)
                 .returns(void.class)
                 .build();
         builder.addMethod(skipMethodSpec);
@@ -304,7 +300,7 @@ public class AppRouterProcessor extends AbstractProcessor {
 
         MethodSpec skipMethodSpec2 = MethodSpec.methodBuilder("skip")
                 .addJavadoc("通用跳转")
-                .addModifiers(Modifier.PUBLIC)
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addParameter(ParameterSpec
                         .builder(String.class, "path")
                         .addJavadoc("路由路径\n")
@@ -313,19 +309,19 @@ public class AppRouterProcessor extends AbstractProcessor {
                         .builder(ClassName.get("android.os", "Bundle"), "bundle")
                         .addJavadoc("Bundle对象")
                         .build())
-                .addStatement("ARouter.getInstance().build(path).with(bundle).navigation()")
+                .addStatement("$T.getInstance().build(path).with(bundle).navigation()", arouterClassName)
                 .returns(void.class)
                 .build();
         builder.addMethod(skipMethodSpec2);
 
         MethodSpec skipMethodSpec3 = MethodSpec.methodBuilder("skip")
                 .addJavadoc("通用跳转")
-                .addModifiers(Modifier.PUBLIC)
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addParameter(ParameterSpec
                         .builder(ClassName.get("android.net", "Uri"), "uri")
                         .addJavadoc("路由路径")
                         .build())
-                .addStatement("ARouter.getInstance().build(uri).navigation()")
+                .addStatement("$T.getInstance().build(uri).navigation()", arouterClassName)
                 .returns(void.class)
                 .build();
         builder.addMethod(skipMethodSpec3);
