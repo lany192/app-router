@@ -65,7 +65,7 @@ public class RoutePathProcessor extends AbstractProcessor {
                 fieldName = fieldName.substring(1);
                 FieldSpec fieldSpec = FieldSpec
                         .builder(String.class, fieldName, Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
-                        .addJavadoc("" + route.name())
+                        .addJavadoc(route.name() + "\n")
                         .addJavadoc("类位置：{@link " + ClassName.get((TypeElement) element) + "}")
                         .initializer("\"" + path + "\"")
                         .build();
