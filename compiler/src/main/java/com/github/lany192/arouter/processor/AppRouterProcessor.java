@@ -118,7 +118,7 @@ public class AppRouterProcessor extends AbstractProcessor {
         MethodSpec.Builder builder = MethodSpec
                 .methodBuilder("start" + simpleName)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addJavadoc("跳转到{@link " + ClassName.get((TypeElement) element) + "}");
+                .addJavadoc(OtherUtils.getUseDoc(element, types, iProvider));
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                 Autowired autowired = field.getAnnotation(Autowired.class);

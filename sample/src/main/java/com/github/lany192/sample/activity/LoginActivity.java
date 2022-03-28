@@ -14,7 +14,7 @@ import com.github.lany192.sample.UserHelper;
 /**
  * @author Administrator
  */
-@Route(path = "/app/login")
+@Route(path = "/app/login", name = "登录界面")
 public class LoginActivity extends AppCompatActivity {
     @Autowired(name = "route_path", desc = "跳转路径,不含参数")
     String path;

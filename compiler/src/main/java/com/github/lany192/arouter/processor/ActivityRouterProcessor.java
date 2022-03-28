@@ -8,6 +8,7 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.enums.TypeKind;
 import com.github.lany192.arouter.Consts;
 import com.github.lany192.arouter.Logger;
+import com.github.lany192.arouter.OtherUtils;
 import com.github.lany192.arouter.TypeUtils;
 import com.github.lany192.arouter.Utils;
 import com.google.auto.service.AutoService;
@@ -84,9 +85,7 @@ public class ActivityRouterProcessor extends AbstractProcessor {
             for (Element element : routeElements) {
                 if (isActivity(element)) { // Activity
                     try {
-                        List<MethodSpec> methods = createMethods(element);
-                        methods.add(createPostcard(element));
-                        createActivityRouter(element, methods);
+                        createActivityRouter(element);
                     } catch (Exception e) {
                         logger.error(e);
                     }
@@ -97,6 +96,67 @@ public class ActivityRouterProcessor extends AbstractProcessor {
             return false;
         }
         return true;
+    }
+
+    private void createActivityRouter(Element element) throws Exception {
+        List<MethodSpec> methods = createMethods(element);
+        methods.add(createPostcard(element));
+
+        String simpleName = element.getSimpleName().toString().replace("Activity", "");
+
+        ClassName routerType = ClassName.get(ClassName.get((TypeElement) element).packageName(), simpleName + "Router");
+        ClassName callbackClass = ClassName.get("com.alibaba.android.arouter.facade.callback", "NavCallback");
+
+        TypeSpec.Builder builder = TypeSpec.classBuilder(simpleName + "Router")
+                .addJavadoc(OtherUtils.getUseDoc(element, types, iProvider) + "\n自动生成,请勿编辑!")
+                .addModifiers(Modifier.PUBLIC);
+
+        List<FieldSpec> fields = createFields(element);
+        for (FieldSpec field : fields) {
+            builder.addField(field);
+        }
+
+        builder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build());
+        builder.addMethod(MethodSpec.methodBuilder("builder")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addCode("return new $T();", routerType)
+                .returns(routerType)
+                .build());
+        for (MethodSpec method : methods) {
+            builder.addMethod(method);
+        }
+        builder.addMethod(MethodSpec.methodBuilder("build")
+                .addParameter(ParameterSpec.builder(callbackClass, "callback").build())
+                .addModifiers(Modifier.PUBLIC)
+                .addJavadoc("跳转到目标界面")
+                .addCode("Postcard postcard = postcard();")
+                .addCode("\nif (callback != null) {")
+                .addCode("\n    postcard.navigation(null, callback);")
+                .addCode("\n} else {")
+                .addCode("\n    postcard.navigation();")
+                .addCode("\n}")
+                .returns(void.class)
+                .build());
+        builder.addMethod(MethodSpec
+                .methodBuilder("build")
+                .addModifiers(Modifier.PUBLIC)
+                .addJavadoc("跳转到目标界面")
+                .addCode("postcard().navigation();")
+                .returns(void.class)
+                .build());
+        builder.addMethod(MethodSpec
+                .methodBuilder("getUri")
+                .addModifiers(Modifier.PUBLIC)
+                .addJavadoc("获取Uri")
+                .addCode("return postcard().getUri();")
+                .returns(uriClass)
+                .build());
+        JavaFile javaFile = JavaFile
+                .builder(ClassName.get((TypeElement) element).packageName(), builder.build())
+                // 设置表示缩进的字符串
+                .indent("    ")
+                .build();
+        javaFile.writeTo(processingEnv.getFiler());
     }
 
     /**
@@ -162,7 +222,7 @@ public class ActivityRouterProcessor extends AbstractProcessor {
                     }
                 }
                 builder.addParameter(parameterSpec);
-                builder.addJavadoc(autowired.desc());
+                builder.addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required());
                 builder.addCode("this." + key + " = " + key + ";");
                 builder.addCode("\nreturn this;");
                 builder.returns(routerType);
@@ -186,7 +246,7 @@ public class ActivityRouterProcessor extends AbstractProcessor {
                 if (typeMirror.getKind().isPrimitive()) {
                     fields.add(FieldSpec
                             .builder(TypeName.get(typeMirror), key, Modifier.PRIVATE)
-                            .addJavadoc(autowired.desc() + "\n")
+                            .addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required())
                             .build());
                 } else {
                     //是否是泛型
@@ -200,7 +260,7 @@ public class ActivityRouterProcessor extends AbstractProcessor {
 
                         fields.add(FieldSpec
                                 .builder(ParameterizedTypeName.get(list, className), key, Modifier.PRIVATE)
-                                .addJavadoc(autowired.desc() + "\n")
+                                .addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required())
                                 .build());
                     } else {
                         if (typeName.contains(".")) {
@@ -208,12 +268,12 @@ public class ActivityRouterProcessor extends AbstractProcessor {
                             ClassName className = ClassName.get(typeName.substring(0, index), typeName.substring(index + 1));
                             fields.add(FieldSpec
                                     .builder(className, key, Modifier.PRIVATE)
-                                    .addJavadoc(autowired.desc() + "\n")
+                                    .addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required())
                                     .build());
                         } else {
                             fields.add(FieldSpec
                                     .builder(Object.class, key, Modifier.PRIVATE)
-                                    .addJavadoc(autowired.desc() + "\n")
+                                    .addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required())
                                     .build());
                         }
                     }
@@ -261,63 +321,6 @@ public class ActivityRouterProcessor extends AbstractProcessor {
         return code;
     }
 
-    private void createActivityRouter(Element element, List<MethodSpec> methods) throws Exception {
-        String simpleName = element.getSimpleName().toString().replace("Activity", "");
-
-        ClassName routerType = ClassName.get(ClassName.get((TypeElement) element).packageName(), simpleName + "Router");
-        ClassName callbackClass = ClassName.get("com.alibaba.android.arouter.facade.callback", "NavCallback");
-
-        TypeSpec.Builder builder = TypeSpec.classBuilder(simpleName + "Router")
-                .addJavadoc("自动生成,请勿编辑!\n{@link " + ClassName.get((TypeElement) element) + "}")
-                .addModifiers(Modifier.PUBLIC);
-
-        List<FieldSpec> fields = createFields(element);
-        for (FieldSpec field : fields) {
-            builder.addField(field);
-        }
-
-        builder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build());
-        builder.addMethod(MethodSpec.methodBuilder("builder")
-                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addCode("return new $T();", routerType)
-                .returns(routerType)
-                .build());
-        for (MethodSpec method : methods) {
-            builder.addMethod(method);
-        }
-        builder.addMethod(MethodSpec.methodBuilder("build")
-                .addParameter(ParameterSpec.builder(callbackClass, "callback").build())
-                .addModifiers(Modifier.PUBLIC)
-                .addJavadoc("跳转到目标界面")
-                .addCode("Postcard postcard = postcard();")
-                .addCode("\nif (callback != null) {")
-                .addCode("\n    postcard.navigation(null, callback);")
-                .addCode("\n} else {")
-                .addCode("\n    postcard.navigation();")
-                .addCode("\n}")
-                .returns(void.class)
-                .build());
-        builder.addMethod(MethodSpec
-                .methodBuilder("build")
-                .addModifiers(Modifier.PUBLIC)
-                .addJavadoc("跳转到目标界面")
-                .addCode("postcard().navigation();")
-                .returns(void.class)
-                .build());
-        builder.addMethod(MethodSpec
-                .methodBuilder("getUri")
-                .addModifiers(Modifier.PUBLIC)
-                .addJavadoc("获取Uri")
-                .addCode("return postcard().getUri();")
-                .returns(uriClass)
-                .build());
-        JavaFile javaFile = JavaFile
-                .builder(ClassName.get((TypeElement) element).packageName(), builder.build())
-                // 设置表示缩进的字符串
-                .indent("    ")
-                .build();
-        javaFile.writeTo(processingEnv.getFiler());
-    }
 
     private TypeMirror getTypeMirror(String name) {
         return processingEnv.getElementUtils().getTypeElement(name).asType();

@@ -36,21 +36,27 @@
         </activity>
         <activity
             android:name=".activity.OneActivity"
+            android:exported="false"
             android:label="OneActivity" />
         <activity
             android:name=".activity.TwoActivity"
+            android:exported="false"
             android:label="TwoActivity" />
         <activity
             android:name=".activity.ThreeActivity"
+            android:exported="false"
             android:label="ThreeActivity" />
         <activity
             android:name=".activity.FourActivity"
+            android:exported="false"
             android:label="FourActivity" />
         <activity
             android:name=".activity.FiveActivity"
+            android:exported="false"
             android:label="FiveActivity" />
         <activity
             android:name=".activity.LoginActivity"
+            android:exported="false"
             android:label="LoginActivity" />
     </application>
 

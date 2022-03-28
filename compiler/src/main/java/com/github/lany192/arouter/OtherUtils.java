@@ -1,6 +1,7 @@
 package com.github.lany192.arouter;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
+import com.alibaba.android.arouter.facade.annotation.Route;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
@@ -9,12 +10,49 @@ import com.squareup.javapoet.TypeName;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Types;
 
 /**
  * @author lyg
  */
 public class OtherUtils {
+    /**
+     * 生成使用文档
+     */
+    public static String getUseDoc(Element element, Types types, TypeMirror iProvider) {
+        Route route = element.getAnnotation(Route.class);
+        String doc = "";
+        if (!StringUtils.isEmpty(route.name())) {
+            doc = route.name() + "\n";
+        }
+        StringBuilder uri = new StringBuilder(route.path());
+        StringBuilder parameter = new StringBuilder("参数说明:");
+        parameter.append("\n").append("| 名称 | 必选 | 说明 |");
+        parameter.append("\n").append("| ---- | ---- | ---- |");
+        boolean isFirst = true;
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                String fieldName = field.getSimpleName().toString();
+                String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
+
+                if (isFirst) {
+                    isFirst = false;
+                    uri.append("?").append(key).append("=xxx");
+                } else {
+                    uri.append("&").append(key).append("=xxx");
+                }
+                parameter.append("\n|").append(key).append(" | ").append(autowired.required()).append(" | ").append(autowired.desc()).append(" |");
+            }
+        }
+        doc = doc + "\n路由协议:\n```\ngamekipo://" + uri + "\n```";
+        doc = doc + "\nJS调用:\n```\nwindow.app.route('" + uri + "');\n```";
+        doc = doc + "\n" + parameter;
+        doc = doc + "\n\n类位置：{@link " + ClassName.get((TypeElement) element) + "}";
+        return doc;
+    }
 
     public static ParameterSpec getParameter(Element field, Autowired autowired) {
         String fieldName = field.getSimpleName().toString();
