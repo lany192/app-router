@@ -10,10 +10,14 @@ public class Logger {
     /**
      * 调试时手动修改
      */
-    private final boolean debug = false;
+    private boolean debug;
 
     public Logger(Messager messager) {
         msg = messager;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 
     /**

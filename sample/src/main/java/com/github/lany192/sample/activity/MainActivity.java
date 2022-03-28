@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.button1).setOnClickListener(v ->
                 OneRouter.builder()
                         .isFans(true)
-                        .ownerId(789)
+//                        .ownerId(789)
                         .money(10.5f)
                         .data1('w')
                         .data2("哈哈")

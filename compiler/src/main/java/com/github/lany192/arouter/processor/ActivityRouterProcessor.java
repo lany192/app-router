@@ -28,6 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -53,6 +54,8 @@ public class ActivityRouterProcessor extends AbstractProcessor {
     private final ClassName postcardClass = ClassName.get("com.alibaba.android.arouter.facade", "Postcard");
     private final ClassName uriClass = ClassName.get("android.net", "Uri");
 
+    private Map<String,String> optionMap;
+
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
@@ -60,7 +63,10 @@ public class ActivityRouterProcessor extends AbstractProcessor {
         typeUtils = new TypeUtils(types, processingEnv.getElementUtils());
         logger = new Logger(processingEnv.getMessager());
         iProvider = processingEnv.getElementUtils().getTypeElement(Consts.IPROVIDER).asType();
-        logger.info("初始化");
+        optionMap = processingEnv.getOptions();
+        String value = optionMap.get("APP_ROUTER_DEBUG");
+        logger.setDebug(Boolean.valueOf(value));
+        logger.info("初始化"+value);
     }
 
     @Override
