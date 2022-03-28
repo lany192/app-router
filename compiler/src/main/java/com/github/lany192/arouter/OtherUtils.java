@@ -17,46 +17,8 @@ import javax.lang.model.util.Types;
  * @author lyg
  */
 public class OtherUtils {
-    /**
-     * 生成使用文档
-     */
-    public static String getUseDoc(Element element, Types types, TypeMirror iProvider, int index) {
-        Route route = element.getAnnotation(Route.class);
-        String doc = "\n\n### " + index + ".";
-        if (!StringUtils.isEmpty(route.name())) {
-            doc += route.name() + "\n";
-        }
-        StringBuilder uri = new StringBuilder(route.path());
-        StringBuilder parameter = new StringBuilder("参数说明:\n");
-        parameter.append("\n").append("| 名称 | 类型 | 必选 | 说明 |");
-        parameter.append("\n").append("| ---- | ---- | ---- | ---- |");
-        boolean isFirst = true;
-        boolean hasParameter = false;
-        for (Element field : element.getEnclosedElements()) {
-            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                hasParameter = true;
-                Autowired autowired = field.getAnnotation(Autowired.class);
-                String fieldName = field.getSimpleName().toString();
-                String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
 
-                if (isFirst) {
-                    isFirst = false;
-                    uri.append("?").append(key).append("=xxx");
-                } else {
-                    uri.append("&").append(key).append("=xxx");
-                }
-                parameter.append("\n|").append(key).append(" | ").append(getParameterType(field)).append(" | ").append(autowired.required() ? "是" : "否").append(" | ").append(autowired.desc()).append(" |");
-            }
-        }
-        doc = doc + "\n路由协议:\n```\ngamekipo://" + uri + "\n```";
-        doc = doc + "\nJS调用:\n```\nwindow.app.route('" + uri + "');\n```";
-        if (hasParameter) {
-            doc = doc + "\n" + parameter;
-        }
-        return doc;
-    }
-
-    private static String getParameterType(Element field) {
+    public static String getParameterType(Element field) {
         String typeName = field.asType().toString();
         TypeMirror typeMirror = field.asType();
         //是否原始类型

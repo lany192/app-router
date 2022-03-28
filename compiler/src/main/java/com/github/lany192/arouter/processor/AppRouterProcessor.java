@@ -12,7 +12,6 @@ import com.github.lany192.arouter.TypeUtils;
 import com.github.lany192.arouter.Utils;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
@@ -90,6 +89,9 @@ public class AppRouterProcessor extends BaseProcessor {
                 }
             }
             try {
+                if (Boolean.parseBoolean(getValue(JS_ROUTER_DOC))) {
+                    logger.info(javaDoc);
+                }
                 createRouterHelper(methods);
             } catch (Exception e) {
                 logger.error(e);
@@ -99,6 +101,48 @@ public class AppRouterProcessor extends BaseProcessor {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 生成使用文档
+     */
+    public String getUseDoc(Element element, int index) {
+        Route route = element.getAnnotation(Route.class);
+        String doc = "\n\n### " + index + ".";
+        if (!StringUtils.isEmpty(route.name())) {
+            doc += route.name() + "\n";
+        }
+        StringBuilder uri = new StringBuilder(route.path());
+        StringBuilder parameter = new StringBuilder("参数说明:\n");
+        parameter.append("\n").append("| 名称 | 类型 | 必选 | 说明 |");
+        parameter.append("\n").append("|:----:|:----:|:----:|:----:|");
+        boolean isFirst = true;
+        boolean hasParameter = false;
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                hasParameter = true;
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                String fieldName = field.getSimpleName().toString();
+                String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
+
+                if (isFirst) {
+                    isFirst = false;
+                    uri.append("?").append(key).append("=xxx");
+                } else {
+                    uri.append("&").append(key).append("=xxx");
+                }
+                parameter.append("\n|").append(key).append(" | ").append(OtherUtils.getParameterType(field)).append(" | ").append(autowired.required() ? "是" : "否").append(" | ").append(autowired.desc()).append(" |");
+            }
+        }
+        String scheme = getValue(ROUTER_SCHEME);
+        String jsFun = getValue(ROUTER_JS_FUN);
+
+        doc = doc + "\n路由协议:\n```\n" + scheme + "://" + uri + "\n```";
+        doc = doc + "\nJS调用:\n```\n" + jsFun + "('" + uri + "');\n```";
+        if (hasParameter) {
+            doc = doc + "\n" + parameter;
+        }
+        return doc;
     }
 
     /**
@@ -116,8 +160,7 @@ public class AppRouterProcessor extends BaseProcessor {
         }
         doc += "\n\n类位置：{@link " + ClassName.get((TypeElement) element) + "}";
 
-        String sss = OtherUtils.getUseDoc(element, types, iProvider, index);
-        javaDoc += sss;
+        javaDoc += getUseDoc(element, index);
 
         MethodSpec.Builder builder = MethodSpec
                 .methodBuilder("start" + simpleName)
@@ -268,7 +311,8 @@ public class AppRouterProcessor extends BaseProcessor {
     }
 
     private void createRouterHelper(List<MethodSpec> methods) throws Exception {
-        logger.info(javaDoc);
+
+
         TypeSpec.Builder builder = TypeSpec.classBuilder("AppRouter")
                 .addJavadoc("路由助手,自动生成,请勿编辑!")
                 .addModifiers(Modifier.PUBLIC);
