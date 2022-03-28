@@ -30,20 +30,7 @@ import javax.lang.model.element.TypeElement;
  */
 @AutoService(Processor.class)
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
-public class RoutePathProcessor extends AbstractProcessor {
-    private Logger logger;
-
-    @Override
-    public synchronized void init(ProcessingEnvironment processingEnv) {
-        super.init(processingEnv);
-        logger = new Logger(processingEnv.getMessager());
-        logger.info("初始化");
-    }
-
-    @Override
-    public SourceVersion getSupportedSourceVersion() {
-        return SourceVersion.latestSupported();
-    }
+public class RoutePathProcessor extends BaseProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {

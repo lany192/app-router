@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -45,8 +46,7 @@ import javax.lang.model.util.Types;
  */
 @AutoService(Processor.class)
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
-public class AppRouterProcessor extends AbstractProcessor {
-    private Logger logger;
+public class AppRouterProcessor extends BaseProcessor {
     private Types types;
     private TypeMirror iProvider = null;
     private TypeUtils typeUtils;
@@ -59,14 +59,7 @@ public class AppRouterProcessor extends AbstractProcessor {
         super.init(processingEnv);
         types = processingEnv.getTypeUtils();
         typeUtils = new TypeUtils(types, processingEnv.getElementUtils());
-        logger = new Logger(processingEnv.getMessager());
         iProvider = processingEnv.getElementUtils().getTypeElement(Consts.IPROVIDER).asType();
-        logger.info("初始化");
-    }
-
-    @Override
-    public SourceVersion getSupportedSourceVersion() {
-        return SourceVersion.latestSupported();
     }
 
     @Override
@@ -279,8 +272,9 @@ public class AppRouterProcessor extends AbstractProcessor {
     }
 
     private void createRouterHelper(List<MethodSpec> methods) throws Exception {
+        logger.info(javaDoc);
         TypeSpec.Builder builder = TypeSpec.classBuilder("AppRouter")
-                .addJavadoc(javaDoc + "\n\n\n路由助手,自动生成,请勿编辑!")
+                .addJavadoc("路由助手,自动生成,请勿编辑!")
                 .addModifiers(Modifier.PUBLIC);
 
 //        ClassName routerType = ClassName.get("com.alibaba.android.arouter", "AppRouter");

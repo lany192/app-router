@@ -44,8 +44,7 @@ import javax.lang.model.util.Types;
 
 @AutoService(Processor.class)
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
-public class ActivityRouterProcessor extends AbstractProcessor {
-    private Logger logger;
+public class ActivityRouterProcessor extends BaseProcessor {
     private Types types;
     private TypeMirror iProvider = null;
     private TypeUtils typeUtils;
@@ -54,24 +53,12 @@ public class ActivityRouterProcessor extends AbstractProcessor {
     private final ClassName postcardClass = ClassName.get("com.alibaba.android.arouter.facade", "Postcard");
     private final ClassName uriClass = ClassName.get("android.net", "Uri");
 
-    private Map<String,String> optionMap;
-
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
         types = processingEnv.getTypeUtils();
         typeUtils = new TypeUtils(types, processingEnv.getElementUtils());
-        logger = new Logger(processingEnv.getMessager());
         iProvider = processingEnv.getElementUtils().getTypeElement(Consts.IPROVIDER).asType();
-        optionMap = processingEnv.getOptions();
-        String value = optionMap.get("APP_ROUTER_DEBUG");
-        logger.setDebug(Boolean.valueOf(value));
-        logger.info("初始化"+value);
-    }
-
-    @Override
-    public SourceVersion getSupportedSourceVersion() {
-        return SourceVersion.latestSupported();
     }
 
     @Override

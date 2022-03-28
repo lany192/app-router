@@ -43,8 +43,7 @@ import javax.lang.model.util.Types;
 
 @AutoService(Processor.class)
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
-public class FragmentRouterProcessor extends AbstractProcessor {
-    private Logger logger;
+public class FragmentRouterProcessor extends BaseProcessor {
     private Types types;
     private TypeMirror iProvider = null;
     private TypeUtils typeUtils;
@@ -57,14 +56,7 @@ public class FragmentRouterProcessor extends AbstractProcessor {
         super.init(processingEnv);
         types = processingEnv.getTypeUtils();
         typeUtils = new TypeUtils(types, processingEnv.getElementUtils());
-        logger = new Logger(processingEnv.getMessager());
         iProvider = processingEnv.getElementUtils().getTypeElement(Consts.IPROVIDER).asType();
-        logger.info("初始化");
-    }
-
-    @Override
-    public SourceVersion getSupportedSourceVersion() {
-        return SourceVersion.latestSupported();
     }
 
     @Override
