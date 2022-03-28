@@ -14,6 +14,22 @@
         annotationProcessor 'com.github.lany192:app-router:+'
     }
 
+# 自定义参数配置
+
+    kapt {
+        arguments {
+            arg("AROUTER_MODULE_NAME", project.getName())
+            //是否debug模式
+            arg("ROUTER_DEBUG", true)
+            //是否打印JS路由文档
+            arg("JS_ROUTER_DOC", true)
+            //Uri Scheme标识
+            arg("ROUTER_SCHEME", "gamekipo")
+            //JS路由调用方法
+            arg("ROUTER_JS_FUN", "window.app.route")
+        }
+    }
+
 ### 调用方法，编译后会自动生成AppRouter类，收集了使用了@Route注解的控件调整方法
     
     //调整到one这个Activity界面
