@@ -10,7 +10,6 @@ import com.squareup.javapoet.TypeName;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.lang.model.element.Element;
-import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
@@ -21,19 +20,21 @@ public class OtherUtils {
     /**
      * 生成使用文档
      */
-    public static String getUseDoc(Element element, Types types, TypeMirror iProvider) {
+    public static String getUseDoc(Element element, Types types, TypeMirror iProvider, int index) {
         Route route = element.getAnnotation(Route.class);
-        String doc = "";
+        String doc = "\n\n### " + index + ".";
         if (!StringUtils.isEmpty(route.name())) {
-            doc = route.name() + "\n";
+            doc += route.name() + "\n";
         }
         StringBuilder uri = new StringBuilder(route.path());
-        StringBuilder parameter = new StringBuilder("参数说明:");
-        parameter.append("\n").append("| 名称 | 必选 | 说明 |");
-        parameter.append("\n").append("| ---- | ---- | ---- |");
+        StringBuilder parameter = new StringBuilder("参数说明:\n");
+        parameter.append("\n").append("| 名称 | 类型 | 必选 | 说明 |");
+        parameter.append("\n").append("| ---- | ---- | ---- | ---- |");
         boolean isFirst = true;
+        boolean hasParameter = false;
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                hasParameter = true;
                 Autowired autowired = field.getAnnotation(Autowired.class);
                 String fieldName = field.getSimpleName().toString();
                 String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
@@ -44,14 +45,48 @@ public class OtherUtils {
                 } else {
                     uri.append("&").append(key).append("=xxx");
                 }
-                parameter.append("\n|").append(key).append(" | ").append(autowired.required()).append(" | ").append(autowired.desc()).append(" |");
+                parameter.append("\n|").append(key).append(" | ").append(getParameterType(field)).append(" | ").append(autowired.required() ? "是" : "否").append(" | ").append(autowired.desc()).append(" |");
             }
         }
         doc = doc + "\n路由协议:\n```\ngamekipo://" + uri + "\n```";
         doc = doc + "\nJS调用:\n```\nwindow.app.route('" + uri + "');\n```";
-        doc = doc + "\n" + parameter;
-        doc = doc + "\n\n类位置：{@link " + ClassName.get((TypeElement) element) + "}";
+        if (hasParameter) {
+            doc = doc + "\n" + parameter;
+        }
         return doc;
+    }
+
+    private static String getParameterType(Element field) {
+        String typeName = field.asType().toString();
+        TypeMirror typeMirror = field.asType();
+        //是否原始类型
+        if (typeMirror.getKind().isPrimitive()) {
+            return TypeName.get(typeMirror).toString();
+        } else {
+            //是否是泛型
+            if (typeName.contains("<") && typeName.contains(">")) {
+                int startIndex = typeName.indexOf("<");
+                int endIndex = typeName.indexOf(">");
+                String tmp = typeName.substring(startIndex + 1, endIndex);
+                int index = tmp.lastIndexOf(".");
+                ClassName className = ClassName.get(tmp.substring(0, index), tmp.substring(index + 1));
+                return "List<" + className.simpleName() + ">" + "(json)";
+            } else {
+                if (typeName.equals("java.lang.String") || typeName.equals("java.lang.CharSequence")) {
+                    int index = typeName.lastIndexOf(".");
+                    ClassName className = ClassName.get(typeName.substring(0, index), typeName.substring(index + 1));
+                    return className.simpleName();
+                } else {
+                    if (typeName.contains(".")) {
+                        int index = typeName.lastIndexOf(".");
+                        ClassName className = ClassName.get(typeName.substring(0, index), typeName.substring(index + 1));
+                        return className.simpleName() + "(json)";
+                    } else {
+                        return "json";
+                    }
+                }
+            }
+        }
     }
 
     public static ParameterSpec getParameter(Element field, Autowired autowired) {

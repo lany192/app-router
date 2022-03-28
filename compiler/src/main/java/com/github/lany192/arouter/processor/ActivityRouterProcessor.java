@@ -8,7 +8,6 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.enums.TypeKind;
 import com.github.lany192.arouter.Consts;
 import com.github.lany192.arouter.Logger;
-import com.github.lany192.arouter.OtherUtils;
 import com.github.lany192.arouter.TypeUtils;
 import com.github.lany192.arouter.Utils;
 import com.google.auto.service.AutoService;
@@ -99,6 +98,8 @@ public class ActivityRouterProcessor extends AbstractProcessor {
     }
 
     private void createActivityRouter(Element element) throws Exception {
+        Route route = element.getAnnotation(Route.class);
+
         List<MethodSpec> methods = createMethods(element);
         methods.add(createPostcard(element));
 
@@ -108,7 +109,7 @@ public class ActivityRouterProcessor extends AbstractProcessor {
         ClassName callbackClass = ClassName.get("com.alibaba.android.arouter.facade.callback", "NavCallback");
 
         TypeSpec.Builder builder = TypeSpec.classBuilder(simpleName + "Router")
-                .addJavadoc(OtherUtils.getUseDoc(element, types, iProvider) + "\n自动生成,请勿编辑!")
+                .addJavadoc(route.name() + "\n类位置：{@link " + ClassName.get((TypeElement) element) + "}" + "\n自动生成,请勿编辑!")
                 .addModifiers(Modifier.PUBLIC);
 
         List<FieldSpec> fields = createFields(element);

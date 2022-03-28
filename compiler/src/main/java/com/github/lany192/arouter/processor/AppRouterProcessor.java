@@ -52,6 +52,7 @@ public class AppRouterProcessor extends AbstractProcessor {
     private TypeUtils typeUtils;
     private final ClassName arouterClassName = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
     private final ClassName routePathClassName = ClassName.get("com.alibaba.android.arouter", "RoutePath");
+    String javaDoc;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -82,9 +83,11 @@ public class AppRouterProcessor extends AbstractProcessor {
         if (elements != null && !elements.isEmpty()) {
             Set<? extends Element> routeElements = roundEnv.getElementsAnnotatedWith(Route.class);
             List<MethodSpec> methods = new ArrayList<>();
+            int index = 1;
             for (Element element : routeElements) {
                 if (isActivity(element)) { // Activity
-                    methods.add(skipActivity(element));
+                    methods.add(skipActivity(element, index));
+                    index++;
                 } else if (isFragment(element)) { // Fragment
                     methods.add(getFragmentInstance(element));
                 } else if (types.isSubtype(element.asType(), iProvider)) {// IProvider
@@ -112,13 +115,25 @@ public class AppRouterProcessor extends AbstractProcessor {
     /**
      * 跳转Activity方法
      */
-    private MethodSpec skipActivity(Element element) {
+    private MethodSpec skipActivity(Element element, int index) {
         String simpleName = element.getSimpleName().toString().replace("Activity", "");
         String methodName = Utils.toLowerCaseFirstOne(simpleName);
+
+
+        Route route = element.getAnnotation(Route.class);
+        String doc = "";
+        if (!StringUtils.isEmpty(route.name())) {
+            doc = route.name() + "\n";
+        }
+        doc += "\n\n类位置：{@link " + ClassName.get((TypeElement) element) + "}";
+
+        String sss = OtherUtils.getUseDoc(element, types, iProvider, index);
+        javaDoc += sss;
+
         MethodSpec.Builder builder = MethodSpec
                 .methodBuilder("start" + simpleName)
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addJavadoc(OtherUtils.getUseDoc(element, types, iProvider));
+                .addJavadoc(doc);
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                 Autowired autowired = field.getAnnotation(Autowired.class);
@@ -265,7 +280,7 @@ public class AppRouterProcessor extends AbstractProcessor {
 
     private void createRouterHelper(List<MethodSpec> methods) throws Exception {
         TypeSpec.Builder builder = TypeSpec.classBuilder("AppRouter")
-                .addJavadoc("路由助手,自动生成,请勿编辑!")
+                .addJavadoc(javaDoc + "\n\n\n路由助手,自动生成,请勿编辑!")
                 .addModifiers(Modifier.PUBLIC);
 
 //        ClassName routerType = ClassName.get("com.alibaba.android.arouter", "AppRouter");
