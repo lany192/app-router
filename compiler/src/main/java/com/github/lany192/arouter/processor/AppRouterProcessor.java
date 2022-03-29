@@ -108,7 +108,7 @@ public class AppRouterProcessor extends BaseProcessor {
      */
     public String getUseDoc(Element element, int index) {
         Route route = element.getAnnotation(Route.class);
-        String doc = "\n\n### " + index + ".";
+        String doc = "\n\n### " + index + ". ";
         if (!StringUtils.isEmpty(route.name())) {
             doc += route.name() + "\n";
         }
