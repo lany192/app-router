@@ -44,6 +44,7 @@ public class AppRouterProcessor extends BaseProcessor {
     private final ClassName arouterClassName = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
     private final ClassName routePathClassName = ClassName.get("com.alibaba.android.arouter", "RoutePath");
     private String jsUseDoc;
+    private String routeTestDoc;
     private String jsH5TestDoc;
 
     @Override
@@ -87,6 +88,8 @@ public class AppRouterProcessor extends BaseProcessor {
             try {
                 if (Boolean.parseBoolean(getValue(JS_ROUTER_DOC))) {
                     logger.info(jsUseDoc);
+                    logger.info("JS测试用例：\n" + jsH5TestDoc);
+                    logger.info("协议测试用例：\n" + routeTestDoc);
                 }
                 createRouterHelper(methods);
             } catch (Exception e) {
@@ -107,6 +110,8 @@ public class AppRouterProcessor extends BaseProcessor {
         String doc = "\n\n### " + index + ". ";
         if (!StringUtils.isEmpty(route.name())) {
             doc += route.name() + "\n";
+        } else {
+            doc += "未定义\n";
         }
         StringBuilder uri = new StringBuilder(route.path());
         StringBuilder parameter = new StringBuilder("参数说明:\n");
@@ -127,7 +132,7 @@ public class AppRouterProcessor extends BaseProcessor {
                 } else {
                     uri.append("&").append(key).append("=xxx");
                 }
-                parameter.append("\n|").append(key).append(" | ").append(OtherUtils.getParameterType(field)).append(" | ").append(autowired.required() ? "是" : "否").append(" | ").append(autowired.desc()).append(" |");
+                parameter.append("\n|").append(key).append(" | ").append(OtherUtils.getParameterType(field)).append(" | ").append(autowired.required() ? "是" : "否").append(" |").append(autowired.desc()).append(" | ");
             }
         }
         String scheme = getValue(ROUTER_SCHEME);
@@ -138,6 +143,11 @@ public class AppRouterProcessor extends BaseProcessor {
         if (hasParameter) {
             doc = doc + "\n" + parameter;
         }
+
+        routeTestDoc += "\n<li><a href=\"" + scheme + "://" + uri + "\">" + index + "." + route.name() + "</a></li>";
+
+        jsH5TestDoc += "\n<li><a href=\"javascript:" + jsFun + "('" + uri + "');\">" + index + "." + route.name() + "</a></li>";
+
         return doc;
     }
 
@@ -157,6 +167,7 @@ public class AppRouterProcessor extends BaseProcessor {
         doc += "\n\n类位置：{@link " + ClassName.get((TypeElement) element) + "}";
 
         jsUseDoc += getUseDoc(element, index);
+
 
         MethodSpec.Builder builder = MethodSpec
                 .methodBuilder("start" + simpleName)
