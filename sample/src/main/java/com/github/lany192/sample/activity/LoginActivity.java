@@ -12,7 +12,7 @@ import com.github.lany192.sample.R;
 import com.github.lany192.sample.UserHelper;
 
 /**
- * @author Administrator
+ * @author lany192
  */
 @Route(path = "/app/login", name = "登录界面")
 public class LoginActivity extends AppCompatActivity {

@@ -3,7 +3,6 @@ package com.github.lany192.sample.service;
 import android.content.Context;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.service.PathReplaceService;
@@ -12,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Administrator
+ * @author lany192
  */
 @Route(path = "/service/path/replace")
 public class PathReplaceServiceImpl implements PathReplaceService {

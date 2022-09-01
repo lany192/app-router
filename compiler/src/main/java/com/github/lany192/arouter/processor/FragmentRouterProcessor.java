@@ -7,7 +7,6 @@ import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.enums.TypeKind;
 import com.github.lany192.arouter.Consts;
-import com.github.lany192.arouter.Logger;
 import com.github.lany192.arouter.TypeUtils;
 import com.github.lany192.arouter.Utils;
 import com.google.auto.service.AutoService;
@@ -30,11 +29,9 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -48,7 +45,7 @@ public class FragmentRouterProcessor extends BaseProcessor {
     private TypeMirror iProvider = null;
     private TypeUtils typeUtils;
     private final ClassName arouterClassName = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
-    private final ClassName routePathClassName = ClassName.get("com.alibaba.android.arouter", "RoutePath");
+    private ClassName routePathClassName;
     private final ClassName postcardClass = ClassName.get("com.alibaba.android.arouter.facade", "Postcard");
 
     @Override
@@ -57,6 +54,7 @@ public class FragmentRouterProcessor extends BaseProcessor {
         types = processingEnv.getTypeUtils();
         typeUtils = new TypeUtils(types, processingEnv.getElementUtils());
         iProvider = processingEnv.getElementUtils().getTypeElement(Consts.IPROVIDER).asType();
+        routePathClassName = ClassName.get("com.alibaba.android.arouter", Utils.toUpperCaseFirstOne(module) + "RoutePath");
     }
 
     @Override

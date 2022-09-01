@@ -17,6 +17,8 @@ public abstract class BaseProcessor extends AbstractProcessor {
      * 配置传递的参数
      */
     protected Map<String, String> options;
+    //模块名称
+    public final String MODULE_NAME = "AROUTER_MODULE_NAME";
     //是否debug模式
     public final String ROUTER_DEBUG = "ROUTER_DEBUG";
     //是否打印JS路由文档
@@ -26,14 +28,24 @@ public abstract class BaseProcessor extends AbstractProcessor {
     //JS路由调用方法
     public final String ROUTER_JS_FUN = "ROUTER_JS_FUN";
 
+    protected String module;
+    protected Boolean debug;
+
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
         logger = new Logger(processingEnv.getMessager());
         options = processingEnv.getOptions();
-        String value = getValue(ROUTER_DEBUG);
-        logger.setDebug(Boolean.parseBoolean(value));
+        debug = Boolean.parseBoolean(getValue(ROUTER_DEBUG));
+        module = getValue(MODULE_NAME);
+
+        logger.setDebug(debug);
         logger.info("初始化");
+        logger.info("模块名称：" + module);
+        logger.info("ROUTER_DEBUG：" + getValue(ROUTER_DEBUG));
+        logger.info("JS_ROUTER_DOC：" + getValue(JS_ROUTER_DOC));
+        logger.info("ROUTER_SCHEME：" + getValue(ROUTER_SCHEME));
+        logger.info("ROUTER_JS_FUN：" + getValue(ROUTER_JS_FUN));
     }
 
     @Override

@@ -33,7 +33,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
 /**
- * @author Administrator
+ * @author lany192
  */
 @AutoService(Processor.class)
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
@@ -42,7 +42,6 @@ public class AppRouterProcessor extends BaseProcessor {
     private TypeMirror iProvider = null;
     private TypeUtils typeUtils;
     private final ClassName arouterClassName = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
-    private final ClassName routePathClassName = ClassName.get("com.alibaba.android.arouter", "RoutePath");
     private String jsUseDoc;
     private String routeTestDoc;
     private String jsH5TestDoc;
@@ -229,7 +228,7 @@ public class AppRouterProcessor extends BaseProcessor {
     }
 
     private void createRouterHelper(List<MethodSpec> methods) throws Exception {
-        TypeSpec.Builder builder = TypeSpec.classBuilder("AppRouter")
+        TypeSpec.Builder builder = TypeSpec.classBuilder(Utils.toUpperCaseFirstOne(module) + "Router")
                 .addJavadoc("路由助手,自动生成,请勿编辑!")
                 .addModifiers(Modifier.PUBLIC);
         MethodSpec skipMethodSpec = MethodSpec.methodBuilder("skip")

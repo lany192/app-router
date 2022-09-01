@@ -11,18 +11,18 @@ kapt {
         //是否打印JS路由文档
         arg("JS_ROUTER_DOC", true)
         //Uri Scheme标识
-        arg("ROUTER_SCHEME", "gamekipo")
+        arg("ROUTER_SCHEME", "appbox")
         //JS路由调用方法
         arg("ROUTER_JS_FUN", "window.app.route")
     }
 }
 
 android {
-    compileSdkVersion 32
+    compileSdk 33
     defaultConfig {
         applicationId "com.github.lany192.sample"
-        minSdkVersion 21
-        targetSdkVersion 32
+        minSdk 21
+        targetSdk 33
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

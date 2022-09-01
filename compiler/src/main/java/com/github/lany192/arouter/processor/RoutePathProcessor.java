@@ -1,7 +1,7 @@
 package com.github.lany192.arouter.processor;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.github.lany192.arouter.Logger;
+import com.github.lany192.arouter.Utils;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -16,17 +16,14 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.processing.AbstractProcessor;
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 
 /**
- * @author Administrator
+ * @author lany192
  */
 @AutoService(Processor.class)
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
@@ -49,8 +46,8 @@ public class RoutePathProcessor extends BaseProcessor {
         }
         return true;
     }
-    
-    private void createRoutePath(Set<? extends Element> elements){
+
+    private void createRoutePath(Set<? extends Element> elements) {
         List<FieldSpec> fields = new ArrayList<>();
         for (Element element : elements) {
             Route route = element.getAnnotation(Route.class);
@@ -66,7 +63,7 @@ public class RoutePathProcessor extends BaseProcessor {
                     .build();
             fields.add(fieldSpec);
         }
-        TypeSpec.Builder builder = TypeSpec.classBuilder("RoutePath")
+        TypeSpec.Builder builder = TypeSpec.classBuilder(Utils.toUpperCaseFirstOne(module) + "RoutePath")
                 .addJavadoc("路径集合,自动生成,请勿编辑!")
                 .addModifiers(Modifier.PUBLIC);
         builder.addFields(fields);

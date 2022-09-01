@@ -1,6 +1,6 @@
 package com.github.lany192.sample;
 
-import com.alibaba.android.arouter.RoutePath;
+import com.alibaba.android.arouter.SampleRoutePath;
 import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.callback.NavigationCallback;
 import com.alibaba.android.arouter.launcher.ARouter;
@@ -37,7 +37,7 @@ public class HelloRouter {
     }
 
     public void build() {
-        Postcard postcard = ARouter.getInstance().build(RoutePath.APP_FIVE);
+        Postcard postcard = ARouter.getInstance().build(SampleRoutePath.APP_FIVE);
         if (users != null) {
             postcard.withSerializable("users", (java.util.ArrayList<com.github.lany192.sample.entity.User>) users);
         }
