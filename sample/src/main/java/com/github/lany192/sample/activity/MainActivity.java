@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.button1).setOnClickListener(v ->
-                OneUI.builder()
+                OneRoute.builder()
                         .isFans(true)
 //                        .ownerId(789)
                         .money(10.5f)
