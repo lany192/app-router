@@ -10,7 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
+import com.alibaba.android.arouter.BlueRouter;
+import com.alibaba.android.arouter.GreenRouter;
 import com.alibaba.android.arouter.SampleRouter;
 import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -35,7 +36,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        findViewById(R.id.hello).setOnClickListener(v ->
+        findViewById(R.id.blue).setOnClickListener(v ->
+                BlueRouter.startHello()
+        );
+        findViewById(R.id.green).setOnClickListener(v ->
                 GreenRouter.startHello()
         );
         findViewById(R.id.button1).setOnClickListener(v ->
