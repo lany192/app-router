@@ -69,6 +69,7 @@
         <FrameLayout
             android:id="@+id/fl_fragment_content"
             android:layout_width="match_parent"
-            android:layout_height="500dp" />
+            android:layout_height="500dp"
+            android:layout_marginTop="8dp" />
     </LinearLayout>
 </ScrollView>
