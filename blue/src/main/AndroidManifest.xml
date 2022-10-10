@@ -4,6 +4,7 @@
     <application>
         <activity
             android:name="com.github.lany192.blue.HelloActivity"
+            android:label="blue"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

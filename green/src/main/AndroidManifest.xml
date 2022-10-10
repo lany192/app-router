@@ -4,7 +4,8 @@
     <application>
         <activity
             android:name="com.github.lany192.green.HelloActivity"
-            android:exported="false">
+            android:exported="false"
+            android:label="green">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="green" />
