@@ -3,11 +3,11 @@
 
     <application>
         <activity
-            android:name=".HelloActivity"
+            android:name="com.github.lany192.green.HelloActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
-                android:value="" />
+                android:value="green" />
         </activity>
     </application>
 

@@ -13,7 +13,7 @@ kapt {
 }
 
 android {
-    namespace 'com.github.lany192.hello'
+    namespace 'com.github.lany192.green'
     compileSdk 33
 
     defaultConfig {

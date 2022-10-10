@@ -1,2 +1,3 @@
-include ':sample', ':compiler'
-include ':hello'
+include ':compiler'
+include ':sample'
+include ':green'

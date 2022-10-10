@@ -1,12 +1,13 @@
-package com.github.lany192.hello;
+package com.github.lany192.green;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.github.lany192.green.R;
 
-@Route(path = "/hello/main")
+@Route(path = "/green/hello")
 public class HelloActivity extends AppCompatActivity {
 
     @Override

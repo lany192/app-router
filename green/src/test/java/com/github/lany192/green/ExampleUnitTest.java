@@ -1,4 +1,4 @@
-package com.github.lany192.hello;
+package com.github.lany192.green;
 
 import org.junit.Test;
 

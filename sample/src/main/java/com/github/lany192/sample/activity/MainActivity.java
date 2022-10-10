@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewById(R.id.hello).setOnClickListener(v ->
-                com.alibaba.android.arouter.HelloRouter.startHello()
+                GreenRouter.startHello()
         );
         findViewById(R.id.button1).setOnClickListener(v ->
                 OneRoute.builder()
