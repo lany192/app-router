@@ -95,10 +95,10 @@ public class ActivityRouterProcessor extends BaseProcessor {
 
         String simpleName = element.getSimpleName().toString().replace("Activity", "");
 
-        ClassName routerType = ClassName.get(ClassName.get((TypeElement) element).packageName(), simpleName + "Route");
+        ClassName routerType = ClassName.get(ClassName.get((TypeElement) element).packageName(), simpleName + "UI");
         ClassName callbackClass = ClassName.get("com.alibaba.android.arouter.facade.callback", "NavCallback");
 
-        TypeSpec.Builder builder = TypeSpec.classBuilder(simpleName + "Route")
+        TypeSpec.Builder builder = TypeSpec.classBuilder(simpleName + "UI")
                 .addJavadoc(route.name() + "\n类位置：{@link " + ClassName.get((TypeElement) element) + "}" + "\n自动生成,请勿编辑!")
                 .addModifiers(Modifier.PUBLIC);
 
@@ -175,7 +175,7 @@ public class ActivityRouterProcessor extends BaseProcessor {
     private List<MethodSpec> createMethods(Element element) {
         String simpleName = element.getSimpleName().toString().replace("Activity", "");
 
-        ClassName routerType = ClassName.get(ClassName.get((TypeElement) element).packageName(), simpleName + "Route");
+        ClassName routerType = ClassName.get(ClassName.get((TypeElement) element).packageName(), simpleName + "UI");
 
         List<MethodSpec> methods = new ArrayList<>();
         for (Element field : element.getEnclosedElements()) {

@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 GreenRouter.startHello()
         );
         findViewById(R.id.button1).setOnClickListener(v ->
-                OneRoute.builder()
+                OneUI.builder()
                         .isFans(true)
 //                        .ownerId(789)
                         .money(10.5f)
