@@ -35,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        findViewById(R.id.hello).setOnClickListener(v ->
+                com.alibaba.android.arouter.HelloRouter.startHello()
+        );
         findViewById(R.id.button1).setOnClickListener(v ->
                 OneRoute.builder()
                         .isFans(true)
