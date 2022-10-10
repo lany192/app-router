@@ -135,10 +135,14 @@ public class ActivityRouterProcessor extends BaseProcessor {
                 .addCode("postcard().navigation();")
                 .returns(void.class)
                 .build());
+
+        String scheme = getValue(OUT_MODULE_NAME);
+        String jsFun = getValue(OBJECT_PATH);
+
         builder.addMethod(MethodSpec
                 .methodBuilder("getUri")
                 .addModifiers(Modifier.PUBLIC)
-                .addJavadoc("获取Uri")
+                .addJavadoc("获取Uri"+scheme+" "+jsFun)
                 .addCode("return postcard().getUri();")
                 .returns(uriClass)
                 .build());
