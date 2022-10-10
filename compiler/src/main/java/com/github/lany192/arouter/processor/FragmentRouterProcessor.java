@@ -45,7 +45,7 @@ public class FragmentRouterProcessor extends BaseProcessor {
     private TypeMirror iProvider = null;
     private TypeUtils typeUtils;
     private final ClassName arouterClassName = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
-    private ClassName routePathClassName;
+    private ClassName PathsClassName;
     private final ClassName postcardClass = ClassName.get("com.alibaba.android.arouter.facade", "Postcard");
 
     @Override
@@ -54,7 +54,7 @@ public class FragmentRouterProcessor extends BaseProcessor {
         types = processingEnv.getTypeUtils();
         typeUtils = new TypeUtils(types, processingEnv.getElementUtils());
         iProvider = processingEnv.getElementUtils().getTypeElement(Consts.IPROVIDER).asType();
-        routePathClassName = ClassName.get("com.alibaba.android.arouter", Utils.toUpperCaseFirstOne(module) + "RoutePath");
+        PathsClassName = ClassName.get("com.alibaba.android.arouter", Utils.toUpperCaseFirstOne(module) + "Paths");
     }
 
     @Override
@@ -98,7 +98,7 @@ public class FragmentRouterProcessor extends BaseProcessor {
                 .addJavadoc("构建Fragment实例");
         Route route = element.getAnnotation(Route.class);
         String path = route.path().replace("/", "_").toUpperCase().substring(1);
-        builder.addCode("$T postcard = $T.getInstance().build($T." + path + ");", postcardClass, arouterClassName, routePathClassName);
+        builder.addCode("$T postcard = $T.getInstance().build($T." + path + ");", postcardClass, arouterClassName, PathsClassName);
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                 Autowired autowired = field.getAnnotation(Autowired.class);

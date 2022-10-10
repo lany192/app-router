@@ -10,14 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
 import com.alibaba.android.arouter.BlueRouter;
 import com.alibaba.android.arouter.GreenRouter;
 import com.alibaba.android.arouter.SampleRouter;
 import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.callback.NavCallback;
-import com.alibaba.android.arouter.facade.callback.NavigationCallback;
-import com.github.lany192.sample.HelloRouter;
 import com.github.lany192.sample.R;
 import com.github.lany192.sample.UserHelper;
 import com.github.lany192.sample.entity.Person;
@@ -43,27 +42,27 @@ public class MainActivity extends AppCompatActivity {
                 GreenRouter.startHello()
         );
         findViewById(R.id.button1).setOnClickListener(v ->
-                OneUI.builder()
-                        .isFans(true)
+                        OneUI.builder()
+                                .isFans(true)
 //                        .ownerId(789)
-                        .money(10.5f)
-                        .data1('w')
-                        .data2("哈哈")
-                        .data3((byte) 1)
-                        .data4("流利")
-                        .build(new NavCallback() {
+                                .money(10.5f)
+                                .data1('w')
+                                .data2("哈哈")
+                                .data3((byte) 1)
+                                .data4("流利")
+                                .build(new NavCallback() {
 
-                            @Override
-                            public void onArrival(Postcard postcard) {
-                                Toast.makeText(MainActivity.this, "到达", Toast.LENGTH_LONG).show();
-                            }
-                        })
+                                    @Override
+                                    public void onArrival(Postcard postcard) {
+                                        Toast.makeText(MainActivity.this, "到达", Toast.LENGTH_LONG).show();
+                                    }
+                                })
         );
         findViewById(R.id.button2).setOnClickListener(v -> {
                     List<String> items = new ArrayList<>();
                     items.add("张三");
-            items.add("王五");
-            SampleRouter.startTwo(88, "这是一个标题", 8.68, items, (short) 9, new Person("王武", 89));
+                    items.add("王五");
+                    SampleRouter.startTwo(88, "这是一个标题", 8.68, items, (short) 9, new Person("王武", 89));
                 }
         );
         findViewById(R.id.button3).setOnClickListener(v ->
@@ -80,33 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     List<Person> items2 = new ArrayList<>();
                     items2.add(new Person("2战三", 123));
                     items2.add(new Person("2哈哈", 321));
-//                    FiveRouter.build(items, items2).navigation();
-
-                    HelloRouter.builder()
-                            .users(items)
-                            .persons(items2)
-                            .callback(new NavigationCallback() {
-                                @Override
-                                public void onFound(Postcard postcard) {
-
-                                }
-
-                                @Override
-                                public void onLost(Postcard postcard) {
-
-                                }
-
-                                @Override
-                                public void onArrival(Postcard postcard) {
-
-                                }
-
-                                @Override
-                                public void onInterrupt(Postcard postcard) {
-
-                                }
-                            })
-                            .build();
+                    SampleRouter.startFive(items, items2);
                 }
         );
         List<String> items = new ArrayList<>();

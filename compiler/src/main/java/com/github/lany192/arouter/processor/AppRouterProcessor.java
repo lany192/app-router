@@ -314,7 +314,7 @@ public class AppRouterProcessor extends BaseProcessor {
 //            }
 //        }
 //        builder.addCode("$T.getInstance()", arouterClassName);
-//        builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
+//        builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", PathsClassName);
 //        for (Element field : element.getEnclosedElements()) {
 //            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
 //                Autowired autowired = field.getAnnotation(Autowired.class);
@@ -342,7 +342,7 @@ public class AppRouterProcessor extends BaseProcessor {
 //            }
 //        }
 //        builder.addCode("return (" + element.getSimpleName().toString() + ")$T.getInstance()", arouterClassName);
-//        builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", routePathClassName);
+//        builder.addCode(".build($T." + route.path().replace("/", "_").toUpperCase().substring(1) + ")", PathsClassName);
 //        for (Element field : element.getEnclosedElements()) {
 //            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
 //                Autowired autowired = field.getAnnotation(Autowired.class);

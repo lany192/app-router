@@ -27,7 +27,7 @@ import javax.lang.model.element.TypeElement;
  */
 @AutoService(Processor.class)
 @IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
-public class RoutePathProcessor extends BaseProcessor {
+public class PathsProcessor extends BaseProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {
@@ -40,14 +40,14 @@ public class RoutePathProcessor extends BaseProcessor {
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Route.class);
         if (elements != null && !elements.isEmpty()) {
-            createRoutePath(elements);
+            createPaths(elements);
             //这里要注意，要返回false，并且要放在Processor的前面，否则会影响arouter的Processor。
             return false;
         }
         return true;
     }
 
-    private void createRoutePath(Set<? extends Element> elements) {
+    private void createPaths(Set<? extends Element> elements) {
         List<FieldSpec> fields = new ArrayList<>();
         for (Element element : elements) {
             Route route = element.getAnnotation(Route.class);
@@ -63,7 +63,7 @@ public class RoutePathProcessor extends BaseProcessor {
                     .build();
             fields.add(fieldSpec);
         }
-        TypeSpec.Builder builder = TypeSpec.classBuilder(Utils.toUpperCaseFirstOne(module) + "RoutePath")
+        TypeSpec.Builder builder = TypeSpec.classBuilder(Utils.toUpperCaseFirstOne(module) + "Paths")
                 .addJavadoc("路径集合,自动生成,请勿编辑!")
                 .addModifiers(Modifier.PUBLIC);
         builder.addFields(fields);
