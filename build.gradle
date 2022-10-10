@@ -28,23 +28,3 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-
-allprojects {
-    //配置说明 https://juejin.cn/post/6908232077200588814
-    configurations.all { Configuration c ->
-        // 所有的依赖降级策略
-        c.resolutionStrategy {
-            dependencySubstitution {
-                all { DependencySubstitution dependency ->
-                    if (dependency.requested instanceof ModuleComponentSelector) {
-                        // 如果发现项目内存在 group +name 等于远端的group+name  那么直接采用本地工程进行编译
-                        def p = rootProject.allprojects.find { p -> p.group == dependency.requested.group && p.name == dependency.requested.module }
-                        if (p != null) {
-                            dependency.useTarget(project(p.path), 'selected local project')
-                        }
-                    }
-                }
-            }
-        }
-    }
-}

@@ -46,7 +46,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     //这个要放在arouter-compiler的前面
-    kapt 'com.github.lany192:app-router:1.4.2'
+    kapt project(path: ':compiler')
     //界面路由 https://github.com/alibaba/ARouter
     implementation 'com.alibaba:arouter-api:1.5.2'
     kapt 'com.alibaba:arouter-compiler:1.5.2'
