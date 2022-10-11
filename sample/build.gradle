@@ -19,9 +19,7 @@ kapt {
         //JS路由调用方法
         arg("ROUTER_JS_FUN", "window.app.route")
         //输出模块名称
-        arg("OUT_MODULE_NAME", "aoute")
-        //当前项目路径
-        arg("OBJECT_PATH", project.path)
+        arg("OUT_MODULE_NAME", "common")
     }
 }
 

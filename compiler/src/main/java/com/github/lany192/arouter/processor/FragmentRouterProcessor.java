@@ -284,9 +284,9 @@ public class FragmentRouterProcessor extends BaseProcessor {
                 .indent("    ")
                 .build();
 
-        String module = getValue(OUT_MODULE_NAME);
-        Path path = Paths.get(System.getProperty("user.dir"), module, "build", "generated", "source", "kapt", "debug");
-        javaFile.writeTo(path);
+//        String module = getValue(OUT_MODULE_NAME);
+//        Path path = Paths.get(System.getProperty("user.dir"), module, "src", "main", "java");
+//        javaFile.writeTo(path);
 
         javaFile.writeTo(processingEnv.getFiler());
     }
