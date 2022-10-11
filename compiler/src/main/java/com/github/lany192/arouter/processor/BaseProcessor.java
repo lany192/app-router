@@ -29,8 +29,6 @@ public abstract class BaseProcessor extends AbstractProcessor {
     public final String ROUTER_JS_FUN = "ROUTER_JS_FUN";
     //输出模块名称
     public final String OUT_MODULE_NAME = "OUT_MODULE_NAME";
-    //当前项目路径
-    public final String OBJECT_PATH = "OBJECT_PATH";
 
     protected String module;
     protected Boolean debug;
@@ -51,7 +49,6 @@ public abstract class BaseProcessor extends AbstractProcessor {
         logger.info("ROUTER_SCHEME：" + getValue(ROUTER_SCHEME));
         logger.info("ROUTER_JS_FUN：" + getValue(ROUTER_JS_FUN));
         logger.info("OUT_MODULE_NAME：" + getValue(OUT_MODULE_NAME));
-        logger.info("OBJECT_PATH：" + getValue(OBJECT_PATH));
     }
 
     @Override

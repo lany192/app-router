@@ -24,6 +24,8 @@ import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -257,7 +259,6 @@ public class FragmentRouterProcessor extends BaseProcessor {
         ClassName className = getFragmentBuilderName(element);
 
         String simpleName = element.getSimpleName().toString().replace("Fragment", "");
-        ;
 
         TypeSpec.Builder builder = TypeSpec.classBuilder(simpleName + "Builder")
                 .addJavadoc("自动生成,请勿编辑!\n{@link " + ClassName.get((TypeElement) element) + "}")
@@ -283,10 +284,11 @@ public class FragmentRouterProcessor extends BaseProcessor {
                 .indent("    ")
                 .build();
 
-//        Path path = Paths.get(System.getProperty("user.dir"), "route", "src", "main", "java", "path");
-//        javaFile.writeTo(path);
+        String module = getValue(OUT_MODULE_NAME);
+        Path path = Paths.get(System.getProperty("user.dir"), module, "build", "generated", "kapt", "debug");
+        javaFile.writeTo(path);
 
-        javaFile.writeTo(processingEnv.getFiler());
+//        javaFile.writeTo(processingEnv.getFiler());
     }
 
     private TypeMirror getTypeMirror(String name) {

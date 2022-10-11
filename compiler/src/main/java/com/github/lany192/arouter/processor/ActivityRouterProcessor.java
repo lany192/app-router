@@ -24,6 +24,8 @@ import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -135,14 +137,10 @@ public class ActivityRouterProcessor extends BaseProcessor {
                 .addCode("postcard().navigation();")
                 .returns(void.class)
                 .build());
-
-        String scheme = getValue(OUT_MODULE_NAME);
-        String jsFun = getValue(OBJECT_PATH);
-
         builder.addMethod(MethodSpec
                 .methodBuilder("getUri")
                 .addModifiers(Modifier.PUBLIC)
-                .addJavadoc("获取Uri" + scheme + " " + jsFun)
+                .addJavadoc("获取Uri")
                 .addCode("return postcard().getUri();")
                 .returns(uriClass)
                 .build());
@@ -152,9 +150,10 @@ public class ActivityRouterProcessor extends BaseProcessor {
                 .indent("    ")
                 .build();
 
-//        Path path = Paths.get(System.getProperty("user.dir"), "route", "src", "main", "java", "path");
-//        javaFile.writeTo(path);
-        javaFile.writeTo(processingEnv.getFiler());
+        String module = getValue(OUT_MODULE_NAME);
+        Path path = Paths.get(System.getProperty("user.dir"), module, "build", "generated", "kapt", "debug");
+        javaFile.writeTo(path);
+//        javaFile.writeTo(processingEnv.getFiler());
     }
 
     /**
