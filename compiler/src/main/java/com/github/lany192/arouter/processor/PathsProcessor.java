@@ -11,6 +11,8 @@ import com.squareup.javapoet.TypeSpec;
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessor;
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -78,8 +80,9 @@ public class PathsProcessor extends BaseProcessor {
                 .indent("    ")
                 .build();
         try {
-//            Path path = Paths.get(System.getProperty("user.dir"), "route", "src", "main", "java", "path");
-//            javaFile.writeTo(path);
+            String module = getValue(OUT_MODULE_NAME);
+            Path path = Paths.get(System.getProperty("user.dir"), module, "build", "generated", "source", "kapt", "debug");
+            javaFile.writeTo(path);
             javaFile.writeTo(processingEnv.getFiler());
         } catch (Exception e) {
             logger.error(e);

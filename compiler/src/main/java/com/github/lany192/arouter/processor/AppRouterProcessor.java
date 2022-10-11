@@ -284,10 +284,10 @@ public class AppRouterProcessor extends BaseProcessor {
                 .build();
 
         String module = getValue(OUT_MODULE_NAME);
-        Path path = Paths.get(System.getProperty("user.dir"), module, "build", "generated", "kapt", "debug");
+        Path path = Paths.get(System.getProperty("user.dir"), module, "build", "generated", "source", "kapt", "debug");
         javaFile.writeTo(path);
 
-//        javaFile.writeTo(processingEnv.getFiler());
+        javaFile.writeTo(processingEnv.getFiler());
     }
 
     private TypeMirror getTypeMirror(String name) {
