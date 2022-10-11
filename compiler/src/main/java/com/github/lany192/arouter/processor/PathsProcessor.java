@@ -78,6 +78,8 @@ public class PathsProcessor extends BaseProcessor {
                 .indent("    ")
                 .build();
         try {
+//            Path path = Paths.get(System.getProperty("user.dir"), "route", "src", "main", "java", "path");
+//            javaFile.writeTo(path);
             javaFile.writeTo(processingEnv.getFiler());
         } catch (Exception e) {
             logger.error(e);

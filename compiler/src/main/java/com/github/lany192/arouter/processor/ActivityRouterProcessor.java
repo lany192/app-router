@@ -142,7 +142,7 @@ public class ActivityRouterProcessor extends BaseProcessor {
         builder.addMethod(MethodSpec
                 .methodBuilder("getUri")
                 .addModifiers(Modifier.PUBLIC)
-                .addJavadoc("获取Uri"+scheme+" "+jsFun)
+                .addJavadoc("获取Uri" + scheme + " " + jsFun)
                 .addCode("return postcard().getUri();")
                 .returns(uriClass)
                 .build());
@@ -151,6 +151,9 @@ public class ActivityRouterProcessor extends BaseProcessor {
                 // 设置表示缩进的字符串
                 .indent("    ")
                 .build();
+
+//        Path path = Paths.get(System.getProperty("user.dir"), "route", "src", "main", "java", "path");
+//        javaFile.writeTo(path);
         javaFile.writeTo(processingEnv.getFiler());
     }
 
