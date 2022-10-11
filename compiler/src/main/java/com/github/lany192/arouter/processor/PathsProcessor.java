@@ -79,10 +79,20 @@ public class PathsProcessor extends BaseProcessor {
                 // 设置表示缩进的字符串
                 .indent("    ")
                 .build();
+        JavaFile javaFile2 = JavaFile
+                .builder("com.github.lany192.common", builder.build())
+                // 设置表示缩进的字符串
+                .indent("    ")
+                .build();
         try {
             String module = getValue(OUT_MODULE_NAME);
             Path path = Paths.get(System.getProperty("user.dir"), module, "build", "generated", "source", "kapt", "debug");
-            javaFile.writeTo(path);
+            javaFile2.writeTo(path);
+//            javaFile2.writeTo(processingEnv.getFiler());
+        } catch (Exception e) {
+            logger.error(e);
+        }
+        try {
             javaFile.writeTo(processingEnv.getFiler());
         } catch (Exception e) {
             logger.error(e);
