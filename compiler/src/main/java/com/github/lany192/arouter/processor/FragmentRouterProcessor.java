@@ -24,8 +24,6 @@ import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -285,8 +283,8 @@ public class FragmentRouterProcessor extends BaseProcessor {
                 .indent("    ")
                 .build();
 
-        Path path = Paths.get(System.getProperty("user.dir"), "route", "src", "main", "java", "path");
-        javaFile.writeTo(path);
+//        Path path = Paths.get(System.getProperty("user.dir"), "route", "src", "main", "java", "path");
+//        javaFile.writeTo(path);
 
         javaFile.writeTo(processingEnv.getFiler());
     }
