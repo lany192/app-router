@@ -9,8 +9,6 @@ plugins {
 kapt {
     arguments {
         arg("AROUTER_MODULE_NAME", project.getName())
-        //输出模块名称
-        arg("OUT_MODULE_NAME", "common")
     }
 }
 
