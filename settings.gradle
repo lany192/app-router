@@ -1,5 +1,6 @@
 include ':compiler'
-include ':sample'
+include ':common'
 include ':blue'
 include ':green'
-include ':common'
+include ':sample'
+

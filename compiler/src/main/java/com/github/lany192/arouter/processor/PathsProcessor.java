@@ -83,6 +83,7 @@ public class PathsProcessor extends BaseProcessor {
         try {
             if (getBooleanValue(Constants.ROUTER_COMMON_ENABLE)) {
                 String common_module = getValue(Constants.ROUTER_COMMON_MODULE, "common");
+//                javaFile.writeTo(Paths.get(System.getProperty("user.dir"), common_module, "src", "main", "java"));
                 javaFile.writeTo(Paths.get(System.getProperty("user.dir"), common_module, "build", "generated", "source", "kapt", "debug"));
             } else {
                 javaFile.writeTo(processingEnv.getFiler());
