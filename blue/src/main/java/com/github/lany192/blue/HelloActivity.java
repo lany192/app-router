@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.github.lany192.common.IGreenRouter;
+import com.github.lany192.common.GreenProvider;
 
 @Route(path = "/blue/hello")
 public class HelloActivity extends AppCompatActivity {
@@ -18,8 +18,8 @@ public class HelloActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hello_blue);
         findViewById(R.id.button).setOnClickListener(v -> {
-            IGreenRouter greenRouter = ARouter.getInstance().navigation(IGreenRouter.class);
-            greenRouter.startGreen();
+            GreenProvider greenProvider = ARouter.getInstance().navigation(GreenProvider.class);
+            greenProvider.startGreen();
         });
     }
 }
