@@ -15,6 +15,6 @@ public class HelloActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hello_blue);
-        findViewById(R.id.textView).setOnClickListener(v -> ARouter.getInstance().build(GreenPaths.GREEN_HELLO).navigation());
+        findViewById(R.id.button).setOnClickListener(v -> ARouter.getInstance().build(GreenPaths.GREEN_HELLO).navigation());
     }
 }
