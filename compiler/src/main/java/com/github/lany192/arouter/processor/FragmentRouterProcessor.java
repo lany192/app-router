@@ -6,7 +6,7 @@ import static com.alibaba.android.arouter.facade.enums.TypeKind.SERIALIZABLE;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.enums.TypeKind;
-import com.github.lany192.arouter.Consts;
+import com.github.lany192.arouter.Constants;
 import com.github.lany192.arouter.TypeUtils;
 import com.github.lany192.arouter.Utils;
 import com.google.auto.service.AutoService;
@@ -24,8 +24,6 @@ import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -55,7 +53,7 @@ public class FragmentRouterProcessor extends BaseProcessor {
         super.init(processingEnv);
         types = processingEnv.getTypeUtils();
         typeUtils = new TypeUtils(types, processingEnv.getElementUtils());
-        iProvider = processingEnv.getElementUtils().getTypeElement(Consts.IPROVIDER).asType();
+        iProvider = processingEnv.getElementUtils().getTypeElement(Constants.IPROVIDER).asType();
         PathsClassName = ClassName.get("com.alibaba.android.arouter", Utils.toUpperCaseFirstOne(module) + "Paths");
     }
 
@@ -296,8 +294,8 @@ public class FragmentRouterProcessor extends BaseProcessor {
     }
 
     private boolean isFragment(Element element) {
-        return types.isSubtype(element.asType(), getTypeMirror(Consts.FRAGMENT))
-                || types.isSubtype(element.asType(), getTypeMirror(Consts.FRAGMENT_X))
-                || types.isSubtype(element.asType(), getTypeMirror(Consts.FRAGMENT_V4));
+        return types.isSubtype(element.asType(), getTypeMirror(Constants.FRAGMENT))
+                || types.isSubtype(element.asType(), getTypeMirror(Constants.FRAGMENT_X))
+                || types.isSubtype(element.asType(), getTypeMirror(Constants.FRAGMENT_V4));
     }
 }

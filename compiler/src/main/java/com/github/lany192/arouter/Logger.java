@@ -26,7 +26,7 @@ public class Logger {
     public void info(CharSequence info) {
         if (debug) {
             if (StringUtils.isNotEmpty(info)) {
-                msg.printMessage(Diagnostic.Kind.NOTE, Consts.PREFIX_OF_LOGGER + info);
+                msg.printMessage(Diagnostic.Kind.NOTE, Constants.PREFIX_OF_LOGGER + info);
             }
         }
     }
@@ -34,7 +34,7 @@ public class Logger {
     public void error(CharSequence error) {
         if (debug) {
             if (StringUtils.isNotEmpty(error)) {
-                msg.printMessage(Diagnostic.Kind.ERROR, Consts.PREFIX_OF_LOGGER + "An exception is encountered, [" + error + "]");
+                msg.printMessage(Diagnostic.Kind.ERROR, Constants.PREFIX_OF_LOGGER + "An exception is encountered, [" + error + "]");
             }
         }
     }
@@ -42,7 +42,7 @@ public class Logger {
     public void error(Throwable error) {
         if (debug) {
             if (null != error) {
-                msg.printMessage(Diagnostic.Kind.ERROR, Consts.PREFIX_OF_LOGGER + "An exception is encountered, [" + error.getMessage() + "]" + "\n" + formatStackTrace(error.getStackTrace()));
+                msg.printMessage(Diagnostic.Kind.ERROR, Constants.PREFIX_OF_LOGGER + "An exception is encountered, [" + error.getMessage() + "]" + "\n" + formatStackTrace(error.getStackTrace()));
             }
         }
     }
@@ -50,7 +50,7 @@ public class Logger {
     public void warning(CharSequence warning) {
         if (debug) {
             if (StringUtils.isNotEmpty(warning)) {
-                msg.printMessage(Diagnostic.Kind.WARNING, Consts.PREFIX_OF_LOGGER + warning);
+                msg.printMessage(Diagnostic.Kind.WARNING, Constants.PREFIX_OF_LOGGER + warning);
             }
         }
     }

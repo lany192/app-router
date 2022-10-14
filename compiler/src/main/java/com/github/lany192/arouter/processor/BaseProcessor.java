@@ -1,6 +1,10 @@
 package com.github.lany192.arouter.processor;
 
+import com.alibaba.fastjson.JSON;
+import com.github.lany192.arouter.Constants;
 import com.github.lany192.arouter.Logger;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 
@@ -16,39 +20,24 @@ public abstract class BaseProcessor extends AbstractProcessor {
     /**
      * 配置传递的参数
      */
-    protected Map<String, String> options;
-    //模块名称
-    public final String MODULE_NAME = "AROUTER_MODULE_NAME";
-    //是否debug模式
-    public final String ROUTER_DEBUG = "ROUTER_DEBUG";
-    //是否打印JS路由文档
-    public final String JS_ROUTER_DOC = "JS_ROUTER_DOC";
-    //Uri Scheme标识
-    public final String ROUTER_SCHEME = "ROUTER_SCHEME";
-    //JS路由调用方法
-    public final String ROUTER_JS_FUN = "ROUTER_JS_FUN";
-    //输出模块名称
-    public final String OUT_MODULE_NAME = "OUT_MODULE_NAME";
-
+    private Map<String, String> options;
+    /**
+     * 当前模块名称
+     */
     protected String module;
-    protected Boolean debug;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
         logger = new Logger(processingEnv.getMessager());
         options = processingEnv.getOptions();
-        debug = Boolean.parseBoolean(getValue(ROUTER_DEBUG));
-        module = getValue(MODULE_NAME);
+        String configInfo = JSON.toJSONString(options);
 
-        logger.setDebug(debug);
-        logger.info("初始化");
-        logger.info("模块名称：" + module);
-        logger.info("ROUTER_DEBUG：" + getValue(ROUTER_DEBUG));
-        logger.info("JS_ROUTER_DOC：" + getValue(JS_ROUTER_DOC));
-        logger.info("ROUTER_SCHEME：" + getValue(ROUTER_SCHEME));
-        logger.info("ROUTER_JS_FUN：" + getValue(ROUTER_JS_FUN));
-        logger.info("OUT_MODULE_NAME：" + getValue(OUT_MODULE_NAME));
+        logger.setDebug(Boolean.parseBoolean(getValue(Constants.ROUTER_DEBUG, "true")));
+        logger.info("初始化......");
+        logger.info("配置信息：" + configInfo);
+
+        module = getValue(Constants.MODULE_NAME, "");
     }
 
     @Override
@@ -57,6 +46,22 @@ public abstract class BaseProcessor extends AbstractProcessor {
     }
 
     public String getValue(String key) {
-        return options.get(key);
+        return getValue(key, "");
+    }
+
+    public boolean getBooleanValue(String key) {
+        String value = options.get(key);
+        if (StringUtils.isEmpty(value)) {
+            value = "false";
+        }
+        return Boolean.parseBoolean(value);
+    }
+
+    public String getValue(String key, String defaultValue) {
+        String value = options.get(key);
+        if (StringUtils.isEmpty(value)) {
+            value = defaultValue;
+        }
+        return value;
     }
 }

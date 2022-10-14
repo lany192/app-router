@@ -2,7 +2,7 @@ package com.github.lany192.arouter.processor;
 
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.github.lany192.arouter.Consts;
+import com.github.lany192.arouter.Constants;
 import com.github.lany192.arouter.OtherUtils;
 import com.github.lany192.arouter.TypeUtils;
 import com.github.lany192.arouter.Utils;
@@ -18,8 +18,6 @@ import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -53,7 +51,7 @@ public class AppRouterProcessor extends BaseProcessor {
         super.init(processingEnv);
         types = processingEnv.getTypeUtils();
         typeUtils = new TypeUtils(types, processingEnv.getElementUtils());
-        iProvider = processingEnv.getElementUtils().getTypeElement(Consts.IPROVIDER).asType();
+        iProvider = processingEnv.getElementUtils().getTypeElement(Constants.IPROVIDER).asType();
     }
 
     @Override
@@ -79,7 +77,7 @@ public class AppRouterProcessor extends BaseProcessor {
                 } else if (types.isSubtype(element.asType(), iProvider)) {// IProvider
                     logger.info(">>> Found provider route: " + element.asType().toString() + " <<<");
                     //methods.add(getProviderInstance(element));
-                } else if (types.isSubtype(element.asType(), getTypeMirror(Consts.SERVICE))) {// Service
+                } else if (types.isSubtype(element.asType(), getTypeMirror(Constants.SERVICE))) {// Service
                     logger.info(">>> Found service route: " + element.asType().toString() + " <<<");
                     //methods.add(getServiceInstance(element));
                 } else {
@@ -87,7 +85,7 @@ public class AppRouterProcessor extends BaseProcessor {
                 }
             }
             try {
-                if (Boolean.parseBoolean(getValue(JS_ROUTER_DOC))) {
+                if (Boolean.parseBoolean(getValue(Constants.ROUTER_JS_DOC))) {
                     logger.info(jsUseDoc);
                     logger.info("JS测试用例：\n" + jsH5TestDoc);
                     logger.info("协议测试用例：\n" + routeTestDoc);
@@ -136,8 +134,8 @@ public class AppRouterProcessor extends BaseProcessor {
                 parameter.append("\n|").append(key).append(" | ").append(OtherUtils.getParameterType(field)).append(" | ").append(autowired.required() ? "是" : "否").append(" |").append(autowired.desc()).append(" | ");
             }
         }
-        String scheme = getValue(ROUTER_SCHEME);
-        String jsFun = getValue(ROUTER_JS_FUN);
+        String scheme = getValue(Constants.ROUTER_SCHEME);
+        String jsFun = getValue(Constants.ROUTER_JS_FUN);
 
         doc = doc + "\n路由协议:\n```\n" + scheme + "://" + uri + "\n```";
         doc = doc + "\nJS调用:\n```\n" + jsFun + "('" + uri + "');\n```";
@@ -295,13 +293,13 @@ public class AppRouterProcessor extends BaseProcessor {
     }
 
     private boolean isActivity(Element element) {
-        return types.isSubtype(element.asType(), getTypeMirror(Consts.ACTIVITY));
+        return types.isSubtype(element.asType(), getTypeMirror(Constants.ACTIVITY));
     }
 
     private boolean isFragment(Element element) {
-        return types.isSubtype(element.asType(), getTypeMirror(Consts.FRAGMENT))
-                || types.isSubtype(element.asType(), getTypeMirror(Consts.FRAGMENT_X))
-                || types.isSubtype(element.asType(), getTypeMirror(Consts.FRAGMENT_V4));
+        return types.isSubtype(element.asType(), getTypeMirror(Constants.FRAGMENT))
+                || types.isSubtype(element.asType(), getTypeMirror(Constants.FRAGMENT_X))
+                || types.isSubtype(element.asType(), getTypeMirror(Constants.FRAGMENT_V4));
     }
 //
 //    /**

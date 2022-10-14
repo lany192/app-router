@@ -9,8 +9,12 @@ plugins {
 kapt {
     arguments {
         arg("AROUTER_MODULE_NAME", project.getName())
-        //输出模块名称
-        arg("OUT_MODULE_NAME", "common")
+        //是否开启公共模块模式，默认关闭
+        arg("ROUTER_COMMON_ENABLE", true)
+        //输出模块名称,默认名称common
+        arg("ROUTER_COMMON_MODULE", "common")
+        //输出模块包名,默认包名com.github.lany192.common
+        arg("ROUTER_COMMON_PACKAGE", "com.github.lany192.common")
     }
 }
 
@@ -39,7 +43,6 @@ android {
 }
 
 dependencies {
-    implementation project(path: ':common')
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -51,4 +54,6 @@ dependencies {
     //界面路由 https://github.com/alibaba/ARouter
     implementation 'com.alibaba:arouter-api:1.5.2'
     kapt 'com.alibaba:arouter-compiler:1.5.2'
+
+    implementation project(path: ':common')
 }

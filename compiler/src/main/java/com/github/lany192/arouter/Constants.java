@@ -1,8 +1,6 @@
 package com.github.lany192.arouter;
 
-import com.squareup.javapoet.ClassName;
-
-public class Consts {
+public class Constants {
     public static final String PROJECT = "\nAppRouter";
 
     // Java type
@@ -36,4 +34,22 @@ public class Consts {
     public static final String FRAGMENT_V4 = "android.support.v4.app.Fragment";
     public static final String FRAGMENT_X = "androidx.fragment.app.Fragment";
     public static final String SERVICE = "android.app.Service";
+
+
+    //模块名称
+    public static final String MODULE_NAME = "AROUTER_MODULE_NAME";
+    //是否debug模式
+    public static final String ROUTER_DEBUG = "ROUTER_DEBUG";
+    //是否打印JS路由文档
+    public static final String ROUTER_JS_DOC = "ROUTER_JS_DOC";
+    //Uri Scheme标识
+    public static final String ROUTER_SCHEME = "ROUTER_SCHEME";
+    //JS路由调用方法
+    public static final String ROUTER_JS_FUN = "ROUTER_JS_FUN";
+    //是否使用公共模块
+    public static final String ROUTER_COMMON_ENABLE = "ROUTER_COMMON_ENABLE";
+    //公共模块名称
+    public static final String ROUTER_COMMON_MODULE = "ROUTER_COMMON_MODULE";
+    //公共模块包名
+    public static final String ROUTER_COMMON_PACKAGE = "ROUTER_COMMON_PACKAGE";
 }

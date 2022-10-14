@@ -1,14 +1,24 @@
 package com.github.lany192.arouter;
 
 
+import static com.github.lany192.arouter.Constants.BOOLEAN;
+import static com.github.lany192.arouter.Constants.BYTE;
+import static com.github.lany192.arouter.Constants.CHAR;
+import static com.github.lany192.arouter.Constants.DOUBEL;
+import static com.github.lany192.arouter.Constants.FLOAT;
+import static com.github.lany192.arouter.Constants.INTEGER;
+import static com.github.lany192.arouter.Constants.LONG;
+import static com.github.lany192.arouter.Constants.PARCELABLE;
+import static com.github.lany192.arouter.Constants.SERIALIZABLE;
+import static com.github.lany192.arouter.Constants.SHORT;
+import static com.github.lany192.arouter.Constants.STRING;
+
 import com.alibaba.android.arouter.facade.enums.TypeKind;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
-
-import static com.github.lany192.arouter.Consts.*;
 
 public class TypeUtils {
 

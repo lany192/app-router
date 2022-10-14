@@ -10,16 +10,22 @@ kapt {
     arguments {
         arg("AROUTER_MODULE_NAME", project.getName())
 //        arg("AROUTER_GENERATE_DOC", "enable")
+
         //是否debug模式
         arg("ROUTER_DEBUG", true)
         //是否打印JS路由文档
-        arg("JS_ROUTER_DOC", true)
-        //Uri Scheme标识
-        arg("ROUTER_SCHEME", "appbox")
+        arg("ROUTER_JS_DOC", true)
         //JS路由调用方法
         arg("ROUTER_JS_FUN", "window.app.route")
-        //输出模块名称
-        arg("OUT_MODULE_NAME", "common")
+        //Uri Scheme标识
+        arg("ROUTER_SCHEME", "appbox")
+
+        //是否开启公共模块模式，默认关闭
+        arg("ROUTER_COMMON_ENABLE", true)
+        //输出模块名称,默认名称common
+        arg("ROUTER_COMMON_MODULE", "common")
+        //输出模块包名,默认包名com.github.lany192.common
+        arg("ROUTER_COMMON_PACKAGE", "com.github.lany192.common")
     }
 }
 
@@ -53,15 +59,13 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation project(path: ':common')
-    implementation project(path: ':blue')
-    implementation project(path: ':green')
+
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
-    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.9.1'
 
     //超链接处理 https://github.com/klinker24/Android-TextView-LinkBuilder
     implementation 'com.klinkerapps:link_builder:2.0.5'
@@ -71,4 +75,8 @@ dependencies {
     //界面路由 https://github.com/alibaba/ARouter
     implementation 'com.alibaba:arouter-api:1.5.2'
     kapt 'com.alibaba:arouter-compiler:1.5.2'
+
+    implementation project(path: ':common')
+    implementation project(path: ':blue')
+    implementation project(path: ':green')
 }

@@ -4,9 +4,9 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.alibaba.android.arouter.GreenPaths;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.github.lany192.common.GreenPaths;
 
 @Route(path = "/blue/hello")
 public class HelloActivity extends AppCompatActivity {

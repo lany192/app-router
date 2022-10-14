@@ -1,6 +1,7 @@
 package com.github.lany192.arouter.processor;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.github.lany192.arouter.Constants;
 import com.github.lany192.arouter.Utils;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
@@ -11,7 +12,6 @@ import com.squareup.javapoet.TypeSpec;
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessor;
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType;
 
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -79,21 +79,14 @@ public class PathsProcessor extends BaseProcessor {
                 // 设置表示缩进的字符串
                 .indent("    ")
                 .build();
-        JavaFile javaFile2 = JavaFile
-                .builder("com.github.lany192.common", builder.build())
-                // 设置表示缩进的字符串
-                .indent("    ")
-                .build();
+
         try {
-            String module = getValue(OUT_MODULE_NAME);
-            Path path = Paths.get(System.getProperty("user.dir"), module, "build", "generated", "source", "kapt", "debug");
-            javaFile2.writeTo(path);
-//            javaFile2.writeTo(processingEnv.getFiler());
-        } catch (Exception e) {
-            logger.error(e);
-        }
-        try {
-            javaFile.writeTo(processingEnv.getFiler());
+            if (getBooleanValue(Constants.ROUTER_COMMON_ENABLE)) {
+                String common_module = getValue(Constants.ROUTER_COMMON_MODULE, "common");
+                javaFile.writeTo(Paths.get(System.getProperty("user.dir"), common_module, "build", "generated", "source", "kapt", "debug"));
+            } else {
+                javaFile.writeTo(processingEnv.getFiler());
+            }
         } catch (Exception e) {
             logger.error(e);
         }

@@ -22,7 +22,7 @@
             //是否debug模式
             arg("ROUTER_DEBUG", true)
             //是否打印JS路由文档
-            arg("JS_ROUTER_DOC", true)
+            arg("ROUTER_JS_DOC", true)
             //Uri Scheme标识
             arg("ROUTER_SCHEME", "gamekipo")
             //JS路由调用方法
