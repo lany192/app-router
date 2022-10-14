@@ -19,13 +19,6 @@ kapt {
         arg("ROUTER_JS_FUN", "window.app.route")
         //Uri Scheme标识
         arg("ROUTER_SCHEME", "appbox")
-
-        //是否开启公共模块模式，默认关闭
-        arg("ROUTER_COMMON_ENABLE", true)
-        //输出模块名称,默认名称common
-        arg("ROUTER_COMMON_MODULE", "common")
-        //输出模块包名,默认包名com.github.lany192.common
-        arg("ROUTER_COMMON_PACKAGE", "com.github.lany192.common")
     }
 }
 

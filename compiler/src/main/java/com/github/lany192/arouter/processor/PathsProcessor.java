@@ -1,7 +1,6 @@
 package com.github.lany192.arouter.processor;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.github.lany192.arouter.Constants;
 import com.github.lany192.arouter.Utils;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
@@ -12,7 +11,6 @@ import com.squareup.javapoet.TypeSpec;
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessor;
 import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -81,13 +79,6 @@ public class PathsProcessor extends BaseProcessor {
                 .build();
 
         try {
-//            if (getBooleanValue(Constants.ROUTER_COMMON_ENABLE)) {
-//                String common_module = getValue(Constants.ROUTER_COMMON_MODULE, "common");
-////                javaFile.writeTo(Paths.get(System.getProperty("user.dir"), common_module, "src", "main", "java"));
-//                javaFile.writeTo(Paths.get(System.getProperty("user.dir"), common_module, "build", "generated", "source", "kapt", "debug"));
-//            } else {
-//                javaFile.writeTo(processingEnv.getFiler());
-//            }
             javaFile.writeTo(processingEnv.getFiler());
         } catch (Exception e) {
             logger.error(e);

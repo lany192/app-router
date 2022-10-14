@@ -46,10 +46,4 @@ public class Constants {
     public static final String ROUTER_SCHEME = "ROUTER_SCHEME";
     //JS路由调用方法
     public static final String ROUTER_JS_FUN = "ROUTER_JS_FUN";
-    //是否使用公共模块
-    public static final String ROUTER_COMMON_ENABLE = "ROUTER_COMMON_ENABLE";
-    //公共模块名称
-    public static final String ROUTER_COMMON_MODULE = "ROUTER_COMMON_MODULE";
-    //公共模块包名
-    public static final String ROUTER_COMMON_PACKAGE = "ROUTER_COMMON_PACKAGE";
 }
