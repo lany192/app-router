@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://jitpack.io' }
         google()
         mavenCentral()
     }
@@ -8,6 +9,7 @@ buildscript {
         classpath 'com.android.tools.build:gradle:7.2.2'
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10'
         classpath 'com.alibaba:arouter-register:1.0.2'
+//        classpath 'com.github.lany192.arouter:arouter-gradle-plugin:1.0.0'
     }
 }
 
