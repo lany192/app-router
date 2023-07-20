@@ -14,11 +14,11 @@ afterEvaluate { project ->
                         from components.java
                     }
                 }
-                repositories {
-                    maven {
-                        url = "${rootProject.rootDir}/repo"
-                    }
-                }
+//                repositories {
+//                    maven {
+//                        url = "${rootProject.rootDir}/repo"
+//                    }
+//                }
                 pom {
                     licenses {
                         license {

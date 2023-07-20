@@ -5,26 +5,26 @@ pluginManagement {
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
         mavenLocal()
-        maven {
-            setUrl("repo")
-        }
+//        maven {
+//            setUrl("repo")
+//        }
     }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        google()
         maven { url 'https://maven.aliyun.com/repository/public' }
+        google()
         gradlePluginPortal()
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
         mavenLocal()
-        maven {
-            setUrl("repo")
-        }
+//        maven {
+//            setUrl("repo")
+//        }
     }
 }
-
+rootProject.name = "app-router"
 include ':compiler'
 include ':arouter-gradle-plugin'
 include ':common'
