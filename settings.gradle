@@ -1,5 +1,5 @@
 include ':compiler'
-//include ':arouter-gradle-plugin'
+include ':arouter-gradle-plugin'
 include ':common'
 include ':blue'
 include ':green'
