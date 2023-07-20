@@ -10,10 +10,9 @@ dependencies {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
-
 dependencies {
     implementation "com.android.tools.build:gradle:8.0.2"
     implementation "commons-codec:commons-codec:1.15"

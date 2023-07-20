@@ -1,8 +1,13 @@
-apply plugin: 'java'
-apply plugin: 'maven-publish'
+plugins {
+    id 'java'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.squareup:javapoet:1.13.0'
     implementation 'com.alibaba:arouter-annotation:1.0.6'
     implementation 'org.apache.commons:commons-lang3:3.12.0'

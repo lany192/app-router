@@ -1,26 +1,24 @@
 pluginManagement {
     repositories {
-        maven {
-            setUrl("repo")
-        }
-        mavenLocal()
-        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
-        maven { url 'https://maven.aliyun.com/repository/google' }
-        maven { url 'https://maven.aliyun.com/repository/public' }
-        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        google()
         gradlePluginPortal()
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
-        google()
+        mavenLocal()
+        maven {
+            setUrl("repo")
+        }
     }
 }
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        mavenLocal()
+        google()
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        gradlePluginPortal()
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
-        google()
+        mavenLocal()
         maven {
             setUrl("repo")
         }
