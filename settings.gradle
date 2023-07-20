@@ -26,7 +26,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "app-router"
 include ':compiler'
-include ':arouter-gradle-plugin'
+include ':plugin'
 include ':sample:common'
 include ':sample:blue'
 include ':sample:green'

@@ -4,7 +4,7 @@ afterEvaluate { project ->
     publishing {
         publications {
             maven(MavenPublication) {
-                groupId = 'com.github.lany192.app-router'
+                groupId = 'com.github.lany192'
                 artifactId = POM_ARTIFACT_ID
                 version = VERSION_NAME
                 afterEvaluate {
