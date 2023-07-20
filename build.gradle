@@ -6,10 +6,9 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.2'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.10'
-        classpath 'com.alibaba:arouter-register:1.0.2'
-//        classpath 'com.github.lany192.arouter:arouter-gradle-plugin:1.0.0'
+        classpath 'com.android.tools.build:gradle:8.0.2'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.20'
+        classpath 'com.github.lany192.app-router:arouter-gradle-plugin:1.4.4'
     }
 }
 
@@ -20,7 +19,7 @@ allprojects {
         google()
         mavenCentral()
     }
-    tasks.withType(JavaCompile){
+    tasks.withType(JavaCompile) {
         options.encoding = "UTF-8"
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
