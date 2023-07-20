@@ -30,23 +30,4 @@ gradlePlugin {
     }
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                groupId = 'com.github.lany192'
-                artifactId = 'arouter-gradle-plugin'
-                version = '1.0'
-                from components.java
-                pom {
-                    licenses {
-                        license {
-                            name = "The Apache License, Version 2.0"
-                            url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
+apply from: rootProject.file('gradle/publish.gradle')

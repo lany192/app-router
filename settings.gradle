@@ -1,3 +1,32 @@
+pluginManagement {
+    repositories {
+        maven {
+            setUrl("repo")
+        }
+        mavenLocal()
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin' }
+        maven { url 'https://maven.aliyun.com/repository/google' }
+        maven { url 'https://maven.aliyun.com/repository/public' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter' }
+        gradlePluginPortal()
+        mavenCentral()
+        maven { url 'https://www.jitpack.io' }
+        google()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url 'https://www.jitpack.io' }
+        google()
+        maven {
+            setUrl("repo")
+        }
+    }
+}
+
 include ':compiler'
 include ':arouter-gradle-plugin'
 include ':common'

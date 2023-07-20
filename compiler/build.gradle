@@ -14,33 +14,5 @@ dependencies {
     compileOnly 'net.ltgt.gradle.incap:incap:0.3'
     annotationProcessor 'net.ltgt.gradle.incap:incap-processor:0.3'
 }
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
 
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                groupId = 'com.github.lany192'
-                artifactId = 'app-router'
-                version = '1.0'
-                from components.java
-                pom {
-                    licenses {
-                        license {
-                            name = "The Apache License, Version 2.0"
-                            url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
+apply from: rootProject.file('gradle/publish.gradle')
