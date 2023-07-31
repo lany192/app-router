@@ -13,9 +13,6 @@ import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.TypeSpec;
 
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessor;
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType;
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -36,7 +33,7 @@ import javax.lang.model.util.Types;
  * @author lany192
  */
 @AutoService(Processor.class)
-@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
+//@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
 public class AppRouterProcessor extends BaseProcessor {
     private Types types;
     private TypeMirror iProvider = null;
@@ -230,7 +227,7 @@ public class AppRouterProcessor extends BaseProcessor {
     private void createRouterHelper(List<MethodSpec> methods) throws Exception {
         TypeSpec.Builder builder = TypeSpec.classBuilder(Utils.toUpperCaseFirstOne(module) + "Router")
                 .addJavadoc("路由助手,自动生成,请勿编辑!")
-                .addModifiers(Modifier.PUBLIC);
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         MethodSpec skipMethodSpec = MethodSpec.methodBuilder("skip")
                 .addJavadoc("通用跳转")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)

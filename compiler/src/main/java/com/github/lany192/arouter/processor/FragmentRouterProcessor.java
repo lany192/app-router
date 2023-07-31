@@ -19,9 +19,6 @@ import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
 import com.squareup.javapoet.TypeSpec;
 
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessor;
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType;
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -39,7 +36,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Types;
 
 @AutoService(Processor.class)
-@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
+//@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
 public class FragmentRouterProcessor extends BaseProcessor {
     private Types types;
     private TypeMirror iProvider = null;
@@ -260,7 +257,7 @@ public class FragmentRouterProcessor extends BaseProcessor {
 
         TypeSpec.Builder builder = TypeSpec.classBuilder(simpleName + "Builder")
                 .addJavadoc("自动生成,请勿编辑!\n{@link " + ClassName.get((TypeElement) element) + "}")
-                .addModifiers(Modifier.PUBLIC);
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
         List<FieldSpec> fields = createFields(element);
         for (FieldSpec field : fields) {

@@ -8,9 +8,6 @@ import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
 
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessor;
-import net.ltgt.gradle.incap.IncrementalAnnotationProcessorType;
-
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -26,7 +23,7 @@ import javax.lang.model.element.TypeElement;
  * @author lany192
  */
 @AutoService(Processor.class)
-@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
+//@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
 public class PathsProcessor extends BaseProcessor {
 
     @Override
@@ -65,7 +62,7 @@ public class PathsProcessor extends BaseProcessor {
         }
         TypeSpec.Builder builder = TypeSpec.classBuilder(Utils.toUpperCaseFirstOne(module) + "Paths")
                 .addJavadoc("路径集合,自动生成,请勿编辑!")
-                .addModifiers(Modifier.PUBLIC);
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         builder.addFields(fields);
         builder.addField(FieldSpec
                 .builder(String.class, "KEY_ROUTE_PATH", Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
