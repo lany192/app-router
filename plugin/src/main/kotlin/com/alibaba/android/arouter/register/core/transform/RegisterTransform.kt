@@ -10,14 +10,16 @@ import org.gradle.api.Project
 object RegisterTransform {
 
     fun transform(project: Project) {
-        val interfaceOne = "com.alibaba.android.arouter.facade.template.IRouteRoot"
-        val interfaceTwo = "com.alibaba.android.arouter.facade.template.IRouteGroup"
-        val interfaceThree = "com.alibaba.android.arouter.facade.template.IProviderGroup"
+        val interface1 = "com.alibaba.android.arouter.facade.template.IRouteRoot"
+        val interface2 = "com.alibaba.android.arouter.facade.template.IRouteGroup"
+        val interface3 = "com.alibaba.android.arouter.facade.template.IProviderGroup"
+        val interface4 = "com.alibaba.android.arouter.facade.template.IProvider"
 
         val map = hashMapOf<String, ScanSetting>()
-        map[interfaceOne] = ScanSetting(interfaceOne)
-        map[interfaceTwo] = ScanSetting(interfaceTwo)
-        map[interfaceThree] = ScanSetting(interfaceThree)
+        map[interface1] = ScanSetting(interface1)
+        map[interface2] = ScanSetting(interface2)
+        map[interface3] = ScanSetting(interface3)
+        map[interface4] = ScanSetting(interface4)
         val androidComponents = project.extensions.getByType(AndroidComponentsExtension::class.java)
         androidComponents.onVariants { variant ->
             variant.instrumentation.transformClassesWith(
