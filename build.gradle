@@ -5,8 +5,8 @@ buildscript {
 }
 
 plugins {
-    id 'com.android.application' version '7.4.2' apply false
-    id 'com.android.library' version '7.4.2' apply false
+    id 'com.android.application' version '8.0.0' apply false
+    id 'com.android.library' version '8.0.0' apply false
     id 'org.jetbrains.kotlin.android' version '1.8.0' apply false
     id 'org.jetbrains.kotlin.jvm' version '1.8.0' apply false
     id 'org.jetbrains.kotlin.kapt' version '1.8.0' apply false
@@ -34,11 +34,11 @@ allprojects {
         if (project.plugins.hasPlugin('com.android.library') || project.plugins.hasPlugin('com.android.application')) {
             def android = project.extensions.getByName('android')
             android.compileOptions {
-                sourceCompatibility JavaVersion.VERSION_1_8
-                targetCompatibility JavaVersion.VERSION_1_8
+                sourceCompatibility JavaVersion.VERSION_17
+                targetCompatibility JavaVersion.VERSION_17
             }
             android.kotlinOptions {
-                jvmTarget = "1.8"
+                jvmTarget = "17"
             }
         }
     }
