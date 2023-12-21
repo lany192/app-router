@@ -43,3 +43,11 @@ allprojects {
         }
     }
 }
+
+ext {
+    aar = [
+            groupId          : 'com.github.lany192',
+            versionCode      : 3,
+            versionName      : '1.0.3'
+    ]
+}

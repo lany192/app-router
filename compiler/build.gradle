@@ -20,4 +20,7 @@ dependencies {
 //    annotationProcessor 'net.ltgt.gradle.incap:incap-processor:0.3'
 }
 
+group = aar.groupId
+version = aar.versionName
+
 apply from: rootProject.file('gradle/publish.gradle')
