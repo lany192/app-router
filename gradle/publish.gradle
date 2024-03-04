@@ -4,9 +4,9 @@ afterEvaluate { project ->
     publishing {
         publications {
             maven(MavenPublication) {
-                groupId = 'com.github.lany192'
-                artifactId = POM_ARTIFACT_ID
-                version = VERSION_NAME
+                groupId = aar.groupId
+                artifactId = project.name
+                version = aar.versionName
                 afterEvaluate {
                     if (plugins.hasPlugin('com.android.application') || plugins.hasPlugin('com.android.library')) {
                         from components.release
@@ -14,11 +14,20 @@ afterEvaluate { project ->
                         from components.java
                     }
                 }
-//                repositories {
-//                    maven {
-//                        url = "${rootProject.rootDir}/repo"
-//                    }
-//                }
+                repositories {
+                    maven {
+                        name = 'local_repo'
+                        url = "${rootProject.rootDir}/repo"
+                    }
+                    maven {
+                        allowInsecureProtocol true
+                        url = "http://localhost:5001/repository/maven-releases/"
+                        credentials {
+                            it.username = "admin"
+                            it.password = "dev123456"
+                        }
+                    }
+                }
                 pom {
                     licenses {
                         license {

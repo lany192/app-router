@@ -30,5 +30,6 @@ gradlePlugin {
         }
     }
 }
-
+group = aar.groupId
+version = aar.versionName
 apply from: rootProject.file('gradle/publish.gradle')
