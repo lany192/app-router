@@ -23,7 +23,7 @@ kapt {
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
     defaultConfig {
         applicationId "com.github.lany192.sample"
         minSdk 21
