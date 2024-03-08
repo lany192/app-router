@@ -14,21 +14,21 @@ afterEvaluate { project ->
                         from components.java
                     }
                 }
-                repositories {
-                    mavenLocal()
-                    maven {
-                        name = 'local_repository'
-                        url = "${rootProject.rootDir}/repository"
-                    }
+//                repositories {
+//                    mavenLocal()
 //                    maven {
-//                        allowInsecureProtocol true
-//                        url = "http://localhost:5001/repository/maven-releases/"
-//                        credentials {
-//                            it.username = "admin"
-//                            it.password = "dev123456"
-//                        }
+//                        name = 'local_repository'
+//                        url = "${rootProject.rootDir}/repository"
 //                    }
-                }
+////                    maven {
+////                        allowInsecureProtocol true
+////                        url = "http://localhost:5001/repository/maven-releases/"
+////                        credentials {
+////                            it.username = "admin"
+////                            it.password = "dev123456"
+////                        }
+////                    }
+//                }
                 pom {
                     licenses {
                         license {
