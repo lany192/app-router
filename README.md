@@ -24,7 +24,7 @@
             //是否打印JS路由文档
             arg("ROUTER_JS_DOC", true)
             //Uri Scheme标识
-            arg("ROUTER_SCHEME", "gamekipo")
+            arg("ROUTER_SCHEME", "xxxapp")
             //JS路由调用方法
             arg("ROUTER_JS_FUN", "window.app.route")
         }

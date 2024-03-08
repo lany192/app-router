@@ -7,25 +7,23 @@ plugins {
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
-}
-
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
-
-dependencies {
-    implementation "com.android.tools.build:gradle:8.0.0"
+    implementation 'com.android.tools.build:gradle:8.0.0'
 //    implementation 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0'
     implementation "commons-codec:commons-codec:1.15"
     implementation "commons-io:commons-io:2.14.0"
-    implementation "org.ow2.asm:asm-util:9.2"
+    implementation "org.ow2.asm:asm-util:9.6"
 }
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
 
 gradlePlugin {
     plugins {
         ArouterPlugin {
-            id = 'com.alibaba.arouter'
+            id = 'com.github.lany192.app-router'
             implementationClass = 'com.alibaba.android.arouter.register.launch.PluginLaunch'
         }
     }

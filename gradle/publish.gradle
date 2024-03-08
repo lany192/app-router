@@ -15,18 +15,19 @@ afterEvaluate { project ->
                     }
                 }
                 repositories {
+                    mavenLocal()
                     maven {
-                        name = 'local_repo'
-                        url = "${rootProject.rootDir}/repo"
+                        name = 'local_repository'
+                        url = "${rootProject.rootDir}/repository"
                     }
-                    maven {
-                        allowInsecureProtocol true
-                        url = "http://localhost:5001/repository/maven-releases/"
-                        credentials {
-                            it.username = "admin"
-                            it.password = "dev123456"
-                        }
-                    }
+//                    maven {
+//                        allowInsecureProtocol true
+//                        url = "http://localhost:5001/repository/maven-releases/"
+//                        credentials {
+//                            it.username = "admin"
+//                            it.password = "dev123456"
+//                        }
+//                    }
                 }
                 pom {
                     licenses {
