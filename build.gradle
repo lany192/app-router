@@ -1,6 +1,12 @@
 buildscript {
+    repositories {
+        mavenLocal()
+        maven {
+            setUrl("repository")
+        }
+    }
     dependencies {
-        classpath 'com.github.lany192.app-router:arouter-gradle-plugin:1.5.4'
+        classpath "com.github.lany192.router:arouter-register:1.0.20240309"
     }
 }
 
@@ -30,18 +36,18 @@ allprojects {
             }
         }
     }
-    afterEvaluate {
-        if (project.plugins.hasPlugin('com.android.library') || project.plugins.hasPlugin('com.android.application')) {
-            def android = project.extensions.getByName('android')
-            android.compileOptions {
-                sourceCompatibility JavaVersion.VERSION_1_8
-                targetCompatibility JavaVersion.VERSION_1_8
-            }
-            android.kotlinOptions {
-                jvmTarget = "1.8"
-            }
-        }
-    }
+//    afterEvaluate {
+//        if (project.plugins.hasPlugin('com.android.library') || project.plugins.hasPlugin('com.android.application')) {
+//            def android = project.extensions.getByName('android')
+//            android.compileOptions {
+//                sourceCompatibility JavaVersion.VERSION_1_8
+//                targetCompatibility JavaVersion.VERSION_1_8
+//            }
+//            android.kotlinOptions {
+//                jvmTarget = "1.8"
+//            }
+//        }
+//    }
 }
 
 ext {

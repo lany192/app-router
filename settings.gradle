@@ -14,6 +14,12 @@ pluginManagement {
         }
     }
 }
+/*
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS) 代码的含义是 解析依赖时 , 只能使用本脚本块中的 Maven 仓库 , 不能使用 Module 子项目中的依赖 ;
+    repositoriesMode 模式有两种 :
+    RepositoriesMode.PREFER_PROJECT : 解析依赖库时 , 优先使用本地仓库 , 本地仓库没有该依赖 , 则使用远程仓库 ;
+    RepositoriesMode.FAIL_ON_PROJECT_REPOS : 解析依赖库时 , 强行使用远程仓库 , 不管本地仓库有没有该依赖库 ;
+*/
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -31,9 +37,19 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "app-router"
-include ':compiler'
-include ':plugin'
-include ':sample:common'
-include ':sample:blue'
-include ':sample:green'
-include ':sample:app'
+//include ':compiler'
+
+
+include ':app'
+include ':arouter-api'
+include ':arouter-compiler'
+include ':annotation'
+include ':gradle-plugin'
+
+include ':module:module-java'
+include ':module:module-java-export'
+include ':module:module-kotlin'
+//include ':module:common'
+//include ':module:blue'
+//include ':module:green'
+//include ':module:app'

@@ -1,0 +1,25 @@
+plugins {
+    id("maven-publish")
+    id("org.jetbrains.kotlin.jvm")
+    id "java-gradle-plugin"
+}
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation "com.android.tools.build:gradle:8.3.0"
+    implementation "commons-codec:commons-codec:1.15"
+    implementation "commons-io:commons-io:2.14.0"
+    implementation "org.ow2.asm:asm-util:9.6"
+}
+
+gradlePlugin {
+    plugins {
+        ArouterPlugin {
+            id = 'com.alibaba.arouter'
+            implementationClass = 'com.alibaba.android.arouter.register.launch.PluginLaunch'
+        }
+    }
+}
+
+apply from: rootProject.file('gradle/maven-publish.gradle')
