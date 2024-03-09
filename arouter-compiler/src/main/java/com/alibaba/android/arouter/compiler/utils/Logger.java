@@ -13,36 +13,52 @@ import javax.tools.Diagnostic;
  * @since 16/8/22 上午11:48
  */
 public class Logger {
-    private Messager msg;
+    private final Messager msg;
+    /**
+     * 调试时手动修改
+     */
+    private boolean debug;
 
     public Logger(Messager messager) {
         msg = messager;
+    }
+
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 
     /**
      * Print info log.
      */
     public void info(CharSequence info) {
-        if (StringUtils.isNotEmpty(info)) {
-            msg.printMessage(Diagnostic.Kind.NOTE, Consts.PREFIX_OF_LOGGER + info);
+        if (debug) {
+            if (StringUtils.isNotEmpty(info)) {
+                msg.printMessage(Diagnostic.Kind.NOTE, Consts.PREFIX_OF_LOGGER + info);
+            }
         }
     }
 
     public void error(CharSequence error) {
-        if (StringUtils.isNotEmpty(error)) {
-            msg.printMessage(Diagnostic.Kind.ERROR, Consts.PREFIX_OF_LOGGER + "An exception is encountered, [" + error + "]");
+        if (debug) {
+            if (StringUtils.isNotEmpty(error)) {
+                msg.printMessage(Diagnostic.Kind.ERROR, Consts.PREFIX_OF_LOGGER + "An exception is encountered, [" + error + "]");
+            }
         }
     }
 
     public void error(Throwable error) {
-        if (null != error) {
-            msg.printMessage(Diagnostic.Kind.ERROR, Consts.PREFIX_OF_LOGGER + "An exception is encountered, [" + error.getMessage() + "]" + "\n" + formatStackTrace(error.getStackTrace()));
+        if (debug) {
+            if (null != error) {
+                msg.printMessage(Diagnostic.Kind.ERROR, Consts.PREFIX_OF_LOGGER + "An exception is encountered, [" + error.getMessage() + "]" + "\n" + formatStackTrace(error.getStackTrace()));
+            }
         }
     }
 
     public void warning(CharSequence warning) {
-        if (StringUtils.isNotEmpty(warning)) {
-            msg.printMessage(Diagnostic.Kind.WARNING, Consts.PREFIX_OF_LOGGER + warning);
+        if (debug) {
+            if (StringUtils.isNotEmpty(warning)) {
+                msg.printMessage(Diagnostic.Kind.WARNING, Consts.PREFIX_OF_LOGGER + warning);
+            }
         }
     }
 

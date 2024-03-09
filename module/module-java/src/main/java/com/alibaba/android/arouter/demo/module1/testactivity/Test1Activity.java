@@ -50,8 +50,8 @@ public class Test1Activity extends BaseActivity {
     @Autowired
     List<TestObj> objList;
 
-    @Autowired
-    Map<String, List<TestObj>> map;
+//    @Autowired
+//    Map<String, List<TestObj>> map;
 
     private long high;
 
@@ -89,8 +89,9 @@ public class Test1Activity extends BaseActivity {
                 ch,
                 fl,
                 dou,
-                objList,
-                map
+                objList
+//                ,
+//                map
         );
         helloService.sayHello("Hello moto.");
 

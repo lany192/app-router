@@ -57,8 +57,8 @@ public class BlankFragment extends Fragment {
     @Autowired
     List<TestObj> objList;
 
-    @Autowired
-    Map<String, List<TestObj>> map;
+//    @Autowired
+//    Map<String, List<TestObj>> map;
 
     public BlankFragment() {
         // Required empty public constructor

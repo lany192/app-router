@@ -82,4 +82,15 @@ public class Consts {
     public static final String ANNOTATION_TYPE_INTECEPTOR = FACADE_PACKAGE + ".annotation.Interceptor";
     public static final String ANNOTATION_TYPE_ROUTE = FACADE_PACKAGE + ".annotation.Route";
     public static final String ANNOTATION_TYPE_AUTOWIRED = FACADE_PACKAGE + ".annotation.Autowired";
+
+    //模块名称
+    public static final String MODULE_NAME = "AROUTER_MODULE_NAME";
+    //是否debug模式
+    public static final String ROUTER_DEBUG = "ROUTER_DEBUG";
+    //是否打印JS路由文档
+    public static final String ROUTER_JS_DOC = "ROUTER_JS_DOC";
+    //Uri Scheme标识
+    public static final String ROUTER_SCHEME = "ROUTER_SCHEME";
+    //JS路由调用方法
+    public static final String ROUTER_JS_FUN = "ROUTER_JS_FUN";
 }
