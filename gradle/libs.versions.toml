@@ -22,7 +22,7 @@ material = "1.11.0"
 activity = "1.8.2"
 constraintlayout = "2.1.4"
 fastjson = "1.2.83"
-arouterRegisterVersion = "2.0.1"
+arouterRegisterVersion = "2.0.2"
 
 [libraries]
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
