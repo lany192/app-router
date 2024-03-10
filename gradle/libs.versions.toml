@@ -10,9 +10,11 @@ material = "1.11.0"
 activity = "1.8.2"
 constraintlayout = "2.1.4"
 fastjson = "1.2.83"
+arouterRegisterVersion = "2.0.1"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+app-router-arouter-register = { module = "com.github.lany192.app-router:arouter-register", version.ref = "arouterRegisterVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

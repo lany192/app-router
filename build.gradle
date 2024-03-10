@@ -1,12 +1,6 @@
 buildscript {
-    repositories {
-        mavenLocal()
-        maven {
-            setUrl("repository")
-        }
-    }
     dependencies {
-        classpath 'com.github.lany192.app-router:arouter-register:master-5e4e8a79f2-1'
+        classpath libs.app.router.arouter.register
     }
 }
 
