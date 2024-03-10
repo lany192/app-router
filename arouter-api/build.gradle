@@ -45,11 +45,10 @@ dependencies {
     annotationProcessor project(':arouter-compiler')
     api project(':arouter-annotation')
 
-    implementation "androidx.annotation:annotation:${ANDROIDX_APPCOMPAT_LIB_VERSION}"
-    implementation "androidx.core:core:${ANDROIDX_APPCOMPAT_LIB_VERSION}"
-    implementation "androidx.fragment:fragment:${ANDROIDX_APPCOMPAT_LIB_VERSION}"
-
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation libs.androidx.annotation
+    implementation libs.androidx.core
+    implementation libs.androidx.fragment
+    implementation libs.androidx.legacy.support.v4
 }
 
 apply from: rootProject.file('gradle/maven-publish.gradle')

@@ -1,6 +1,7 @@
 buildscript {
     dependencies {
-        classpath libs.app.router.arouter.register
+//        classpath libs.app.router.arouter.register
+        classpath "com.github.jadepeakpoet.ARouter:arouter-register:1.0.3"
     }
 }
 

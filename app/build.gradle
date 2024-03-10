@@ -38,7 +38,7 @@ dependencies {
 
     implementation project(':module:module-kotlin')
 
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation libs.androidx.legacy.support.v4
 
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat

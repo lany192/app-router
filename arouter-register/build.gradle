@@ -7,10 +7,10 @@ plugins {
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
-    implementation "com.android.tools.build:gradle:8.3.0"
-    implementation "commons-codec:commons-codec:1.15"
-    implementation "commons-io:commons-io:2.14.0"
-    implementation "org.ow2.asm:asm-util:9.6"
+    implementation libs.gradle
+    implementation libs.commons.codec
+    implementation libs.commons.io
+    implementation libs.asm.util
 }
 
 gradlePlugin {

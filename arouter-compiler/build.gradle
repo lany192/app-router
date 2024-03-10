@@ -10,14 +10,14 @@ java {
 dependencies {
     implementation project(':arouter-annotation')
     annotationProcessor 'com.google.auto.service:auto-service:1.1.1'
-    compileOnly 'com.google.auto.service:auto-service-annotations:1.1.1'
+    compileOnly libs.service.auto.service.annotations
 
-    implementation 'com.squareup:javapoet:1.13.0'
+    implementation libs.squareup.javapoet
 
-    implementation 'org.apache.commons:commons-lang3:3.13.0'
-    implementation 'org.apache.commons:commons-collections4:4.4'
+    implementation libs.apache.commons.lang3
+    implementation libs.apache.commons.collections4
 
-            implementation libs.alibaba.fastjson
+    implementation libs.alibaba.fastjson
 }
 
 apply from: rootProject.file('gradle/maven-publish.gradle')
