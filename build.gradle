@@ -6,8 +6,7 @@ buildscript {
         }
     }
     dependencies {
-//        classpath "com.github.lany192.router:arouter-register:1.0.${new Date().format('MMdd')}"
-        classpath "com.github.jadepeakpoet.ARouter:arouter-register:1.0.3"
+        classpath 'com.github.lany192.app-router:arouter-register:master-5e4e8a79f2-1'
     }
 }
 
