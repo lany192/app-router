@@ -1,15 +1,14 @@
-package com.alibaba.android.arouter.compiler.other.processor;
+package com.alibaba.android.arouter.compiler.processor;
 
 import static com.alibaba.android.arouter.facade.enums.TypeKind.PARCELABLE;
 import static com.alibaba.android.arouter.facade.enums.TypeKind.SERIALIZABLE;
 
-import com.alibaba.android.arouter.compiler.other.Constants;
+import com.alibaba.android.arouter.compiler.utils.Constants;
 import com.alibaba.android.arouter.compiler.utils.TypeUtils;
 import com.alibaba.android.arouter.compiler.utils.Utils;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.enums.TypeKind;
-
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.FieldSpec;
@@ -38,14 +37,13 @@ import javax.lang.model.util.Types;
 
 @AutoService(Processor.class)
 //@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
-public class ActivityRouterProcessor extends BaseProcessor {
+public class FragmentRouterProcessor extends BaseRouterProcessor {
     private Types types;
     private TypeMirror iProvider = null;
     private TypeUtils typeUtils;
     private final ClassName arouterClassName = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
     private ClassName PathsClassName;
     private final ClassName postcardClass = ClassName.get("com.alibaba.android.arouter.facade", "Postcard");
-    private final ClassName uriClass = ClassName.get("android.net", "Uri");
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -70,9 +68,11 @@ public class ActivityRouterProcessor extends BaseProcessor {
         if (elements != null && !elements.isEmpty()) {
             Set<? extends Element> routeElements = roundEnv.getElementsAnnotatedWith(Route.class);
             for (Element element : routeElements) {
-                if (isActivity(element)) { // Activity
+                if (isFragment(element)) { // Fragment
                     try {
-                        createActivityRouter(element);
+                        List<MethodSpec> methods = createMethods(element);
+                        methods.add(createPostcard(element));
+                        createFragmentBuilder(element, methods);
                     } catch (Exception e) {
                         logger.error(e);
                     }
@@ -85,81 +85,14 @@ public class ActivityRouterProcessor extends BaseProcessor {
         return true;
     }
 
-    private void createActivityRouter(Element element) throws Exception {
-        Route route = element.getAnnotation(Route.class);
-
-        List<MethodSpec> methods = createMethods(element);
-        methods.add(createPostcard(element));
-
-        String simpleName = element.getSimpleName().toString().replace("Activity", "");
-
-        ClassName routerType = ClassName.get(ClassName.get((TypeElement) element).packageName(), simpleName + "UI");
-        ClassName callbackClass = ClassName.get("com.alibaba.android.arouter.facade.callback", "NavCallback");
-
-        TypeSpec.Builder builder = TypeSpec.classBuilder(simpleName + "UI")
-                .addJavadoc(route.name() + "\n类位置：{@link " + ClassName.get((TypeElement) element) + "}" + "\n自动生成,请勿编辑!")
-                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-
-        List<FieldSpec> fields = createFields(element);
-        for (FieldSpec field : fields) {
-            builder.addField(field);
-        }
-
-        builder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build());
-        builder.addMethod(MethodSpec.methodBuilder("builder")
-                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addCode("return new $T();", routerType)
-                .returns(routerType)
-                .build());
-        for (MethodSpec method : methods) {
-            builder.addMethod(method);
-        }
-        builder.addMethod(MethodSpec.methodBuilder("build")
-                .addParameter(ParameterSpec.builder(callbackClass, "callback").build())
-                .addModifiers(Modifier.PUBLIC)
-                .addJavadoc("跳转到目标界面")
-                .addCode("Postcard postcard = postcard();")
-                .addCode("\nif (callback != null) {")
-                .addCode("\n    postcard.navigation(null, callback);")
-                .addCode("\n} else {")
-                .addCode("\n    postcard.navigation();")
-                .addCode("\n}")
-                .returns(void.class)
-                .build());
-        builder.addMethod(MethodSpec
-                .methodBuilder("build")
-                .addModifiers(Modifier.PUBLIC)
-                .addJavadoc("跳转到目标界面")
-                .addCode("postcard().navigation();")
-                .returns(void.class)
-                .build());
-        builder.addMethod(MethodSpec
-                .methodBuilder("getUri")
-                .addModifiers(Modifier.PUBLIC)
-                .addJavadoc("获取Uri")
-                .addCode("return postcard().getUri();")
-                .returns(uriClass)
-                .build());
-        JavaFile javaFile = JavaFile
-                .builder(ClassName.get((TypeElement) element).packageName(), builder.build())
-                // 设置表示缩进的字符串
-                .indent("    ")
-                .build();
-
-//        String module = getValue(OUT_MODULE_NAME);
-//        Path path = Paths.get(System.getProperty("user.dir"), module, "src", "main", "java");
-//        javaFile.writeTo(path);
-        javaFile.writeTo(processingEnv.getFiler());
-    }
-
     /**
      * Postcard方法
      */
     private MethodSpec createPostcard(Element element) {
         MethodSpec.Builder builder = MethodSpec
-                .methodBuilder("postcard")
+                .methodBuilder("build")
                 .addModifiers(Modifier.PUBLIC)
-                .addJavadoc("组建Postcard");
+                .addJavadoc("构建Fragment实例");
         Route route = element.getAnnotation(Route.class);
         String path = route.path().replace("/", "_").toUpperCase().substring(1);
         builder.addCode("$T postcard = $T.getInstance().build($T." + path + ");", postcardClass, arouterClassName, PathsClassName);
@@ -169,16 +102,17 @@ public class ActivityRouterProcessor extends BaseProcessor {
                 builder.addCode(makeCode(field, autowired));
             }
         }
-        builder.addCode("\nreturn postcard;");
-        builder.returns(postcardClass);
+        builder.addCode("\nreturn ($T) postcard.navigation();", ClassName.get((TypeElement) element));
+        builder.returns(ClassName.get((TypeElement) element));
         return builder.build();
     }
 
+    private ClassName getFragmentBuilderName(Element element) {
+        String simpleName = element.getSimpleName().toString().replace("Fragment", "");
+        return ClassName.get(ClassName.get((TypeElement) element).packageName(), simpleName + "Builder");
+    }
+
     private List<MethodSpec> createMethods(Element element) {
-        String simpleName = element.getSimpleName().toString().replace("Activity", "");
-
-        ClassName routerType = ClassName.get(ClassName.get((TypeElement) element).packageName(), simpleName + "UI");
-
         List<MethodSpec> methods = new ArrayList<>();
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -215,10 +149,10 @@ public class ActivityRouterProcessor extends BaseProcessor {
                     }
                 }
                 builder.addParameter(parameterSpec);
-                builder.addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required());
+                builder.addJavadoc(autowired.desc());
                 builder.addCode("this." + key + " = " + key + ";");
                 builder.addCode("\nreturn this;");
-                builder.returns(routerType);
+                builder.returns(getFragmentBuilderName(element));
 
                 methods.add(builder.build());
             }
@@ -239,7 +173,7 @@ public class ActivityRouterProcessor extends BaseProcessor {
                 if (typeMirror.getKind().isPrimitive()) {
                     fields.add(FieldSpec
                             .builder(TypeName.get(typeMirror), key, Modifier.PRIVATE)
-                            .addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required())
+                            .addJavadoc(autowired.desc() + "\n")
                             .build());
                 } else {
                     //是否是泛型
@@ -253,7 +187,7 @@ public class ActivityRouterProcessor extends BaseProcessor {
 
                         fields.add(FieldSpec
                                 .builder(ParameterizedTypeName.get(list, className), key, Modifier.PRIVATE)
-                                .addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required())
+                                .addJavadoc(autowired.desc() + "\n")
                                 .build());
                     } else {
                         if (typeName.contains(".")) {
@@ -261,12 +195,12 @@ public class ActivityRouterProcessor extends BaseProcessor {
                             ClassName className = ClassName.get(typeName.substring(0, index), typeName.substring(index + 1));
                             fields.add(FieldSpec
                                     .builder(className, key, Modifier.PRIVATE)
-                                    .addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required())
+                                    .addJavadoc(autowired.desc() + "\n")
                                     .build());
                         } else {
                             fields.add(FieldSpec
                                     .builder(Object.class, key, Modifier.PRIVATE)
-                                    .addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required())
+                                    .addJavadoc(autowired.desc() + "\n")
                                     .build());
                         }
                     }
@@ -287,15 +221,15 @@ public class ActivityRouterProcessor extends BaseProcessor {
         String code = "";
         if (typeMirror.getKind().isPrimitive()) {
             logger.info("字段:" + fieldName + " -> 基本类型:" + name);
-            code += "\npostcard.with" + name + "(\"" + key + "\"," + key + ");";
+            code += "\npostcard.with" + name + "(\"" + key + "\", " + key + ");";
         } else {
             code = "\nif (" + key + " != null) {";
             if (typeKind == SERIALIZABLE) {
                 logger.info("字段:" + fieldName + " -> Serializable类型:" + name);
-                code += "\n    postcard.withSerializable(\"" + key + "\",(" + typeName + ")" + key + ");";
+                code += "\n    postcard.withSerializable(\"" + key + "\", (" + typeName + ")" + key + ");";
             } else if (typeKind == PARCELABLE) {
                 logger.info("字段:" + fieldName + " -> Parcelable类型:" + name);
-                code += "\n    postcard.withParcelable(\"" + key + "\",(" + typeName + ")" + key + ");";
+                code += "\n    postcard.withParcelable(\"" + key + "\", (" + typeName + ")" + key + ");";
             } else {
                 logger.info("字段:" + fieldName + " -> 字段类型:" + name);
                 if (typeName.startsWith("java.lang") || typeName.startsWith("java.util")) {
@@ -303,10 +237,12 @@ public class ActivityRouterProcessor extends BaseProcessor {
                     if (!typeName.contains("<") && typeName.contains(".")) {
                         int index = typeName.lastIndexOf(".");
                         name = Utils.toUpperCaseFirstOne(typeName.substring(index + 1));
-                        code += "\n    postcard.with" + name + "(\"" + key + "\"," + key + ");";
+                        code += "\n    postcard.with" + name + "(\"" + key + "\", " + key + ");";
+                    } else {
+                        code += "\n    postcard.withObject(\"" + key + "\", " + key + ");";
                     }
                 } else {
-                    code += "\n    postcard.withObject(\"" + key + "\"," + key + ");";
+                    code += "\n    postcard.withObject(\"" + key + "\", " + key + ");";
                 }
             }
             code += "\n}";
@@ -314,12 +250,48 @@ public class ActivityRouterProcessor extends BaseProcessor {
         return code;
     }
 
+    private void createFragmentBuilder(Element element, List<MethodSpec> methods) throws Exception {
+        ClassName className = getFragmentBuilderName(element);
+
+        String simpleName = element.getSimpleName().toString().replace("Fragment", "");
+
+        TypeSpec.Builder builder = TypeSpec.classBuilder(simpleName + "Builder")
+                .addJavadoc("自动生成,请勿编辑!\n{@link " + ClassName.get((TypeElement) element) + "}")
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+
+        List<FieldSpec> fields = createFields(element);
+        for (FieldSpec field : fields) {
+            builder.addField(field);
+        }
+
+        builder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build());
+        builder.addMethod(MethodSpec.methodBuilder("builder")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addCode("return new $T();", className)
+                .returns(className)
+                .build());
+        for (MethodSpec method : methods) {
+            builder.addMethod(method);
+        }
+        JavaFile javaFile = JavaFile
+                .builder(ClassName.get((TypeElement) element).packageName(), builder.build())
+                // 设置表示缩进的字符串
+                .indent("    ")
+                .build();
+
+//        String module = getValue(OUT_MODULE_NAME);
+//        Path path = Paths.get(System.getProperty("user.dir"), module, "src", "main", "java");
+//        javaFile.writeTo(path);
+
+        javaFile.writeTo(processingEnv.getFiler());
+    }
 
     private TypeMirror getTypeMirror(String name) {
         return processingEnv.getElementUtils().getTypeElement(name).asType();
     }
 
-    private boolean isActivity(Element element) {
-        return types.isSubtype(element.asType(), getTypeMirror(Constants.ACTIVITY));
+    private boolean isFragment(Element element) {
+        return types.isSubtype(element.asType(), getTypeMirror(Constants.FRAGMENT))
+                || types.isSubtype(element.asType(), getTypeMirror(Constants.FRAGMENT_X));
     }
 }

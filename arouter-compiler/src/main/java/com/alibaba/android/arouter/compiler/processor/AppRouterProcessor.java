@@ -1,11 +1,12 @@
-package com.github.lany192.arouter.processor;
+package com.alibaba.android.arouter.compiler.processor;
 
+import com.alibaba.android.arouter.compiler.utils.Constants;
+import com.alibaba.android.arouter.compiler.utils.OtherUtils;
+import com.alibaba.android.arouter.compiler.utils.TypeUtils;
+import com.alibaba.android.arouter.compiler.utils.Utils;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.github.lany192.arouter.Constants;
-import com.github.lany192.arouter.OtherUtils;
-import com.github.lany192.arouter.TypeUtils;
-import com.github.lany192.arouter.Utils;
+
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
@@ -34,7 +35,7 @@ import javax.lang.model.util.Types;
  */
 @AutoService(Processor.class)
 //@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
-public class AppRouterProcessor extends BaseProcessor {
+public class AppRouterProcessor extends BaseRouterProcessor {
     private Types types;
     private TypeMirror iProvider = null;
     private TypeUtils typeUtils;
@@ -225,7 +226,7 @@ public class AppRouterProcessor extends BaseProcessor {
     }
 
     private void createRouterHelper(List<MethodSpec> methods) throws Exception {
-        TypeSpec.Builder builder = TypeSpec.classBuilder(Utils.toUpperCaseFirstOne(module) + "Router")
+        TypeSpec.Builder builder = TypeSpec.classBuilder(Utils.getModuleName(module) + "Router")
                 .addJavadoc("路由助手,自动生成,请勿编辑!")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
         MethodSpec skipMethodSpec = MethodSpec.methodBuilder("skip")
@@ -295,8 +296,7 @@ public class AppRouterProcessor extends BaseProcessor {
 
     private boolean isFragment(Element element) {
         return types.isSubtype(element.asType(), getTypeMirror(Constants.FRAGMENT))
-                || types.isSubtype(element.asType(), getTypeMirror(Constants.FRAGMENT_X))
-                || types.isSubtype(element.asType(), getTypeMirror(Constants.FRAGMENT_V4));
+                || types.isSubtype(element.asType(), getTypeMirror(Constants.FRAGMENT_X));
     }
 //
 //    /**

@@ -1,8 +1,8 @@
-package com.github.lany192.arouter.processor;
+package com.alibaba.android.arouter.compiler.processor;
 
+import com.alibaba.android.arouter.compiler.utils.Constants;
+import com.alibaba.android.arouter.compiler.utils.Logger;
 import com.alibaba.fastjson.JSON;
-import com.github.lany192.arouter.Constants;
-import com.github.lany192.arouter.Logger;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -12,7 +12,7 @@ import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.SourceVersion;
 
-public abstract class BaseProcessor extends AbstractProcessor {
+public abstract class BaseRouterProcessor extends AbstractProcessor {
     /**
      * 日志打印
      */

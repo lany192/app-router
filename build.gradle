@@ -6,16 +6,17 @@ buildscript {
         }
     }
     dependencies {
-        classpath "com.github.lany192.router:arouter-register:1.0.20240309"
+        classpath "com.github.lany192.router:arouter-register:1.0.${new Date().format('MMdd')}"
+//        classpath "com.github.jadepeakpoet.ARouter:arouter-register:1.0.3"
     }
 }
 
 plugins {
-    id 'com.android.application' version '8.3.0' apply false
-    id 'com.android.library' version '8.3.0' apply false
-    id 'org.jetbrains.kotlin.android' version '1.9.20' apply false
-    id 'org.jetbrains.kotlin.jvm' version '1.9.20' apply false
-    id 'org.jetbrains.kotlin.kapt' version '1.9.20' apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.library) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.kotlin.kapt) apply false
 }
 
 allprojects {
@@ -54,6 +55,6 @@ ext {
     aar = [
             groupId    : 'com.github.lany192.router',
             versionCode: 5,
-            versionName: "1.0.${new Date().format('yyyyMMdd')}"
+            versionName: "1.0.${new Date().format('MMdd')}"
     ]
 }

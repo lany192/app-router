@@ -37,18 +37,16 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "app-router"
-//include ':compiler'
-
-
-include ':app'
 include ':arouter-api'
 include ':arouter-compiler'
-include ':annotation'
-include ':gradle-plugin'
+include ':arouter-annotation'
+include ':arouter-register'
 
+include ':app'
 include ':module:module-java'
 include ':module:module-java-export'
 include ':module:module-kotlin'
+
 //include ':module:common'
 //include ':module:blue'
 //include ':module:green'

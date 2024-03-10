@@ -1,4 +1,4 @@
-package com.alibaba.android.arouter.compiler.other.processor;
+package com.alibaba.android.arouter.compiler.processor;
 
 import com.alibaba.android.arouter.compiler.utils.Utils;
 import com.alibaba.android.arouter.facade.annotation.Route;
@@ -24,7 +24,7 @@ import javax.lang.model.element.TypeElement;
  */
 @AutoService(Processor.class)
 //@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
-public class PathsProcessor extends BaseProcessor {
+public class PathsProcessor extends BaseRouterProcessor {
 
     @Override
     public Set<String> getSupportedAnnotationTypes() {

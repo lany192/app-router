@@ -4,8 +4,8 @@ afterEvaluate { project ->
     publishing {
         publications {
             maven(MavenPublication) {
-                groupId = GROUP
-                artifactId = POM_ARTIFACT_ID
+                groupId = aar.groupId
+                artifactId = project.name
                 version = aar.versionName
                 afterEvaluate {
                     if (plugins.hasPlugin('com.android.application') || plugins.hasPlugin('com.android.library')) {
@@ -15,9 +15,19 @@ afterEvaluate { project ->
                     }
                 }
                 repositories {
+                    mavenLocal()
                     maven {
+                        name = 'local_repository'
                         url = "${rootProject.rootDir}/repository"
                     }
+//                    maven {
+//                        allowInsecureProtocol true
+//                        url = "http://localhost:5001/repository/maven-releases/"
+//                        credentials {
+//                            it.username = "admin"
+//                            it.password = "dev123456"
+//                        }
+//                    }
                 }
             }
         }

@@ -3,23 +3,28 @@ plugins {
 }
 
 dependencies {
-    implementation project(':annotation')
+    implementation project(':arouter-annotation')
     implementation project(':arouter-api')
     annotationProcessor project(':arouter-compiler')
 
     implementation project(':module:module-java-export')
 
-    implementation "androidx.appcompat:appcompat:${ANDROIDX_APPCOMPAT_LIB_VERSION}"
-    implementation 'com.alibaba:fastjson:1.2.83'
+            implementation libs.alibaba.fastjson
+
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.constraintlayout
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
 }
 android {
     namespace 'com.alibaba.android.arouter.demo.module1'
 
-    compileSdk Integer.parseInt(COMPILE_SDK_VERSION)
+    compileSdk 34
 
     defaultConfig {
-        minSdk Integer.parseInt(MIN_SDK_VERSION)
-        targetSdk Integer.parseInt(TARGET_SDK_VERSION)
+        minSdk 21
+        targetSdk 34
 
         javaCompileOptions {
             annotationProcessorOptions {

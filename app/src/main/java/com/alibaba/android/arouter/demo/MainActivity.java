@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 
+import com.alibaba.android.arouter.demo.kotlin.KotlinTestUI;
 import com.alibaba.android.arouter.demo.module1.testactivity.TestDynamicActivity;
 import com.alibaba.android.arouter.demo.module1.testservice.SingleService;
 import com.alibaba.android.arouter.demo.service.HelloService;
@@ -81,12 +82,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //                    .withString("name", "老王")
 //                    .withInt("age", 23)
 //                    .navigation();
-
+            KotlinTestUI.builder().name("哈哈张三").age(18).build();
         } else if (viewId == R.id.normalNavigationWithParams) {
-            // ARouter.getInstance()
-            //         .build("/test/activity2")
-            //         .withString("key1", "value1")
-            //         .navigation();
+
+//             ARouter.getInstance()
+//                     .build("/test/activity2")
+//                     .withString("key1", "value1")
+//                     .navigation();
 
             Uri testUriMix = Uri.parse("arouter://m.aliyun.com/test/activity2");
             ARouter.getInstance().build(testUriMix)

@@ -60,17 +60,28 @@ public class Utils {
     }
 
     /**
-     * 首字母转大写
+     * Module名称转java类名
      */
-    public static String getModuleName(String str) {
-        if (StringUtils.isEmpty(str)) {
-            return str;
+    public static String getModuleName(String moduleName) {
+        if (StringUtils.isEmpty(moduleName)) {
+            return "";
         } else {
-            if (str.length() > 1) {
-                return str.substring(0, 1).toUpperCase() + str.substring(1).replace("-","");
-            } else {
-                return str.toUpperCase().replace("-","");
+            StringBuilder className = new StringBuilder();
+            // 首字母大写
+            boolean nextIsUpperCase = true;
+            for (char charValue : moduleName.toCharArray()) {
+                if (charValue == '-' || charValue == '_') {
+                    nextIsUpperCase = true;
+                } else {
+                    if (nextIsUpperCase) {
+                        className.append(Character.toUpperCase(charValue));
+                        nextIsUpperCase = false;
+                    } else {
+                        className.append(charValue);
+                    }
+                }
             }
+            return className.toString();
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.github.lany192.arouter;
+package com.alibaba.android.arouter.compiler.utils;
 
 public class Constants {
     public static final String PROJECT = "\nAppRouter";
