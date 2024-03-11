@@ -16,6 +16,7 @@ android {
                 arguments = [AROUTER_MODULE_NAME: project.getName()]
             }
         }
+        consumerProguardFiles 'proguard-rules.pro'
     }
 
     compileOptions {
@@ -25,7 +26,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
