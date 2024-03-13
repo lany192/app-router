@@ -9,10 +9,6 @@ kapt {
     }
 }
 
-kotlin {
-    jvmToolchain(8)
-}
-
 kapt {
     arguments {
         arg("AROUTER_MODULE_NAME", project.getName())
