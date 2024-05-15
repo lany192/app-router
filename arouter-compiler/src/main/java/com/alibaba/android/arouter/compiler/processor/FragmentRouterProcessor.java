@@ -114,6 +114,11 @@ public class FragmentRouterProcessor extends BaseRouterProcessor {
 
     private List<MethodSpec> createMethods(Element element) {
         List<MethodSpec> methods = new ArrayList<>();
+
+        MethodSpec.Builder allBuilder = MethodSpec.methodBuilder("get" + element.getSimpleName());
+        allBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC);
+        allBuilder.addCode("\nreturn builder()");
+
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                 Autowired autowired = field.getAnnotation(Autowired.class);
@@ -154,9 +159,18 @@ public class FragmentRouterProcessor extends BaseRouterProcessor {
                 builder.addCode("\nreturn this;");
                 builder.returns(getFragmentBuilderName(element));
 
+                allBuilder.addCode("." + key + "(" + key + ")\n");
+                allBuilder.addParameter(parameterSpec);
+
+
                 methods.add(builder.build());
             }
         }
+
+        allBuilder.addCode("\n.build();");
+
+        allBuilder.returns(ClassName.get((TypeElement) element));
+        methods.add(allBuilder.build());
         return methods;
     }
 
