@@ -64,6 +64,7 @@ public class AppRouterProcessor extends BaseRouterProcessor {
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(Route.class);
         if (elements != null && !elements.isEmpty()) {
+            logger.info("扫描到Route的数量："+elements.size());
             List<MethodSpec> methods = new ArrayList<>();
             int index = 1;
             for (Element element : elements) {
