@@ -31,15 +31,15 @@ android {
         }
     }
 
-    lintOptions {
-        abortOnError false
-    }
-
     publishing {
         singleVariant("release") {
             withSourcesJar()
 //            withJavadocJar()
         }
+    }
+
+    lint {
+        abortOnError false
     }
 }
 

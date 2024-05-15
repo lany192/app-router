@@ -1,5 +1,5 @@
 [versions]
-agp = "8.3.0"
+agp = "8.4.0"
 annotation = "1.7.1"
 asmUtil = "9.6"
 autoServiceAnnotationsVersion = "1.1.1"

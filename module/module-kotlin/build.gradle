@@ -9,12 +9,6 @@ kapt {
     }
 }
 
-kapt {
-    arguments {
-        arg("AROUTER_MODULE_NAME", project.getName())
-    }
-}
-
 dependencies {
     implementation project(':arouter-api')
     implementation project(':arouter-annotation')
@@ -51,8 +45,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-    lintOptions {
+    lint {
         abortOnError false
     }
 

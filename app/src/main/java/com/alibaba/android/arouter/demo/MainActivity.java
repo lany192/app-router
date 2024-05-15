@@ -5,13 +5,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 
+import com.alibaba.android.arouter.demo.databinding.ActivityMainBinding;
 import com.alibaba.android.arouter.demo.kotlin.KotlinTestUI;
 import com.alibaba.android.arouter.demo.module1.testactivity.TestDynamicActivity;
 import com.alibaba.android.arouter.demo.module1.testservice.SingleService;
@@ -31,34 +31,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-    }
-
-    /**
-     * Called when a view has been clicked.
-     *
-     * @param v The view that was clicked.
-     */
-    @Override
-    public void onClick(View v) {
-        // Build test data.
-        TestSerializable testSerializable = new TestSerializable("Titanic", 555);
-        TestParcelable testParcelable = new TestParcelable("jack", 666);
-        TestObj testObj = new TestObj("Rose", 777);
-        List<TestObj> objList = new ArrayList<>();
-        objList.add(testObj);
-        Map<String, List<TestObj>> map = new HashMap<>();
-        map.put("testMap", objList);
-
-        int viewId = v.getId();
-        if (viewId == R.id.openLog) {
-            ARouter.openLog();
-
-        } else if (viewId == R.id.init) {
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        binding.openLog.setOnClickListener(v -> ARouter.openLog());
+        binding.init.setOnClickListener(v -> {
             // 调试模式不是必须开启，但是为了防止有用户开启了InstantRun，但是
             // 忘了开调试模式，导致无法使用Demo，如果使用了InstantRun，必须在
             // 初始化之前开启调试模式，但是上线前需要关闭，InstantRun仅用于开
@@ -66,43 +46,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             // 来区分环境
             ARouter.openDebug();
             ARouter.init(getApplication());
-
-        } else if (viewId == R.id.normalNavigation) {
+        });
+        binding.normalNavigation.setOnClickListener(v -> {
             ARouter.getInstance()
                     .build("/test/activity2")
                     .navigation();
-
             // 也可以通过依赖对方提供的二方包来约束入参
             // 非必须，可以通过这种方式调用
             // Entrance.redirect2Test1Activity("张飞", 48, this);
-
-        } else if (viewId == R.id.kotlinNavigation) {
-//            ARouter.getInstance()
-//                    .build("/kotlin/test")
-//                    .withString("name", "老王")
-//                    .withInt("age", 23)
-//                    .navigation();
+        });
+        binding.kotlinNavigation.setOnClickListener(v -> {
             KotlinTestUI.builder().name("哈哈张三").age(18).build();
-        } else if (viewId == R.id.normalNavigationWithParams) {
-
-//             ARouter.getInstance()
-//                     .build("/test/activity2")
-//                     .withString("key1", "value1")
-//                     .navigation();
-
+        });
+        binding.normalNavigationWithParams.setOnClickListener(v -> {
             Uri testUriMix = Uri.parse("arouter://m.aliyun.com/test/activity2");
             ARouter.getInstance().build(testUriMix)
                     .withString("key1", "value1")
                     .navigation();
-
-
-        } else if (viewId == R.id.oldVersionAnim) {
+        });
+        binding.oldVersionAnim.setOnClickListener(v -> {
             ARouter.getInstance()
                     .build("/test/activity2")
                     .withTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom)
                     .navigation(this);
-
-        } else if (viewId == R.id.newVersionAnim) {
+        });
+        binding.newVersionAnim.setOnClickListener(v -> {
             if (Build.VERSION.SDK_INT >= 16) {
                 ActivityOptionsCompat compat = ActivityOptionsCompat.
                         makeScaleUpAnimation(v, v.getWidth() / 2, v.getHeight() / 2, 0, 0);
@@ -114,8 +82,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else {
                 Toast.makeText(this, "API < 16,不支持新版本动画", Toast.LENGTH_SHORT).show();
             }
-
-        } else if (viewId == R.id.interceptor) {
+        });
+        binding.interceptor.setOnClickListener(v -> {
             ARouter.getInstance()
                     .build("/test/activity4")
                     .navigation(this, new NavCallback() {
@@ -129,14 +97,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Log.d("ARouter", "被拦截了");
                         }
                     });
-
-        } else if (viewId == R.id.navByUrl) {
+        });
+        binding.navByUrl.setOnClickListener(v -> {
             ARouter.getInstance()
                     .build("/test/webview")
                     .withString("url", "file) {///android_asset/scheme-test.html")
                     .navigation();
-
-        } else if (viewId == R.id.autoInject) {
+        });
+        binding.autoInject.setOnClickListener(v -> {
+            TestSerializable testSerializable = new TestSerializable("Titanic", 555);
+            TestParcelable testParcelable = new TestParcelable("jack", 666);
+            TestObj testObj = new TestObj("Rose", 777);
+            List<TestObj> objList = new ArrayList<>();
+            objList.add(testObj);
+            Map<String, List<TestObj>> map = new HashMap<>();
+            map.put("testMap", objList);
             ARouter.getInstance().build("/test/activity1")
                     .withString("name", "老王")
                     .withInt("age", 18)
@@ -149,24 +124,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .withObject("objList", objList)
                     .withObject("map", map)
                     .navigation();
-
-        } else if (viewId == R.id.navByName) {
+        });
+        binding.navByName.setOnClickListener(v -> {
             ((HelloService) ARouter.getInstance().build("/yourservicegroupname/hello").navigation()).sayHello("mike");
-
-        } else if (viewId == R.id.navByType) {
+        });
+        binding.navByType.setOnClickListener(v -> {
             ARouter.getInstance().navigation(HelloService.class).sayHello("mike");
-
-        } else if (viewId == R.id.navToMoudle1) {
+        });
+        binding.navToMoudle1.setOnClickListener(v -> {
             ARouter.getInstance().build("/module/1").navigation();
-
-        } else if (viewId == R.id.navToMoudle2) {
+        });
+        binding.navToMoudle2.setOnClickListener(v -> {
             // 这个页面主动指定了Group名
             ARouter.getInstance().build("/module/2", "m2").navigation();
-
-        } else if (viewId == R.id.destroy) {
+        });
+        binding.destroy.setOnClickListener(v -> {
             ARouter.getInstance().destroy();
-
-        } else if (viewId == R.id.failNav) {
+        });
+        binding.failNav.setOnClickListener(v -> {
             ARouter.getInstance().build("/xxx/xxx").navigation(this, new NavCallback() {
                 @Override
                 public void onFound(Postcard postcard) {
@@ -188,22 +163,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Log.d("ARouter", "被拦截了");
                 }
             });
-
-        } else if (viewId == R.id.callSingle) {
+        });
+        binding.callSingle.setOnClickListener(v -> {
             ARouter.getInstance().navigation(SingleService.class).sayHello("Mike");
-
-        } else if (viewId == R.id.failNav2) {
+        });
+        binding.failNav2.setOnClickListener(v -> {
             ARouter.getInstance().build("/xxx/xxx").navigation();
-
-        } else if (viewId == R.id.failNav3) {
+        });
+        binding.failNav3.setOnClickListener(v -> {
             ARouter.getInstance().navigation(MainActivity.class);
-
-        } else if (viewId == R.id.normalNavigation2) {
+        });
+        binding.normalNavigation2.setOnClickListener(v -> {
             ARouter.getInstance()
                     .build("/test/activity2")
                     .navigation(this, 666);
-
-        } else if (viewId == R.id.getFragment) {
+        });
+        binding.getFragment.setOnClickListener(v -> {
+            TestSerializable testSerializable = new TestSerializable("Titanic", 555);
+            TestParcelable testParcelable = new TestParcelable("jack", 666);
+            TestObj testObj = new TestObj("Rose", 777);
+            List<TestObj> objList = new ArrayList<>();
+            objList.add(testObj);
+            Map<String, List<TestObj>> map = new HashMap<>();
+            map.put("testMap", objList);
             Fragment fragment = (Fragment) ARouter.getInstance().build("/test/fragment")
                     .withString("name", "老王")
                     .withInt("age", 18)
@@ -216,8 +198,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .withObject("objList", objList)
                     .withObject("map", map).navigation();
             Toast.makeText(this, "找到Fragment) {" + fragment.toString(), Toast.LENGTH_SHORT).show();
-
-        } else if (viewId == R.id.addGroup) {
+        });
+        binding.addGroup.setOnClickListener(v -> {
             ARouter.getInstance().addRouteGroup(new IRouteGroup() {
                 @Override
                 public void loadInto(Map<String, RouteMeta> atlas) {
@@ -228,26 +210,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             "dynamic", 0, 0));
                 }
             });
-        } else if (viewId == R.id.dynamicNavigation) {
-            // 该页面未配置 Route 注解，动态注册到 ARouter
-            ARouter.getInstance().build("/dynamic/activity")
-                    .withString("name", "老王")
-                    .withInt("age", 18)
-                    .withBoolean("boy", true)
-                    .withLong("high", 180)
-                    .withString("url", "https) {//a.b.c")
-                    .withSerializable("ser", testSerializable)
-                    .withParcelable("pac", testParcelable)
-                    .withObject("obj", testObj)
-                    .withObject("objList", objList)
-                    .withObject("map", map).navigation(this);
-        }
+        });
+        binding.dynamicNavigation.setOnClickListener(v -> {
+            ARouter.getInstance().addRouteGroup(new IRouteGroup() {
+                @Override
+                public void loadInto(Map<String, RouteMeta> atlas) {
+                    TestSerializable testSerializable = new TestSerializable("Titanic", 555);
+                    TestParcelable testParcelable = new TestParcelable("jack", 666);
+                    TestObj testObj = new TestObj("Rose", 777);
+                    List<TestObj> objList = new ArrayList<>();
+                    objList.add(testObj);
+                    Map<String, List<TestObj>> map = new HashMap<>();
+                    map.put("testMap", objList);
+                    // 该页面未配置 Route 注解，动态注册到 ARouter
+                    ARouter.getInstance().build("/dynamic/activity")
+                            .withString("name", "老王")
+                            .withInt("age", 18)
+                            .withBoolean("boy", true)
+                            .withLong("high", 180)
+                            .withString("url", "https) {//a.b.c")
+                            .withSerializable("ser", testSerializable)
+                            .withParcelable("pac", testParcelable)
+                            .withObject("obj", testObj)
+                            .withObject("objList", objList)
+                            .withObject("map", map).navigation(MainActivity.this);
+                }
+            });
+        });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case 666:
                 Log.e("activityResult", String.valueOf(resultCode));

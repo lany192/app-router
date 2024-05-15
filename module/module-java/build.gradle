@@ -9,7 +9,7 @@ dependencies {
 
     implementation project(':module:module-java-export')
 
-            implementation libs.alibaba.fastjson
+    implementation libs.alibaba.fastjson
 
     implementation libs.androidx.appcompat
     implementation libs.androidx.constraintlayout
@@ -45,7 +45,7 @@ android {
         }
     }
 
-    lintOptions {
+    lint {
         abortOnError false
     }
 }
