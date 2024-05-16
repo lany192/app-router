@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 
+import com.alibaba.android.arouter.AppRouter;
 import com.alibaba.android.arouter.demo.databinding.ActivityMainBinding;
 import com.alibaba.android.arouter.demo.kotlin.KotlinTestUI;
 import com.alibaba.android.arouter.demo.module1.testactivity.TestDynamicActivity;
@@ -237,7 +238,9 @@ public class MainActivity extends AppCompatActivity {
                         .withObject("map", map).navigation(MainActivity.this);
             });
         });
-        binding.sample.setOnClickListener(v -> ARouter.getInstance().build("/app/sample").navigation());
+        binding.sample.setOnClickListener(v -> {
+            AppRouter.startSample();
+        });
     }
 
     @Override
