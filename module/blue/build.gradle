@@ -40,18 +40,14 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
+    implementation libs.androidx.appcompat
+    implementation libs.material
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    //这个要放在arouter-compiler的前面
-    kapt project(path: ':compiler')
-
     implementation project(path: ':module:common')
-    //界面路由 https://github.com/alibaba/ARouter
-    implementation 'com.alibaba:arouter-api:1.5.2'
-    kapt 'com.alibaba:arouter-compiler:1.5.2'
+    implementation project(':arouter-api')
+    kapt project(':arouter-compiler')
 }

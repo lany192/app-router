@@ -62,13 +62,10 @@ dependencies {
     //超链接处理 https://github.com/klinker24/Android-TextView-LinkBuilder
     implementation 'com.klinkerapps:link_builder:2.0.5'
 
-    //这个要放在arouter-compiler的前面
-    kapt project(path: ':compiler')
-    //界面路由 https://github.com/alibaba/ARouter
-    implementation 'com.alibaba:arouter-api:1.5.2'
-    kapt 'com.alibaba:arouter-compiler:1.5.2'
-
     implementation project(path: ':module:common')
     implementation project(path: ':module:blue')
     implementation project(path: ':module:green')
+
+    implementation project(':arouter-api')
+    kapt project(':arouter-compiler')
 }

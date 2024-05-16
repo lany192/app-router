@@ -159,7 +159,7 @@ public class FragmentRouterProcessor extends BaseRouterProcessor {
                 builder.addCode("\nreturn this;");
                 builder.returns(getFragmentBuilderName(element));
 
-                allBuilder.addCode("." + key + "(" + key + ")\n");
+                allBuilder.addCode("." + Utils.line2hump(key) + "(" + key + ")\n");
                 allBuilder.addParameter(parameterSpec);
 
 
