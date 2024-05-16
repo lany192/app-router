@@ -46,6 +46,34 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".sample.activity.SampleActivity"
+            android:exported="false"
+            android:label="OneActivity" />
+        <activity
+            android:name=".sample.activity.OneActivity"
+            android:exported="false"
+            android:label="OneActivity" />
+        <activity
+            android:name=".sample.activity.TwoActivity"
+            android:exported="false"
+            android:label="TwoActivity" />
+        <activity
+            android:name=".sample.activity.ThreeActivity"
+            android:exported="false"
+            android:label="ThreeActivity" />
+        <activity
+            android:name=".sample.activity.FourActivity"
+            android:exported="false"
+            android:label="FourActivity" />
+        <activity
+            android:name=".sample.activity.FiveActivity"
+            android:exported="false"
+            android:label="FiveActivity" />
+        <activity
+            android:name=".sample.activity.LoginActivity"
+            android:exported="false"
+            android:label="LoginActivity" />
     </application>
 
 </manifest>

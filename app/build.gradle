@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'com.alibaba.arouter'
@@ -56,8 +57,10 @@ dependencies {
     kapt project(':arouter-compiler')
     implementation project(':module:module-java-export')
     implementation project(':module:module-java')
-
     implementation project(':module:module-kotlin')
+    implementation project(':module:common')
+    implementation project(':module:blue')
+    implementation project(':module:green')
 
     implementation libs.androidx.legacy.support.v4
 
@@ -69,4 +72,9 @@ dependencies {
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core
+
+    //超链接处理 https://github.com/klinker24/Android-TextView-LinkBuilder
+    implementation 'com.klinkerapps:link_builder:2.0.5'
+
+    implementation 'com.google.code.gson:gson:2.10.1'
 }

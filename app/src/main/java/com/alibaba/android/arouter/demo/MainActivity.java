@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -214,31 +215,29 @@ public class MainActivity extends AppCompatActivity {
             });
         });
         binding.dynamicNavigation.setOnClickListener(v -> {
-            ARouter.getInstance().addRouteGroup(new IRouteGroup() {
-                @Override
-                public void loadInto(Map<String, RouteMeta> atlas) {
-                    TestSerializable testSerializable = new TestSerializable("Titanic", 555);
-                    TestParcelable testParcelable = new TestParcelable("jack", 666);
-                    TestObj testObj = new TestObj("Rose", 777);
-                    List<TestObj> objList = new ArrayList<>();
-                    objList.add(testObj);
-                    Map<String, List<TestObj>> map = new HashMap<>();
-                    map.put("testMap", objList);
-                    // 该页面未配置 Route 注解，动态注册到 ARouter
-                    ARouter.getInstance().build("/dynamic/activity")
-                            .withString("name", "老王")
-                            .withInt("age", 18)
-                            .withBoolean("boy", true)
-                            .withLong("high", 180)
-                            .withString("url", "https) {//a.b.c")
-                            .withSerializable("ser", testSerializable)
-                            .withParcelable("pac", testParcelable)
-                            .withObject("obj", testObj)
-                            .withObject("objList", objList)
-                            .withObject("map", map).navigation(MainActivity.this);
-                }
+            ARouter.getInstance().addRouteGroup(atlas -> {
+                TestSerializable testSerializable = new TestSerializable("Titanic", 555);
+                TestParcelable testParcelable = new TestParcelable("jack", 666);
+                TestObj testObj = new TestObj("Rose", 777);
+                List<TestObj> objList = new ArrayList<>();
+                objList.add(testObj);
+                Map<String, List<TestObj>> map = new HashMap<>();
+                map.put("testMap", objList);
+                // 该页面未配置 Route 注解，动态注册到 ARouter
+                ARouter.getInstance().build("/dynamic/activity")
+                        .withString("name", "老王")
+                        .withInt("age", 18)
+                        .withBoolean("boy", true)
+                        .withLong("high", 180)
+                        .withString("url", "https) {//a.b.c")
+                        .withSerializable("ser", testSerializable)
+                        .withParcelable("pac", testParcelable)
+                        .withObject("obj", testObj)
+                        .withObject("objList", objList)
+                        .withObject("map", map).navigation(MainActivity.this);
             });
         });
+        binding.sample.setOnClickListener(v -> ARouter.getInstance().build("/app/sample").navigation());
     }
 
     @Override
