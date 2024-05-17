@@ -11,7 +11,6 @@ import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.enums.TypeKind;
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
-import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
@@ -21,9 +20,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -70,9 +67,7 @@ public class FragmentRouterProcessor extends BaseRouterProcessor {
             for (Element element : routeElements) {
                 if (isFragment(element)) { // Fragment
                     try {
-                        List<MethodSpec> methods = createMethods(element);
-                        methods.add(createPostcard(element));
-                        createFragmentBuilder(element, methods);
+                        createFragmentBuilder(element);
                     } catch (Exception e) {
                         logger.error(e);
                     }
@@ -86,13 +81,13 @@ public class FragmentRouterProcessor extends BaseRouterProcessor {
     }
 
     /**
-     * Postcard方法
+     * GetFragment方法
      */
-    private MethodSpec createPostcard(Element element) {
+    private MethodSpec createGetFragment(Element element) {
         MethodSpec.Builder builder = MethodSpec
-                .methodBuilder("build")
-                .addModifiers(Modifier.PUBLIC)
-                .addJavadoc("构建Fragment实例");
+                .methodBuilder("getFragment")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addJavadoc("获取" + ClassName.get((TypeElement) element).simpleName() + "实例");
         Route route = element.getAnnotation(Route.class);
         String path = route.path().replace("/", "_").toUpperCase().substring(1);
         builder.addCode("$T postcard = $T.getInstance().build($T." + path + ");", postcardClass, arouterClassName, PathsClassName);
@@ -100,6 +95,7 @@ public class FragmentRouterProcessor extends BaseRouterProcessor {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                 Autowired autowired = field.getAnnotation(Autowired.class);
                 builder.addCode(makeCode(field, autowired));
+                builder.addParameter(createParameterSpec(field, autowired));
             }
         }
         builder.addCode("\nreturn ($T) postcard.navigation();", ClassName.get((TypeElement) element));
@@ -107,121 +103,48 @@ public class FragmentRouterProcessor extends BaseRouterProcessor {
         return builder.build();
     }
 
+    private ParameterSpec createParameterSpec(Element field, Autowired autowired) {
+        String fieldName = field.getSimpleName().toString();
+        String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
+        TypeMirror typeMirror = field.asType();
+        String typeName = field.asType().toString();
+        ParameterSpec parameterSpec;
+        if (typeMirror.getKind().isPrimitive()) {
+            parameterSpec = ParameterSpec.builder(TypeName.get(typeMirror), key)
+                    .addJavadoc(autowired.desc() + "\n")
+                    .build();
+        } else {
+            //是否是泛型
+            if (typeName.contains("<") && typeName.contains(">")) {
+                int startIndex = typeName.indexOf("<");
+                int endIndex = typeName.indexOf(">");
+                String tmp = typeName.substring(startIndex + 1, endIndex);
+                int index = tmp.lastIndexOf(".");
+                ClassName className = ClassName.get(tmp.substring(0, index), tmp.substring(index + 1));
+                ClassName list = ClassName.get("java.util", "List");
+                parameterSpec = ParameterSpec.builder(ParameterizedTypeName.get(list, className), key)
+                        .addJavadoc(autowired.desc() + "\n")
+                        .build();
+            } else {
+                if (typeName.contains(".")) {
+                    int index = typeName.lastIndexOf(".");
+                    ClassName className = ClassName.get(typeName.substring(0, index), typeName.substring(index + 1));
+                    parameterSpec = ParameterSpec.builder(className, key)
+                            .addJavadoc(autowired.desc() + "\n")
+                            .build();
+                } else {
+                    parameterSpec = ParameterSpec.builder(Object.class, key)
+                            .addJavadoc(autowired.desc() + "\n")
+                            .build();
+                }
+            }
+        }
+        return parameterSpec;
+    }
+
     private ClassName getFragmentBuilderName(Element element) {
         String simpleName = element.getSimpleName().toString().replace("Fragment", "");
         return ClassName.get(ClassName.get((TypeElement) element).packageName(), simpleName + "Builder");
-    }
-
-    private List<MethodSpec> createMethods(Element element) {
-        List<MethodSpec> methods = new ArrayList<>();
-
-        MethodSpec.Builder allBuilder = MethodSpec.methodBuilder("getFragment");
-        allBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC);
-        allBuilder.addCode("\nreturn builder()");
-
-        for (Element field : element.getEnclosedElements()) {
-            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                Autowired autowired = field.getAnnotation(Autowired.class);
-                String fieldName = field.getSimpleName().toString();
-                String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
-                TypeMirror typeMirror = field.asType();
-                String typeName = field.asType().toString();
-
-                MethodSpec.Builder builder = MethodSpec.methodBuilder(Utils.line2hump(key));
-                builder.addModifiers(Modifier.PUBLIC);
-                ParameterSpec parameterSpec;
-
-                if (typeMirror.getKind().isPrimitive()) {
-                    parameterSpec = ParameterSpec.builder(TypeName.get(typeMirror), key).build();
-                } else {
-                    //是否是泛型
-                    if (typeName.contains("<") && typeName.contains(">")) {
-                        int startIndex = typeName.indexOf("<");
-                        int endIndex = typeName.indexOf(">");
-                        String tmp = typeName.substring(startIndex + 1, endIndex);
-                        int index = tmp.lastIndexOf(".");
-                        ClassName className = ClassName.get(tmp.substring(0, index), tmp.substring(index + 1));
-                        ClassName list = ClassName.get("java.util", "List");
-                        parameterSpec = ParameterSpec.builder(ParameterizedTypeName.get(list, className), key).build();
-                    } else {
-                        if (typeName.contains(".")) {
-                            int index = typeName.lastIndexOf(".");
-                            ClassName className = ClassName.get(typeName.substring(0, index), typeName.substring(index + 1));
-                            parameterSpec = ParameterSpec.builder(className, key).build();
-                        } else {
-                            parameterSpec = ParameterSpec.builder(Object.class, key).build();
-                        }
-                    }
-                }
-                builder.addParameter(parameterSpec);
-                builder.addJavadoc(autowired.desc());
-                builder.addCode("this." + key + " = " + key + ";");
-                builder.addCode("\nreturn this;");
-                builder.returns(getFragmentBuilderName(element));
-
-                allBuilder.addCode("." + Utils.line2hump(key) + "(" + key + ")\n");
-                allBuilder.addParameter(parameterSpec);
-
-
-                methods.add(builder.build());
-            }
-        }
-
-        allBuilder.addCode("\n.build();");
-
-        allBuilder.returns(ClassName.get((TypeElement) element));
-        methods.add(allBuilder.build());
-        return methods;
-    }
-
-    private List<FieldSpec> createFields(Element element) {
-        List<FieldSpec> fields = new ArrayList<>();
-        for (Element field : element.getEnclosedElements()) {
-            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
-                Autowired autowired = field.getAnnotation(Autowired.class);
-                String fieldName = field.getSimpleName().toString();
-                String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
-                TypeMirror typeMirror = field.asType();
-                String typeName = field.asType().toString();
-
-                if (typeMirror.getKind().isPrimitive()) {
-                    fields.add(FieldSpec
-                            .builder(TypeName.get(typeMirror), key, Modifier.PRIVATE)
-                            .addJavadoc(autowired.desc() + "\n")
-                            .build());
-                } else {
-                    //是否是泛型
-                    if (typeName.contains("<") && typeName.contains(">")) {
-                        int startIndex = typeName.indexOf("<");
-                        int endIndex = typeName.indexOf(">");
-                        String tmp = typeName.substring(startIndex + 1, endIndex);
-                        int index = tmp.lastIndexOf(".");
-                        ClassName className = ClassName.get(tmp.substring(0, index), tmp.substring(index + 1));
-                        ClassName list = ClassName.get("java.util", "List");
-
-                        fields.add(FieldSpec
-                                .builder(ParameterizedTypeName.get(list, className), key, Modifier.PRIVATE)
-                                .addJavadoc(autowired.desc() + "\n")
-                                .build());
-                    } else {
-                        if (typeName.contains(".")) {
-                            int index = typeName.lastIndexOf(".");
-                            ClassName className = ClassName.get(typeName.substring(0, index), typeName.substring(index + 1));
-                            fields.add(FieldSpec
-                                    .builder(className, key, Modifier.PRIVATE)
-                                    .addJavadoc(autowired.desc() + "\n")
-                                    .build());
-                        } else {
-                            fields.add(FieldSpec
-                                    .builder(Object.class, key, Modifier.PRIVATE)
-                                    .addJavadoc(autowired.desc() + "\n")
-                                    .build());
-                        }
-                    }
-                }
-            }
-        }
-        return fields;
     }
 
     private String makeCode(Element field, Autowired autowired) {
@@ -264,29 +187,12 @@ public class FragmentRouterProcessor extends BaseRouterProcessor {
         return code;
     }
 
-    private void createFragmentBuilder(Element element, List<MethodSpec> methods) throws Exception {
+    private void createFragmentBuilder(Element element) throws Exception {
         ClassName className = getFragmentBuilderName(element);
-
-        String simpleName = element.getSimpleName().toString().replace("Fragment", "");
-
-        TypeSpec.Builder builder = TypeSpec.classBuilder(simpleName + "Builder")
+        TypeSpec.Builder builder = TypeSpec.classBuilder(className.simpleName())
                 .addJavadoc("自动生成,请勿编辑!\n{@link " + ClassName.get((TypeElement) element) + "}")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-
-        List<FieldSpec> fields = createFields(element);
-        for (FieldSpec field : fields) {
-            builder.addField(field);
-        }
-
-        builder.addMethod(MethodSpec.constructorBuilder().addModifiers(Modifier.PRIVATE).build());
-        builder.addMethod(MethodSpec.methodBuilder("builder")
-                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addCode("return new $T();", className)
-                .returns(className)
-                .build());
-        for (MethodSpec method : methods) {
-            builder.addMethod(method);
-        }
+        builder.addMethod(createGetFragment(element));
         JavaFile javaFile = JavaFile
                 .builder(ClassName.get((TypeElement) element).packageName(), builder.build())
                 // 设置表示缩进的字符串

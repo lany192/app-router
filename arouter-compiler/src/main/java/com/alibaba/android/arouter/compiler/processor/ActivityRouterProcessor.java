@@ -267,7 +267,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
         String typeName = field.asType().toString();
         ParameterSpec parameterSpec;
         if (typeMirror.getKind().isPrimitive()) {
-            parameterSpec = ParameterSpec.builder(TypeName.get(typeMirror), key).build();
+            parameterSpec = ParameterSpec.builder(TypeName.get(typeMirror), key).addJavadoc(autowired.desc() + "\n").build();
         } else {
             //是否是泛型
             if (typeName.contains("<") && typeName.contains(">")) {
@@ -277,14 +277,14 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
                 int index = tmp.lastIndexOf(".");
                 ClassName className = ClassName.get(tmp.substring(0, index), tmp.substring(index + 1));
                 ClassName list = ClassName.get("java.util", "List");
-                parameterSpec = ParameterSpec.builder(ParameterizedTypeName.get(list, className), key).build();
+                parameterSpec = ParameterSpec.builder(ParameterizedTypeName.get(list, className), key).addJavadoc(autowired.desc() + "\n").build();
             } else {
                 if (typeName.contains(".")) {
                     int index = typeName.lastIndexOf(".");
                     ClassName className = ClassName.get(typeName.substring(0, index), typeName.substring(index + 1));
-                    parameterSpec = ParameterSpec.builder(className, key).build();
+                    parameterSpec = ParameterSpec.builder(className, key).addJavadoc(autowired.desc() + "\n").build();
                 } else {
-                    parameterSpec = ParameterSpec.builder(Object.class, key).build();
+                    parameterSpec = ParameterSpec.builder(Object.class, key).addJavadoc(autowired.desc() + "\n").build();
                 }
             }
         }
