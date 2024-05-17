@@ -16,6 +16,7 @@ import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -54,10 +55,10 @@ public class BlankFragment extends Fragment {
     TestParcelable pac;
 
     @Autowired
-    List<TestObj> objList;
+    List<TestObj> items;
 
 //    @Autowired
-//    Map<String, List<TestObj>> map;
+//    Map<String, String> map;
 
     public BlankFragment() {
         // Required empty public constructor

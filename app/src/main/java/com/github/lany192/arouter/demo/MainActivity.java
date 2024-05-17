@@ -24,6 +24,8 @@ import com.github.lany192.arouter.demo.service.model.TestObj;
 import com.github.lany192.arouter.demo.service.model.TestParcelable;
 import com.github.lany192.arouter.demo.service.model.TestSerializable;
 import com.github.lany192.purple.KotlinTestRouter;
+import com.github.lany192.yellow.BlankBuilder;
+import com.github.lany192.yellow.testactivity.Test2Router;
 import com.github.lany192.yellow.testactivity.TestDynamicActivity;
 import com.github.lany192.yellow.testservice.SingleService;
 import com.hjq.toast.Toaster;
@@ -41,15 +43,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        binding.normalNavigation.setOnClickListener(v -> {
-            ARouter.getInstance()
-                    .build("/test/activity2")
-                    .navigation();
-        });
-        binding.kotlinNavigation.setOnClickListener(v -> {
-            KotlinTestRouter.start("张三", 18);
-        });
-        binding.normalNavigationWithParams.setOnClickListener(v -> {
+        binding.test.setOnClickListener(v -> Test2Router.start("哈哈"));
+        binding.test3.setOnClickListener(v -> KotlinTestRouter.start("张三", 18));
+        binding.testWithParams.setOnClickListener(v -> {
             Uri testUriMix = Uri.parse("arouter://m.aliyun.com/test/activity2");
             ARouter.getInstance().build(testUriMix)
                     .withString("key1", "value1")
@@ -157,31 +153,22 @@ public class MainActivity extends AppCompatActivity {
         binding.failNav3.setOnClickListener(v -> {
             ARouter.getInstance().navigation(MainActivity.class);
         });
-        binding.normalNavigation2.setOnClickListener(v -> {
+        binding.test2.setOnClickListener(v -> {
             ARouter.getInstance()
                     .build("/test/activity2")
                     .navigation(this, 666);
         });
-        binding.getFragment.setOnClickListener(v -> {
+        binding.test4.setOnClickListener(v -> {
             TestSerializable testSerializable = new TestSerializable("Titanic", 555);
             TestParcelable testParcelable = new TestParcelable("jack", 666);
             TestObj testObj = new TestObj("Rose", 777);
             List<TestObj> objList = new ArrayList<>();
             objList.add(testObj);
-            Map<String, List<TestObj>> map = new HashMap<>();
-            map.put("testMap", objList);
-            Fragment fragment = (Fragment) ARouter.getInstance().build("/test/fragment")
-                    .withString("name", "老王")
-                    .withInt("age", 18)
-                    .withBoolean("boy", true)
-                    .withLong("high", 180)
-                    .withString("url", "https) {//a.b.c")
-                    .withSerializable("ser", testSerializable)
-                    .withParcelable("pac", testParcelable)
-                    .withObject("obj", testObj)
-                    .withObject("objList", objList)
-                    .withObject("map", map).navigation();
-            Toast.makeText(this, "找到Fragment) {" + fragment.toString(), Toast.LENGTH_SHORT).show();
+            Map<String, String> map = new HashMap<>();
+            map.put("testMap", "666");
+
+            Fragment fragment = BlankBuilder.getFragment("老王", testObj, 18, 180, true, 'a', 1.8f, 1.8, testSerializable, testParcelable, objList);
+            Toaster.show("找到Fragment:" + fragment.toString());
         });
         binding.addGroup.setOnClickListener(v -> {
             ARouter.getInstance().addRouteGroup(new IRouteGroup() {
