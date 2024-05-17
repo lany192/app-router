@@ -205,9 +205,7 @@ public class MainActivity extends AppCompatActivity {
                         .withObject("map", map).navigation(MainActivity.this);
             });
         });
-        binding.sample.setOnClickListener(v -> {
-            SampleRouter.start();
-        });
+        binding.other.setOnClickListener(v -> SampleRouter.start());
     }
 
     @Override
