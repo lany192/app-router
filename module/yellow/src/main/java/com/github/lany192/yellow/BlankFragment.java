@@ -23,7 +23,7 @@ import java.util.List;
 @Route(path = "/test/fragment")
 public class BlankFragment extends Fragment {
 
-    @Autowired
+    @Autowired(desc = "名称")
     String name;
 
     @Autowired(required = true)

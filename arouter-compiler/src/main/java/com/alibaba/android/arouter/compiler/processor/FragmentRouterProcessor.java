@@ -90,7 +90,8 @@ public class FragmentRouterProcessor extends BaseRouterProcessor {
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addJavadoc("获取" + ClassName.get((TypeElement) element).simpleName() + "实例");
         Route route = element.getAnnotation(Route.class);
-        builder.addCode("$T postcard = $T.getInstance().build(PATH);", postcardClass, arouterClassName);
+        String path = route.path().replace("/", "_").toUpperCase().substring(1);
+        builder.addCode("$T postcard = $T.getInstance().build(" + path + ");", postcardClass, arouterClassName);
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                 Autowired autowired = field.getAnnotation(Autowired.class);
@@ -194,8 +195,10 @@ public class FragmentRouterProcessor extends BaseRouterProcessor {
                 .addJavadoc("自动生成,请勿编辑!\n{@link " + ClassName.get((TypeElement) element) + "}")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
+        String path = route.path().replace("/", "_").toUpperCase().substring(1);
+
         builder.addField(FieldSpec
-                .builder(String.class, "PATH", Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
+                .builder(String.class, path, Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
                 .addJavadoc(route.name() + "\n")
                 .addJavadoc("路由路径")
                 .initializer("\"" + route.path() + "\"")
