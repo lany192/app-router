@@ -9,65 +9,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        tools:context="com.alibaba.android.arouter.demo.MainActivity">
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:paddingRight="16dp"
+        android:paddingBottom="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_test_area"
             android:orientation="vertical"
-            android:padding="@dimen/test_area_padding">
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="基本设置" />
-
-            <Button
-                android:id="@+id/openLog"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="打开日志并打印堆栈" />
-
-            <Button
-                android:id="@+id/openDebug"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="开启调试模式(InstantRun需要开启)"
-                android:visibility="gone" />
-
-            <Button
-                android:id="@+id/init"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="初始化ARouter"
-                android:textColor="@color/red" />
-
-            <Button
-                android:id="@+id/destroy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="关闭ARouter" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/between_cell"
-            android:background="@drawable/bg_test_area"
-            android:orientation="vertical"
-            android:padding="@dimen/test_area_padding">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:text="基础功能(请先初始化)" />
+                android:text="基础功能" />
 
             <Button
                 android:id="@+id/normalNavigation"
@@ -115,16 +73,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/between_cell"
+            android:layout_marginTop="10dp"
             android:background="@drawable/bg_test_area"
             android:orientation="vertical"
-            android:padding="@dimen/test_area_padding">
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="进阶用法(请先初始化)" />
+                android:text="进阶用法" />
 
             <Button
                 android:id="@+id/navByUrl"
@@ -148,16 +106,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/between_cell"
+            android:layout_marginTop="10dp"
             android:background="@drawable/bg_test_area"
             android:orientation="vertical"
-            android:padding="@dimen/test_area_padding">
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="服务管理(请先初始化)" />
+                android:text="服务管理" />
 
             <Button
                 android:id="@+id/navByName"
@@ -181,22 +139,22 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/between_cell"
+            android:layout_marginTop="10dp"
             android:background="@drawable/bg_test_area"
             android:orientation="vertical"
-            android:padding="@dimen/test_area_padding">
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="多模块测试(请先初始化)" />
+                android:text="多模块测试" />
 
             <Button
-                android:id="@+id/navToMoudle1"
+                android:id="@+id/yellow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="跳转到模块1" />
+                android:text="跳转到yellow模块" />
 
             <Button
                 android:id="@+id/navToMoudle2"
@@ -208,16 +166,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/between_cell"
+            android:layout_marginTop="10dp"
             android:background="@drawable/bg_test_area"
             android:orientation="vertical"
-            android:padding="@dimen/test_area_padding">
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:text="跳转失败测试(请先初始化)" />
+                android:text="跳转失败测试" />
 
             <Button
                 android:id="@+id/failNav"
@@ -241,10 +199,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/between_cell"
+            android:layout_marginTop="10dp"
             android:background="@drawable/bg_test_area"
             android:orientation="vertical"
-            android:padding="@dimen/test_area_padding">
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -268,10 +226,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/between_cell"
+            android:layout_marginTop="10dp"
             android:background="@drawable/bg_test_area"
             android:orientation="vertical"
-            android:padding="@dimen/test_area_padding">
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="wrap_content"

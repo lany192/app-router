@@ -1,0 +1,51 @@
+plugins {
+    id 'com.android.library'
+}
+
+dependencies {
+    implementation project(':arouter-annotation')
+    implementation project(':arouter-api')
+    annotationProcessor project(':arouter-compiler')
+    implementation project(':module:black')
+
+
+    implementation libs.alibaba.fastjson
+
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.constraintlayout
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
+}
+android {
+    namespace 'com.github.lany192.yellow'
+
+    compileSdk 34
+
+    defaultConfig {
+        minSdk 21
+        targetSdk 34
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName(), AROUTER_GENERATE_DOC: "enable"]
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lint {
+        abortOnError false
+    }
+}

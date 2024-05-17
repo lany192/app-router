@@ -115,7 +115,7 @@ public class FragmentRouterProcessor extends BaseRouterProcessor {
     private List<MethodSpec> createMethods(Element element) {
         List<MethodSpec> methods = new ArrayList<>();
 
-        MethodSpec.Builder allBuilder = MethodSpec.methodBuilder("get" + element.getSimpleName());
+        MethodSpec.Builder allBuilder = MethodSpec.methodBuilder("getFragment");
         allBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC);
         allBuilder.addCode("\nreturn builder()");
 

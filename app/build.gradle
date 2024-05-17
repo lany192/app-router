@@ -49,15 +49,15 @@ android {
     lint {
         abortOnError false
     }
-    namespace 'com.alibaba.android.arouter.demo'
+    namespace 'com.github.lany192.arouter.demo'
 }
 
 dependencies {
     implementation project(':arouter-api')
     kapt project(':arouter-compiler')
-    implementation project(':module:module-java-export')
-    implementation project(':module:module-java')
-    implementation project(':module:module-kotlin')
+    implementation project(':module:black')
+    implementation project(':module:yellow')
+    implementation project(':module:purple')
     implementation project(':module:common')
     implementation project(':module:blue')
     implementation project(':module:green')
@@ -74,7 +74,8 @@ dependencies {
     androidTestImplementation libs.androidx.espresso.core
 
     //超链接处理 https://github.com/klinker24/Android-TextView-LinkBuilder
-    implementation 'com.klinkerapps:link_builder:2.0.5'
+    implementation libs.link.builder
 
-    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation libs.gson
+    implementation libs.toaster
 }

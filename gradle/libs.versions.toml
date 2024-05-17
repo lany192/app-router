@@ -10,6 +10,7 @@ commonsCollections4Version = "4.4"
 core = "1.12.0"
 fragment = "1.6.2"
 gradle = "8.3.0"
+gson = "2.10.1"
 javapoetVersion = "1.13.0"
 kotlin = "1.9.23"
 coreKtx = "1.12.0"
@@ -18,11 +19,13 @@ junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
 legacySupportV4 = "1.0.0"
+link_builder = "2.0.5"
 material = "1.11.0"
 activity = "1.8.2"
 constraintlayout = "2.1.4"
 fastjson = "1.2.83"
 arouterRegisterVersion = "2.0.2"
+toaster = "12.6" #Toast工具 https://github.com/getActivity/Toaster
 
 [libraries]
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
@@ -37,16 +40,19 @@ asm-util = { module = "org.ow2.asm:asm-util", version.ref = "asmUtil" }
 commons-io = { module = "commons-io:commons-io", version.ref = "commonsIo" }
 commons-codec = { module = "commons-codec:commons-codec", version.ref = "commonsCodec" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+link_builder = { module = "com.klinkerapps:link_builder", version.ref = "link_builder" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 alibaba-fastjson = { group = "com.alibaba", name = "fastjson", version.ref = "fastjson" }
 service-auto-service-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoServiceAnnotationsVersion" }
 squareup-javapoet = { module = "com.squareup:javapoet", version.ref = "javapoetVersion" }
+toaster = { module = "com.github.getActivity:Toaster", version.ref = "toaster" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

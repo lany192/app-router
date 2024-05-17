@@ -44,9 +44,9 @@ include ':arouter-annotation'
 include ':arouter-register'
 
 include ':app'
-include ':module:module-java'
-include ':module:module-java-export'
-include ':module:module-kotlin'
+include ':module:yellow'
+include ':module:black'
+include ':module:purple'
 
 include ':module:common'
 include ':module:blue'

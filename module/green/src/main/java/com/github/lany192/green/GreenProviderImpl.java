@@ -2,7 +2,6 @@ package com.github.lany192.green;
 
 import android.content.Context;
 
-import com.alibaba.android.arouter.GreenRouter;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.github.lany192.common.GreenProvider;
 
@@ -16,6 +15,6 @@ public class GreenProviderImpl implements GreenProvider {
 
     @Override
     public void startGreen() {
-        GreenRouter.startHello();
+        HelloRouter.start();
     }
 }
