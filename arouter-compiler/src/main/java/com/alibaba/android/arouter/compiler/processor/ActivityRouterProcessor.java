@@ -154,6 +154,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
 //                .returns(uriClass)
 //                .build());
 
+        builder.addMethod(createPostcard(element));
         builder.addMethod(createStart(element));
         builder.addMethod(createStart2(element));
 
@@ -174,17 +175,15 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
      */
     private MethodSpec createPostcard(Element element) {
         MethodSpec.Builder builder = MethodSpec
-                .methodBuilder("postcard")
-                .addModifiers(Modifier.PUBLIC)
-                .addJavadoc("组建Postcard");
-        Route route = element.getAnnotation(Route.class);
-        String path = route.path().replace("/", "_").toUpperCase().substring(1);
-        builder.addCode("$T postcard = $T.getInstance().build($T." + path + ");", postcardClass, arouterClassName, PathsClassName);
+                .methodBuilder("getPostcard")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addJavadoc("构建Postcard");
+        builder.addCode("$T postcard = $T.getInstance().build(PATH);", postcardClass, arouterClassName);
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                 Autowired autowired = field.getAnnotation(Autowired.class);
                 builder.addCode(makeCode(field, autowired));
-
+                builder.addParameter(createParameterSpec(field, autowired));
             }
         }
         builder.addCode("\nreturn postcard;");
