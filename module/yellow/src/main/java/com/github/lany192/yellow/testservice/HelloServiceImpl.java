@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.github.lany192.arouter.demo.service.HelloService;
+import com.github.lany192.arouter.sample.service.HelloService;
 import com.alibaba.android.arouter.facade.annotation.Route;
 
 /**

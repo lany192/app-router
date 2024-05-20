@@ -1,4 +1,4 @@
-package com.github.lany192.arouter.demo.sample.activity;
+package com.github.lany192.arouter.sample.activity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -7,32 +7,24 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.github.lany192.arouter.demo.R;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.github.lany192.arouter.demo.sample.entity.Person;
+import com.github.lany192.arouter.sample.R;
+import com.github.lany192.arouter.sample.entity.User;
 
-import java.util.List;
-
-@Route(path = "/app/two")
-public class TwoActivity extends AppCompatActivity {
-    @Autowired(name = "ownerId", desc = "用户id")
-    long ownerId;
-    @Autowired(name = "title", desc = "标题")
-    String mTitle;
-    @Autowired(name = "cent", desc = "积分")
-    double cent;
-    @Autowired(name = "items", desc = "列表")
-    List<String> items;
-    @Autowired(name = "data", desc = "测试A")
-    short data;
-    @Autowired(name = "person", desc = "个人")
-    Person person;
+@Route(path = "/app/three")
+public class ThreeActivity extends AppCompatActivity {
+    @Autowired(name = "username", desc = "名称")
+    String name;
+    @Autowired(name = "user", desc = "用户")
+    User user;
+    @Autowired(name = "age", desc = "年龄")
+    int age;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_two);
+        setContentView(R.layout.activity_three);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
@@ -41,13 +33,10 @@ public class TwoActivity extends AppCompatActivity {
 
         TextView showText = findViewById(R.id.show_text_view);
         StringBuilder builder = new StringBuilder();
-        builder.append("界面TWO");
-        builder.append("\n用户id:").append(ownerId);
-        builder.append("\n标题:").append(mTitle);
-        builder.append("\n积分:").append(cent);
-        builder.append("\n列表:").append(items);
-        builder.append("\n测试A:").append(data);
-        builder.append("\n个人:").append(person);
+        builder.append("界面THREE");
+        builder.append("\n名称:").append(name);
+        builder.append("\n年龄:").append(age);
+        builder.append("\n用户:").append(user);
         showText.setText(builder);
     }
 

@@ -1,4 +1,4 @@
-package com.github.lany192.arouter.demo.sample.entity;
+package com.github.lany192.arouter.sample.entity;
 
 import java.io.Serializable;
 

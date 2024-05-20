@@ -1,4 +1,4 @@
-package com.github.lany192.arouter.demo.sample.activity;
+package com.github.lany192.arouter.sample.activity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -7,9 +7,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.github.lany192.arouter.demo.R;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.github.lany192.arouter.sample.R;
 
 @Route(path = "/app/one")
 public class OneActivity extends AppCompatActivity {

@@ -1,4 +1,4 @@
-package com.github.lany192.arouter.demo.service.model;
+package com.github.lany192.arouter.sample.service.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

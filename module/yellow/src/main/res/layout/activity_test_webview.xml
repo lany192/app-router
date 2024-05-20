@@ -4,7 +4,7 @@
     android:id="@+id/activity_test_webview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.github.lany192.arouter.demo.activity.TestWebview">
+    tools:context="com.github.lany192.arouter.sample.activity.TestWebview">
 
     <WebView
         android:id="@+id/webview"

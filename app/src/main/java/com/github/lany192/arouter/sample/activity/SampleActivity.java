@@ -1,4 +1,4 @@
-package com.github.lany192.arouter.demo.sample.activity;
+package com.github.lany192.arouter.sample.activity;
 
 import android.graphics.Color;
 import android.net.Uri;
@@ -14,11 +14,11 @@ import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.facade.callback.NavCallback;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.github.lany192.arouter.demo.R;
-import com.github.lany192.arouter.demo.sample.UserHelper;
-import com.github.lany192.arouter.demo.sample.entity.Person;
-import com.github.lany192.arouter.demo.sample.entity.User;
-import com.github.lany192.arouter.demo.sample.fragment.HelloBuilder;
+import com.github.lany192.arouter.sample.R;
+import com.github.lany192.arouter.sample.fragment.HelloBuilder;
+import com.github.lany192.arouter.sample.UserHelper;
+import com.github.lany192.arouter.sample.entity.Person;
+import com.github.lany192.arouter.sample.entity.User;
 import com.github.lany192.green.HelloRouter;
 import com.hjq.toast.Toaster;
 import com.klinker.android.link_builder.Link;

@@ -1,4 +1,4 @@
-package com.github.lany192.arouter.demo.sample.fragment;
+package com.github.lany192.arouter.sample.fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,10 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.github.lany192.arouter.demo.R;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;
+import com.github.lany192.arouter.sample.R;
 
 import java.util.List;
 

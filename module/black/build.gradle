@@ -15,7 +15,7 @@ dependencies {
     androidTestImplementation libs.androidx.espresso.core
 }
 android {
-    namespace 'com.github.lany192.arouter.demo.service'
+    namespace 'com.github.lany192.arouter.sample.service'
 
     compileSdk 34
 

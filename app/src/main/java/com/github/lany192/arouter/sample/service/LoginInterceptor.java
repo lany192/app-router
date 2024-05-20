@@ -1,4 +1,4 @@
-package com.github.lany192.arouter.demo.sample.service;
+package com.github.lany192.arouter.sample.service;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,10 +8,10 @@ import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.annotation.Interceptor;
 import com.alibaba.android.arouter.facade.callback.InterceptorCallback;
 import com.alibaba.android.arouter.facade.template.IInterceptor;
-import com.github.lany192.arouter.demo.sample.UserHelper;
-import com.github.lany192.arouter.demo.sample.activity.LoginRouter;
-import com.github.lany192.arouter.demo.sample.activity.ThreeRouter;
-import com.github.lany192.arouter.demo.sample.activity.TwoRouter;
+import com.github.lany192.arouter.sample.activity.LoginRouter;
+import com.github.lany192.arouter.sample.activity.ThreeRouter;
+import com.github.lany192.arouter.sample.activity.TwoRouter;
+import com.github.lany192.arouter.sample.UserHelper;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.github.lany192.arouter.demo.sample;
+package com.github.lany192.arouter.sample;
 
 public class UserHelper {
     private volatile static UserHelper instance = null;

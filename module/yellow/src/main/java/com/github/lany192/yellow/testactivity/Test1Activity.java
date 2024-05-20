@@ -4,10 +4,10 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.github.lany192.yellow.R;
-import com.github.lany192.arouter.demo.service.HelloService;
-import com.github.lany192.arouter.demo.service.model.TestObj;
-import com.github.lany192.arouter.demo.service.model.TestParcelable;
-import com.github.lany192.arouter.demo.service.model.TestSerializable;
+import com.github.lany192.arouter.sample.service.HelloService;
+import com.github.lany192.arouter.sample.service.model.TestObj;
+import com.github.lany192.arouter.sample.service.model.TestParcelable;
+import com.github.lany192.arouter.sample.service.model.TestSerializable;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 import com.alibaba.android.arouter.launcher.ARouter;

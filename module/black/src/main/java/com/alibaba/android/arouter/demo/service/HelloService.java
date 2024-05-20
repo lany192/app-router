@@ -1,4 +1,4 @@
-package com.github.lany192.arouter.demo.service;
+package com.github.lany192.arouter.sample.service;
 
 import com.alibaba.android.arouter.facade.template.IProvider;
 

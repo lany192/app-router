@@ -7,7 +7,7 @@
     android:paddingTop="16dp"
     android:paddingRight="16dp"
     android:paddingBottom="16dp"
-    tools:context="com.github.lany192.arouter.demo.service.com.github.lany192.yellow.TestModuleActivity">
+    tools:context="com.github.lany192.arouter.sample.service.com.github.lany192.yellow.TestModuleActivity">
 
     <TextView
         android:layout_width="wrap_content"

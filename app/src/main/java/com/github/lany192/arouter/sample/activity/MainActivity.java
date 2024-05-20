@@ -1,10 +1,9 @@
-package com.github.lany192.arouter.demo;
+package com.github.lany192.arouter.sample.activity;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityOptionsCompat;
@@ -17,12 +16,13 @@ import com.alibaba.android.arouter.facade.enums.RouteType;
 import com.alibaba.android.arouter.facade.model.RouteMeta;
 import com.alibaba.android.arouter.facade.template.IRouteGroup;
 import com.alibaba.android.arouter.launcher.ARouter;
-import com.github.lany192.arouter.demo.databinding.ActivityMainBinding;
-import com.github.lany192.arouter.demo.sample.activity.SampleRouter;
-import com.github.lany192.arouter.demo.service.HelloService;
-import com.github.lany192.arouter.demo.service.model.TestObj;
-import com.github.lany192.arouter.demo.service.model.TestParcelable;
-import com.github.lany192.arouter.demo.service.model.TestSerializable;
+import com.github.lany192.arouter.sample.R;
+import com.github.lany192.arouter.sample.databinding.ActivityMainBinding;
+import com.github.lany192.arouter.sample.activity.SampleRouter;
+import com.github.lany192.arouter.sample.service.HelloService;
+import com.github.lany192.arouter.sample.service.model.TestObj;
+import com.github.lany192.arouter.sample.service.model.TestParcelable;
+import com.github.lany192.arouter.sample.service.model.TestSerializable;
 import com.github.lany192.purple.KotlinTestRouter;
 import com.github.lany192.yellow.BlankBuilder;
 import com.github.lany192.yellow.TestWebviewRouter;

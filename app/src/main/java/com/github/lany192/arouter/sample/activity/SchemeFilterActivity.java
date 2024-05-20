@@ -1,4 +1,4 @@
-package com.github.lany192.arouter.demo.sample.activity;
+package com.github.lany192.arouter.sample.activity;
 
 import android.net.Uri;
 import android.os.Bundle;

@@ -1,11 +1,11 @@
-package com.github.lany192.arouter.demo.sample.provider;
+package com.github.lany192.arouter.sample.provider;
 
 import android.content.Context;
 
-import com.github.lany192.arouter.demo.sample.activity.FiveRouter;
 import com.alibaba.android.arouter.facade.annotation.Route;
-import com.github.lany192.arouter.demo.sample.entity.Person;
-import com.github.lany192.arouter.demo.sample.entity.User;
+import com.github.lany192.arouter.sample.activity.FiveRouter;
+import com.github.lany192.arouter.sample.entity.Person;
+import com.github.lany192.arouter.sample.entity.User;
 import com.github.lany192.common.SampleProvider;
 
 import java.util.ArrayList;

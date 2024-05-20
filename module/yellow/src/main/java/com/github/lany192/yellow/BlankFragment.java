@@ -9,9 +9,9 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import com.github.lany192.arouter.demo.service.model.TestObj;
-import com.github.lany192.arouter.demo.service.model.TestParcelable;
-import com.github.lany192.arouter.demo.service.model.TestSerializable;
+import com.github.lany192.arouter.sample.service.model.TestObj;
+import com.github.lany192.arouter.sample.service.model.TestParcelable;
+import com.github.lany192.arouter.sample.service.model.TestSerializable;
 import com.alibaba.android.arouter.facade.annotation.Autowired;
 import com.alibaba.android.arouter.facade.annotation.Route;
 
