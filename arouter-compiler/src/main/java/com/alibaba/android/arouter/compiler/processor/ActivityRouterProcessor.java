@@ -108,6 +108,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
         builder.addMethod(createPostcard(element));
         builder.addMethod(createPostcard2(element));
         builder.addMethod(createStart(element));
+        builder.addMethod(createStarWithBundle(element));
         builder.addMethod(createStart2(element));
         builder.addMethod(createStart5(element));
         builder.addMethod(createStart3(element));
@@ -179,6 +180,22 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
             }
         }
         builder.addCode("$T postcard = getPostcard(" + params + ");", postcardClass);
+        builder.addCode("\npostcard.navigation();");
+        builder.returns(void.class);
+        return builder.build();
+    }
+
+    /**
+     * Start方法
+     */
+    private MethodSpec createStarWithBundle(Element element) {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("start").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器\n");
+
+        builder.addParameter(ParameterSpec
+                .builder(bundleClass, "bundle")
+                .addJavadoc("参数信息\n")
+                .build());
+        builder.addCode("$T postcard = getPostcard(bundle);", postcardClass);
         builder.addCode("\npostcard.navigation();");
         builder.returns(void.class);
         return builder.build();
