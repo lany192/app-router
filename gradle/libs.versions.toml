@@ -50,7 +50,7 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 alibaba-fastjson = { group = "com.alibaba", name = "fastjson", version.ref = "fastjson" }
 service-auto-service-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoServiceAnnotationsVersion" }
-squareup-javapoet = { module = "com.squareup:javapoet", version.ref = "javapoet" }
+javapoet = { module = "com.squareup:javapoet", version.ref = "javapoet" }
 toaster = { module = "com.github.getActivity:Toaster", version.ref = "toaster" }
 
 router = { module = "com.github.lany192.app-router:arouter-api", version.ref = "router" }

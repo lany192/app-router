@@ -12,7 +12,7 @@ dependencies {
     annotationProcessor 'com.google.auto.service:auto-service:1.1.1'
     compileOnly libs.service.auto.service.annotations
 
-    implementation libs.squareup.javapoet
+    implementation libs.javapoet
 
     implementation libs.apache.commons.lang3
     implementation libs.apache.commons.collections4
