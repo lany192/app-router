@@ -36,7 +36,7 @@ class ScanSetting(interfaceName: String) : Serializable {
     }
 
     companion object {
-        const val pLUGIN_NAME = "com.alibaba.arouter"
+        const val pLUGIN_NAME = "com.github.lany192.arouter"
 
         /**
          * The register code is generated into this class

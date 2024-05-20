@@ -14,11 +14,11 @@ kapt {
 
 android {
     namespace 'com.github.lany192.green'
-    compileSdk 34
+    compileSdk Integer.parseInt(COMPILE_SDK_VERSION)
 
     defaultConfig {
-        minSdk 21
-        targetSdk 34
+        minSdk Integer.parseInt(MIN_SDK_VERSION)
+        targetSdk Integer.parseInt(TARGET_SDK_VERSION)
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -48,6 +48,12 @@ dependencies {
     androidTestImplementation libs.androidx.espresso.core
 
     implementation project(path: ':module:common')
-    implementation project(':arouter')
-    kapt project(':arouter-compiler')
+
+    if (useOnlineLibrary.toBoolean()) {
+        implementation libs.router
+        kapt libs.router.compiler
+    } else {
+        implementation project(':arouter')
+        kapt project(':arouter-compiler')
+    }
 }

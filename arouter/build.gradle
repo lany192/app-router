@@ -5,11 +5,11 @@ plugins {
 android {
     namespace 'com.alibaba.android.arouter'
 
-    compileSdk 34
+    compileSdk Integer.parseInt(COMPILE_SDK_VERSION)
 
     defaultConfig {
-        minSdk 21
-        targetSdk 34
+        minSdk Integer.parseInt(MIN_SDK_VERSION)
+        targetSdk Integer.parseInt(TARGET_SDK_VERSION)
 
         javaCompileOptions {
             annotationProcessorOptions {

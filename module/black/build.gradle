@@ -2,26 +2,14 @@ plugins {
     id 'com.android.library'
 }
 
-dependencies {
-    implementation project(':arouter-annotation')
-    implementation project(':arouter')
-    annotationProcessor project(':arouter-compiler')
-
-    implementation libs.alibaba.fastjson
-    implementation libs.androidx.appcompat
-    implementation libs.androidx.constraintlayout
-    testImplementation libs.junit
-    androidTestImplementation libs.androidx.junit
-    androidTestImplementation libs.androidx.espresso.core
-}
 android {
     namespace 'com.github.lany192.arouter.sample.service'
 
-    compileSdk 34
+    compileSdk Integer.parseInt(COMPILE_SDK_VERSION)
 
     defaultConfig {
-        minSdk 21
-        targetSdk 34
+        minSdk Integer.parseInt(MIN_SDK_VERSION)
+        targetSdk Integer.parseInt(TARGET_SDK_VERSION)
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -45,4 +33,22 @@ android {
     lint {
         abortOnError false
     }
+}
+
+dependencies {
+    if (useOnlineLibrary.toBoolean()) {
+        implementation libs.router
+        annotationProcessor libs.router.compiler
+    } else {
+        implementation project(':arouter-annotation')
+        implementation project(':arouter')
+        annotationProcessor project(':arouter-compiler')
+    }
+
+    implementation libs.alibaba.fastjson
+    implementation libs.androidx.appcompat
+    implementation libs.androidx.constraintlayout
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.junit
+    androidTestImplementation libs.androidx.espresso.core
 }

@@ -26,6 +26,7 @@ constraintlayout = "2.1.4"
 fastjson = "1.2.83"
 arouterRegisterVersion = "2.0.2"
 toaster = "12.6" #Toast工具 https://github.com/getActivity/Toaster
+router = "2.0.6" #https://github.com/lany192/app-router
 
 [libraries]
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
@@ -53,6 +54,10 @@ alibaba-fastjson = { group = "com.alibaba", name = "fastjson", version.ref = "fa
 service-auto-service-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoServiceAnnotationsVersion" }
 squareup-javapoet = { module = "com.squareup:javapoet", version.ref = "javapoetVersion" }
 toaster = { module = "com.github.getActivity:Toaster", version.ref = "toaster" }
+
+router-compiler = { module = "com.github.lany192.app-router:arouter-compiler", version.ref = "router" }
+router = { module = "com.github.lany192.app-router:arouter-api", version.ref = "router" }
+router-register = { module = "com.github.lany192.app-router:arouter-register", version.ref = "router" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
