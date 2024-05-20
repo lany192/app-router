@@ -1,6 +1,12 @@
 buildscript {
     dependencies {
         classpath libs.router.register
+
+//        if (useOnlineLibrary.toBoolean()) {
+//            classpath libs.router.register
+//        } else {
+//            classpath project(':arouter-register')
+//        }
     }
 }
 

@@ -16,7 +16,7 @@ dependencies {
 gradlePlugin {
     plugins {
         ArouterPlugin {
-            id = 'com.alibaba.arouter'
+            id = 'com.github.lany192.router'
             implementationClass = 'com.alibaba.android.arouter.register.launch.PluginLaunch'
         }
     }
