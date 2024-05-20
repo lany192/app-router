@@ -47,7 +47,7 @@ allprojects {
 ext {
     aar = [
             groupId    : 'com.github.lany192.router',
-            versionCode: 5,
-            versionName: "1.0.${new Date().format('MMdd')}"
+            versionCode: 1,
+            versionName: "1.0.0"
     ]
 }
