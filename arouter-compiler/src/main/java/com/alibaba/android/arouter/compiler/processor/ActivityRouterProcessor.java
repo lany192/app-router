@@ -42,10 +42,9 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
     private TypeMirror iProvider = null;
     private TypeUtils typeUtils;
     private final ClassName arouterClassName = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
-    private ClassName PathsClassName;
     private final ClassName postcardClass = ClassName.get("com.alibaba.android.arouter.facade", "Postcard");
-    private final ClassName uriClass = ClassName.get("android.net", "Uri");
-    ClassName callbackClass = ClassName.get("com.alibaba.android.arouter.facade.callback", "NavCallback");
+    private final ClassName callbackClass = ClassName.get("com.alibaba.android.arouter.facade.callback", "NavCallback");
+    private final ClassName activityClass = ClassName.get("android.app", "Activity");
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -53,7 +52,6 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
         types = processingEnv.getTypeUtils();
         typeUtils = new TypeUtils(types, processingEnv.getElementUtils());
         iProvider = processingEnv.getElementUtils().getTypeElement(Constants.IPROVIDER).asType();
-        PathsClassName = ClassName.get("com.alibaba.android.arouter", Utils.getModuleName(module) + "Paths");
     }
 
     @Override
@@ -150,6 +148,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
         builder.addMethod(createPostcard(element));
         builder.addMethod(createStart(element));
         builder.addMethod(createStart2(element));
+        builder.addMethod(createStart3(element));
 
         JavaFile javaFile = JavaFile.builder(ClassName.get((TypeElement) element).packageName(), builder.build())
                 // 设置表示缩进的字符串
@@ -209,17 +208,50 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
      */
     private MethodSpec createStart2(Element element) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("start").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器");
-        Route route = element.getAnnotation(Route.class);
-        builder.addCode("$T postcard = $T.getInstance().build(PATH);", postcardClass, arouterClassName);
+        String params = "";
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                 Autowired autowired = field.getAnnotation(Autowired.class);
-                builder.addCode(makeCode(field, autowired));
+                String fieldName = field.getSimpleName().toString();
+                String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
+                if (StringUtils.isEmpty(params)) {
+                    params = key;
+                } else {
+                    params = params + "," + key;
+                }
                 builder.addParameter(createParameterSpec(field, autowired));
             }
         }
+        builder.addCode("$T postcard = getPostcard(" + params + ");", postcardClass);
         builder.addParameter(ParameterSpec.builder(callbackClass, "callback").build());
         builder.addCode("\npostcard.navigation(null, callback);");
+        builder.returns(void.class);
+        return builder.build();
+    }
+
+    /**
+     * Start方法
+     */
+    private MethodSpec createStart3(Element element) {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("start").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器");
+        String params = "";
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                String fieldName = field.getSimpleName().toString();
+                String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
+                if (StringUtils.isEmpty(params)) {
+                    params = key;
+                } else {
+                    params = params + ", " + key;
+                }
+                builder.addParameter(createParameterSpec(field, autowired));
+            }
+        }
+        builder.addParameter(ParameterSpec.builder(activityClass, "activity").build());
+        builder.addParameter(ParameterSpec.builder(ClassName.get(Integer.class), "requestCode").build());
+        builder.addCode("$T postcard = getPostcard(" + params + ");", postcardClass);
+        builder.addCode("\npostcard.navigation(activity, requestCode);");
         builder.returns(void.class);
         return builder.build();
     }
