@@ -224,7 +224,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
             }
         }
         builder.addCode("$T postcard = getPostcard(" + params + ");", postcardClass);
-        builder.addParameter(ParameterSpec.builder(callbackClass, "callback").build());
+        builder.addParameter(getNavCallbackParameter());
         builder.addCode("\npostcard.navigation(null, callback);");
         builder.returns(void.class);
         return builder.build();
@@ -249,14 +249,13 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
                 builder.addParameter(createParameterSpec(field, autowired));
             }
         }
-        builder.addParameter(ParameterSpec.builder(activityClass, "activity").build());
+        builder.addParameter(getActivityParameter());
         builder.addParameter(ParameterSpec.builder(ClassName.get(Integer.class), "requestCode").build());
         builder.addCode("$T postcard = getPostcard(" + params + ");", postcardClass);
         builder.addCode("\npostcard.navigation(activity, requestCode);");
         builder.returns(void.class);
         return builder.build();
     }
-
 
     /**
      * Start方法
@@ -277,14 +276,26 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
                 builder.addParameter(createParameterSpec(field, autowired));
             }
         }
-        builder.addParameter(ParameterSpec.builder(activityClass, "activity").build());
-        builder.addParameter(ParameterSpec.builder(ClassName.get(Integer.class), "requestCode").build());
-        builder.addParameter(ParameterSpec.builder(callbackClass, "callback").build());
+        builder.addParameter(getActivityParameter());
+        builder.addParameter(ParameterSpec.builder(ClassName.get(Integer.class), "requestCode").addJavadoc("请求码").build());
+        builder.addParameter(getNavCallbackParameter());
 
         builder.addCode("$T postcard = getPostcard(" + params + ");", postcardClass);
         builder.addCode("\npostcard.navigation(activity, requestCode, callback);");
         builder.returns(void.class);
         return builder.build();
+    }
+    private ParameterSpec getActivityParameter() {
+        return ParameterSpec
+                .builder(activityClass, "activity")
+                .addJavadoc("上下文")
+                .build();
+    }
+    private ParameterSpec getNavCallbackParameter() {
+        return ParameterSpec
+                .builder(callbackClass, "callback")
+                .addJavadoc("导航回调")
+                .build();
     }
 
     private List<MethodSpec> createMethods(Element element) {
