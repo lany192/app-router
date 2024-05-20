@@ -99,17 +99,10 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
         ClassName currentClassName = getCurrentClassName(element);
 
 
-        TypeSpec.Builder builder = TypeSpec.classBuilder(currentClassName.simpleName())
-                .addJavadoc(route.name() + "\n类位置：{@link " + ClassName.get((TypeElement) element) + "}" + "\n自动生成,请勿编辑!")
-                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+        TypeSpec.Builder builder = TypeSpec.classBuilder(currentClassName.simpleName()).addJavadoc(route.name() + "\n类位置：{@link " + ClassName.get((TypeElement) element) + "}" + "\n自动生成,请勿编辑!").addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
 
-        builder.addField(FieldSpec
-                .builder(String.class, "PATH", Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL)
-                .addJavadoc(route.name() + "\n")
-                .addJavadoc("路由路径")
-                .initializer("\"" + route.path() + "\"")
-                .build());
+        builder.addField(FieldSpec.builder(String.class, "PATH", Modifier.STATIC, Modifier.PUBLIC, Modifier.FINAL).addJavadoc(route.name() + "\n").addJavadoc("路由路径").initializer("\"" + route.path() + "\"").build());
 
 
 //
@@ -158,11 +151,9 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
         builder.addMethod(createStart(element));
         builder.addMethod(createStart2(element));
 
-        JavaFile javaFile = JavaFile
-                .builder(ClassName.get((TypeElement) element).packageName(), builder.build())
+        JavaFile javaFile = JavaFile.builder(ClassName.get((TypeElement) element).packageName(), builder.build())
                 // 设置表示缩进的字符串
-                .indent("    ")
-                .build();
+                .indent("    ").build();
 
 //        String module = getValue(OUT_MODULE_NAME);
 //        Path path = Paths.get(System.getProperty("user.dir"), module, "src", "main", "java");
@@ -174,10 +165,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
      * Postcard方法
      */
     private MethodSpec createPostcard(Element element) {
-        MethodSpec.Builder builder = MethodSpec
-                .methodBuilder("getPostcard")
-                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addJavadoc("构建Postcard");
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("getPostcard").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("构建Postcard");
         builder.addCode("$T postcard = $T.getInstance().build(PATH);", postcardClass, arouterClassName);
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -195,18 +183,22 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
      * Start方法
      */
     private MethodSpec createStart(Element element) {
-        MethodSpec.Builder builder = MethodSpec
-                .methodBuilder("start")
-                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addJavadoc("启动器");
-        builder.addCode("$T postcard = $T.getInstance().build(PATH);", postcardClass, arouterClassName);
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("start").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器");
+        String params = "";
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
                 Autowired autowired = field.getAnnotation(Autowired.class);
-                builder.addCode(makeCode(field, autowired));
+                String fieldName = field.getSimpleName().toString();
+                String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
+                if (StringUtils.isEmpty(params)) {
+                    params = key;
+                } else {
+                    params = params + "," + key;
+                }
                 builder.addParameter(createParameterSpec(field, autowired));
             }
         }
+        builder.addCode("$T postcard = getPostcard(" + params + ");", postcardClass);
         builder.addCode("\npostcard.navigation();");
         builder.returns(void.class);
         return builder.build();
@@ -216,10 +208,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
      * Start方法
      */
     private MethodSpec createStart2(Element element) {
-        MethodSpec.Builder builder = MethodSpec
-                .methodBuilder("start")
-                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addJavadoc("启动器");
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("start").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器");
         Route route = element.getAnnotation(Route.class);
         builder.addCode("$T postcard = $T.getInstance().build(PATH);", postcardClass, arouterClassName);
         for (Element field : element.getEnclosedElements()) {
@@ -301,10 +290,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
                 String typeName = field.asType().toString();
 
                 if (typeMirror.getKind().isPrimitive()) {
-                    fields.add(FieldSpec
-                            .builder(TypeName.get(typeMirror), key, Modifier.PRIVATE)
-                            .addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required())
-                            .build());
+                    fields.add(FieldSpec.builder(TypeName.get(typeMirror), key, Modifier.PRIVATE).addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required()).build());
                 } else {
                     //是否是泛型
                     if (typeName.contains("<") && typeName.contains(">")) {
@@ -315,23 +301,14 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
                         ClassName className = ClassName.get(tmp.substring(0, index), tmp.substring(index + 1));
                         ClassName list = ClassName.get("java.util", "List");
 
-                        fields.add(FieldSpec
-                                .builder(ParameterizedTypeName.get(list, className), key, Modifier.PRIVATE)
-                                .addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required())
-                                .build());
+                        fields.add(FieldSpec.builder(ParameterizedTypeName.get(list, className), key, Modifier.PRIVATE).addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required()).build());
                     } else {
                         if (typeName.contains(".")) {
                             int index = typeName.lastIndexOf(".");
                             ClassName className = ClassName.get(typeName.substring(0, index), typeName.substring(index + 1));
-                            fields.add(FieldSpec
-                                    .builder(className, key, Modifier.PRIVATE)
-                                    .addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required())
-                                    .build());
+                            fields.add(FieldSpec.builder(className, key, Modifier.PRIVATE).addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required()).build());
                         } else {
-                            fields.add(FieldSpec
-                                    .builder(Object.class, key, Modifier.PRIVATE)
-                                    .addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required())
-                                    .build());
+                            fields.add(FieldSpec.builder(Object.class, key, Modifier.PRIVATE).addJavadoc(autowired.desc() + "\n是否必选：" + autowired.required()).build());
                         }
                     }
                 }
