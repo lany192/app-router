@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-    implementation project(':arouter-api')
+    implementation project(':arouter')
     implementation project(':arouter-annotation')
     kapt project(':arouter-compiler')
 

@@ -4,7 +4,7 @@ plugins {
 
 dependencies {
     implementation project(':arouter-annotation')
-    implementation project(':arouter-api')
+    implementation project(':arouter')
     annotationProcessor project(':arouter-compiler')
 
     implementation libs.alibaba.fastjson

@@ -38,7 +38,7 @@ dependencyResolutionManagement {
 }
 rootProject.name = "app-router"
 
-include ':arouter-api'
+include ':arouter'
 include ':arouter-compiler'
 include ':arouter-annotation'
 include ':arouter-register'

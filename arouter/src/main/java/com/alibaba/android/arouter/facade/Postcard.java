@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.SparseArray;
 
+import androidx.annotation.Keep;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityOptionsCompat;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
  * @version 1.1.0
  * @since 16/8/22 19:16
  */
+@Keep
 public final class Postcard extends RouteMeta {
     // Base
     private Uri uri;

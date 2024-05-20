@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
 
+import androidx.annotation.Keep;
+
 import com.alibaba.android.arouter.exception.InitException;
 import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.callback.NavigationCallback;
@@ -20,6 +22,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @version 1.0
  * @since 16/8/16 14:36
  */
+@Keep
 public final class ARouter {
     // Key of raw uri
     public static final String RAW_URI = "NTeRQWvye18AkPd6G";

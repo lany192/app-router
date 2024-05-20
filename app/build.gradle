@@ -53,7 +53,7 @@ android {
 }
 
 dependencies {
-    implementation project(':arouter-api')
+    implementation project(':arouter')
     kapt project(':arouter-compiler')
     implementation project(':module:black')
     implementation project(':module:yellow')

@@ -48,6 +48,6 @@ dependencies {
     androidTestImplementation libs.androidx.espresso.core
 
     implementation project(path: ':module:common')
-    implementation project(':arouter-api')
+    implementation project(':arouter')
     kapt project(':arouter-compiler')
 }
