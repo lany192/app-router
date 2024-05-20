@@ -40,16 +40,14 @@ public class FragmentRouterProcessor extends BaseRouterProcessor {
     private TypeMirror iProvider = null;
     private TypeUtils typeUtils;
     private final ClassName arouterClassName = ClassName.get("com.alibaba.android.arouter.launcher", "ARouter");
-    private ClassName PathsClassName;
     private final ClassName postcardClass = ClassName.get("com.alibaba.android.arouter.facade", "Postcard");
-
+    private final ClassName bundleClass = ClassName.get("android.os", "Bundle");
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
         types = processingEnv.getTypeUtils();
         typeUtils = new TypeUtils(types, processingEnv.getElementUtils());
         iProvider = processingEnv.getElementUtils().getTypeElement(Constants.IPROVIDER).asType();
-        PathsClassName = ClassName.get("com.alibaba.android.arouter", Utils.getModuleName(module) + "Paths");
     }
 
     @Override
@@ -88,7 +86,7 @@ public class FragmentRouterProcessor extends BaseRouterProcessor {
         MethodSpec.Builder builder = MethodSpec
                 .methodBuilder("getFragment")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
-                .addJavadoc("获取" + ClassName.get((TypeElement) element).simpleName() + "实例");
+                .addJavadoc("获取" + ClassName.get((TypeElement) element).simpleName() + "实例\n");
         Route route = element.getAnnotation(Route.class);
         String path = route.path().replace("/", "_").toUpperCase().substring(1);
         builder.addCode("$T postcard = $T.getInstance().build(" + path + ");", postcardClass, arouterClassName);
@@ -99,6 +97,28 @@ public class FragmentRouterProcessor extends BaseRouterProcessor {
                 builder.addParameter(createParameterSpec(field, autowired));
             }
         }
+        builder.addCode("\nreturn ($T) postcard.navigation();", ClassName.get((TypeElement) element));
+        builder.returns(ClassName.get((TypeElement) element));
+        return builder.build();
+    }
+
+    /**
+     * GetFragment方法
+     */
+    private MethodSpec createGetFragment2(Element element) {
+        MethodSpec.Builder builder = MethodSpec
+                .methodBuilder("getFragment")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addJavadoc("获取" + ClassName.get((TypeElement) element).simpleName() + "实例\n");
+        builder.addParameter(ParameterSpec
+                .builder(bundleClass, "bundle")
+                .addJavadoc("参数信息\n")
+                .build());
+
+        Route route = element.getAnnotation(Route.class);
+        String path = route.path().replace("/", "_").toUpperCase().substring(1);
+        builder.addCode("$T postcard = $T.getInstance().build(" + path + ");", postcardClass, arouterClassName);
+        builder.addCode("\npostcard.with(bundle);");
         builder.addCode("\nreturn ($T) postcard.navigation();", ClassName.get((TypeElement) element));
         builder.returns(ClassName.get((TypeElement) element));
         return builder.build();
@@ -205,6 +225,7 @@ public class FragmentRouterProcessor extends BaseRouterProcessor {
                 .build());
 
         builder.addMethod(createGetFragment(element));
+        builder.addMethod(createGetFragment2(element));
         JavaFile javaFile = JavaFile
                 .builder(ClassName.get((TypeElement) element).packageName(), builder.build())
                 // 设置表示缩进的字符串
