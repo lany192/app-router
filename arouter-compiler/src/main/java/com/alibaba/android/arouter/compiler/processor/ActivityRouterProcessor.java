@@ -149,6 +149,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
         builder.addMethod(createStart(element));
         builder.addMethod(createStart2(element));
         builder.addMethod(createStart3(element));
+        builder.addMethod(createStart4(element));
 
         JavaFile javaFile = JavaFile.builder(ClassName.get((TypeElement) element).packageName(), builder.build())
                 // 设置表示缩进的字符串
@@ -252,6 +253,36 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
         builder.addParameter(ParameterSpec.builder(ClassName.get(Integer.class), "requestCode").build());
         builder.addCode("$T postcard = getPostcard(" + params + ");", postcardClass);
         builder.addCode("\npostcard.navigation(activity, requestCode);");
+        builder.returns(void.class);
+        return builder.build();
+    }
+
+
+    /**
+     * Start方法
+     */
+    private MethodSpec createStart4(Element element) {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("start").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器");
+        String params = "";
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                String fieldName = field.getSimpleName().toString();
+                String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
+                if (StringUtils.isEmpty(params)) {
+                    params = key;
+                } else {
+                    params = params + ", " + key;
+                }
+                builder.addParameter(createParameterSpec(field, autowired));
+            }
+        }
+        builder.addParameter(ParameterSpec.builder(activityClass, "activity").build());
+        builder.addParameter(ParameterSpec.builder(ClassName.get(Integer.class), "requestCode").build());
+        builder.addParameter(ParameterSpec.builder(callbackClass, "callback").build());
+
+        builder.addCode("$T postcard = getPostcard(" + params + ");", postcardClass);
+        builder.addCode("\npostcard.navigation(activity, requestCode, callback);");
         builder.returns(void.class);
         return builder.build();
     }
