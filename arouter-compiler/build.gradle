@@ -9,8 +9,8 @@ java {
 
 dependencies {
     implementation project(':arouter-annotation')
-    annotationProcessor 'com.google.auto.service:auto-service:1.1.1'
-    compileOnly libs.service.auto.service.annotations
+    annotationProcessor libs.auto.service.compiler
+    compileOnly libs.auto.service.annotations
 
     implementation libs.javapoet
 

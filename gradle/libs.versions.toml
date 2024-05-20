@@ -2,7 +2,7 @@
 agp = "8.4.0"
 annotation = "1.7.1"
 asmUtil = "9.6"
-autoServiceAnnotationsVersion = "1.1.1"
+autoService = "1.1.1"
 commonsIo = "2.15.1"
 commonsCodec = "1.16.1"
 commonsLang3Version = "3.14.0"
@@ -36,6 +36,7 @@ androidx-legacy-support-v4 = { module = "androidx.legacy:legacy-support-v4", ver
 apache-commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commonsLang3Version" }
 apache-commons-collections4 = { module = "org.apache.commons:commons-collections4", version.ref = "commonsCollections4Version" }
 asm-util = { module = "org.ow2.asm:asm-util", version.ref = "asmUtil" }
+
 commons-io = { module = "commons-io:commons-io", version.ref = "commonsIo" }
 commons-codec = { module = "commons-codec:commons-codec", version.ref = "commonsCodec" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
@@ -49,7 +50,10 @@ material = { group = "com.google.android.material", name = "material", version.r
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 alibaba-fastjson = { group = "com.alibaba", name = "fastjson", version.ref = "fastjson" }
-service-auto-service-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoServiceAnnotationsVersion" }
+
+auto-service-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoService" }
+auto-service-compiler = { module = "com.google.auto.service:auto-service", version.ref = "autoService" }
+
 javapoet = { module = "com.squareup:javapoet", version.ref = "javapoet" }
 toaster = { module = "com.github.getActivity:Toaster", version.ref = "toaster" }
 
