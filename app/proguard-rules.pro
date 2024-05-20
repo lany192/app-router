@@ -69,12 +69,6 @@
 -dontwarn com.alibaba.fastjson.**
 -keep class com.alibaba.fastjson.**{*;}
 
-# ARouter
--keep public class com.alibaba.android.arouter.routes.**{*;}
--keep class * implements com.alibaba.android.arouter.facade.template.ISyringe{*;}
--keep interface * implements com.alibaba.android.arouter.facade.template.IProvider
-
-
 -dontwarn com.alibaba.android.**
 -dontwarn coil.compose.**
 -dontwarn com.amazonaws.**
