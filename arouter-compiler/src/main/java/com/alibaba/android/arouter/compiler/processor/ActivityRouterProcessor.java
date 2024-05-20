@@ -106,13 +106,16 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
                 .build());
 
         builder.addMethod(createPostcard(element));
-        builder.addMethod(createPostcard2(element));
         builder.addMethod(createStart(element));
-        builder.addMethod(createStarWithBundle(element));
         builder.addMethod(createStart2(element));
         builder.addMethod(createStart5(element));
         builder.addMethod(createStart3(element));
         builder.addMethod(createStart4(element));
+
+        builder.addMethod(createPostcard2(element));
+        builder.addMethod(createStarWithBundle(element));
+        builder.addMethod(createStart2WithBundle(element));
+
 
         JavaFile javaFile = JavaFile
                 .builder(ClassName.get((TypeElement) element).packageName(), builder.build())
@@ -221,6 +224,26 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
             }
         }
         builder.addCode("$T postcard = getPostcard(" + params + ");", postcardClass);
+        builder.addParameter(ParameterSpec
+                .builder(callbackClass, "callback")
+                .addJavadoc("导航回调\n")
+                .build());
+        builder.addCode("\npostcard.navigation(null, callback);");
+        builder.returns(void.class);
+        return builder.build();
+    }
+
+
+    /**
+     * Start方法
+     */
+    private MethodSpec createStart2WithBundle(Element element) {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("start").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器\n");
+        builder.addParameter(ParameterSpec
+                .builder(bundleClass, "bundle")
+                .addJavadoc("参数信息\n")
+                .build());
+        builder.addCode("$T postcard = getPostcard(bundle);", postcardClass);
         builder.addParameter(ParameterSpec
                 .builder(callbackClass, "callback")
                 .addJavadoc("导航回调\n")
