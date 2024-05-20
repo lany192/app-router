@@ -115,6 +115,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
         builder.addMethod(createPostcard2(element));
         builder.addMethod(createStarWithBundle(element));
         builder.addMethod(createStart2WithBundle(element));
+        builder.addMethod(createStart5WithBundle(element));
 
 
         JavaFile javaFile = JavaFile
@@ -438,5 +439,28 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
 
     private boolean isActivity(Element element) {
         return types.isSubtype(element.asType(), getTypeMirror(Constants.ACTIVITY));
+    }
+
+    /**
+     * Start方法
+     */
+    private MethodSpec createStart5WithBundle(Element element) {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("start").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器");
+        builder.addParameter(ParameterSpec
+                .builder(bundleClass, "bundle")
+                .addJavadoc("参数信息\n")
+                .build());
+        builder.addCode("$T postcard = getPostcard(bundle);", postcardClass);
+        builder.addParameter(ParameterSpec
+                .builder(contextClass, "context")
+                .addJavadoc("上下文\n")
+                .build());
+        builder.addParameter(ParameterSpec
+                .builder(callbackClass, "callback")
+                .addJavadoc("导航回调\n")
+                .build());
+        builder.addCode("\npostcard.navigation(context, callback);");
+        builder.returns(void.class);
+        return builder.build();
     }
 }
