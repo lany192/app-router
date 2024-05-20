@@ -4,9 +4,9 @@ afterEvaluate { project ->
     publishing {
         publications {
             maven(MavenPublication) {
-                groupId = aar.groupId
+                groupId = "com.github.lany192.router"
                 artifactId = project.name
-                version = aar.versionName
+                version = "1.0.0"
                 afterEvaluate {
                     if (plugins.hasPlugin('com.android.application') || plugins.hasPlugin('com.android.library')) {
                         from components.release
