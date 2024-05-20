@@ -234,7 +234,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
      * Start方法
      */
     private MethodSpec createStart3(Element element) {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("start").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器");
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("startForResult").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器");
         String params = "";
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -261,7 +261,10 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
      * Start方法
      */
     private MethodSpec createStart4(Element element) {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("start").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器");
+        MethodSpec.Builder builder = MethodSpec
+                .methodBuilder("startForResult")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addJavadoc("启动器");
         String params = "";
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -277,7 +280,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
             }
         }
         builder.addParameter(getActivityParameter());
-        builder.addParameter(ParameterSpec.builder(ClassName.get(Integer.class), "requestCode").addJavadoc("请求码").build());
+        builder.addParameter(ParameterSpec.builder(ClassName.get(Integer.class), "requestCode").addJavadoc("请求码\n").build());
         builder.addParameter(getNavCallbackParameter());
 
         builder.addCode("$T postcard = getPostcard(" + params + ");", postcardClass);
@@ -288,13 +291,13 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
     private ParameterSpec getActivityParameter() {
         return ParameterSpec
                 .builder(activityClass, "activity")
-                .addJavadoc("上下文")
+                .addJavadoc("上下文\n")
                 .build();
     }
     private ParameterSpec getNavCallbackParameter() {
         return ParameterSpec
                 .builder(callbackClass, "callback")
-                .addJavadoc("导航回调")
+                .addJavadoc("导航回调\n")
                 .build();
     }
 
