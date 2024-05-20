@@ -261,6 +261,10 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
      */
     private MethodSpec createStart3(Element element) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("startForResult").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器\n");
+        builder.addParameter(ParameterSpec
+                .builder(activityClass, "activity")
+                .addJavadoc("上下文\n")
+                .build());
         String params = "";
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -275,10 +279,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
                 builder.addParameter(createParameterSpec(field, autowired));
             }
         }
-        builder.addParameter(ParameterSpec
-                .builder(activityClass, "activity")
-                .addJavadoc("上下文\n")
-                .build());
+
         builder.addParameter(ParameterSpec
                 .builder(ClassName.get(Integer.class), "requestCode")
                 .build());
@@ -296,7 +297,10 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
                 .methodBuilder("startForResult")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addJavadoc("启动器");
-
+        builder.addParameter(ParameterSpec
+                .builder(activityClass, "activity")
+                .addJavadoc("上下文\n")
+                .build());
         String params = "";
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -311,10 +315,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
                 builder.addParameter(createParameterSpec(field, autowired));
             }
         }
-        builder.addParameter(ParameterSpec
-                .builder(activityClass, "activity")
-                .addJavadoc("上下文\n")
-                .build());
+
         builder.addParameter(ParameterSpec
                 .builder(ClassName.get(Integer.class), "requestCode")
                 .addJavadoc("请求码\n")
@@ -334,6 +335,11 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
      */
     private MethodSpec createStart5(Element element) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("start").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器");
+        builder.addParameter(ParameterSpec
+                .builder(contextClass, "context")
+                .addJavadoc("上下文\n")
+                .build());
+
         String params = "";
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -349,10 +355,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
             }
         }
         builder.addCode("$T postcard = getPostcard(" + params + ");", postcardClass);
-        builder.addParameter(ParameterSpec
-                .builder(contextClass, "context")
-                .addJavadoc("上下文\n")
-                .build());
+
         builder.addParameter(ParameterSpec
                 .builder(callbackClass, "callback")
                 .addJavadoc("导航回调\n")
@@ -449,14 +452,16 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
     private MethodSpec createStart5WithBundle(Element element) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("start").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器");
         builder.addParameter(ParameterSpec
+                .builder(contextClass, "context")
+                .addJavadoc("上下文\n")
+                .build());
+
+        builder.addParameter(ParameterSpec
                 .builder(bundleClass, "bundle")
                 .addJavadoc("参数信息\n")
                 .build());
         builder.addCode("$T postcard = getPostcard(bundle);", postcardClass);
-        builder.addParameter(ParameterSpec
-                .builder(contextClass, "context")
-                .addJavadoc("上下文\n")
-                .build());
+
         builder.addParameter(ParameterSpec
                 .builder(callbackClass, "callback")
                 .addJavadoc("导航回调\n")
@@ -472,14 +477,16 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
      */
     private MethodSpec createStart3WithBundle(Element element) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder("startForResult").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器\n");
-        builder.addParameter(ParameterSpec
-                .builder(bundleClass, "bundle")
-                .addJavadoc("参数信息\n")
-                .build());
+
         builder.addParameter(ParameterSpec
                 .builder(activityClass, "activity")
                 .addJavadoc("上下文\n")
                 .build());
+        builder.addParameter(ParameterSpec
+                .builder(bundleClass, "bundle")
+                .addJavadoc("参数信息\n")
+                .build());
+
         builder.addParameter(ParameterSpec
                 .builder(ClassName.get(Integer.class), "requestCode")
                 .build());
@@ -498,13 +505,14 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .addJavadoc("启动器");
         builder.addParameter(ParameterSpec
-                .builder(bundleClass, "bundle")
-                .addJavadoc("参数信息\n")
-                .build());
-        builder.addParameter(ParameterSpec
                 .builder(activityClass, "activity")
                 .addJavadoc("上下文\n")
                 .build());
+        builder.addParameter(ParameterSpec
+                .builder(bundleClass, "bundle")
+                .addJavadoc("参数信息\n")
+                .build());
+
         builder.addParameter(ParameterSpec
                 .builder(ClassName.get(Integer.class), "requestCode")
                 .addJavadoc("请求码\n")
