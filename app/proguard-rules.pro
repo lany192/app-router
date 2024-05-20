@@ -1,6 +1,5 @@
 -optimizationpasses 5
 -dontpreverify
--dontwarn
 -ignorewarnings
 -verbose
 -overloadaggressively
@@ -18,7 +17,6 @@
 -keep public class * extends android.content.ContentProvider
 -keep public class * extends android.app.backup.BackupAgentHelper
 -keep public class * extends android.preference.Preference
--keep public class com.android.vending.licensing.ILicensingService
 
 -keepclasseswithmembers class * {
     public <init>(android.content.Context,android.util.AttributeSet);
@@ -75,3 +73,23 @@
 -keep public class com.alibaba.android.arouter.routes.**{*;}
 -keep class * implements com.alibaba.android.arouter.facade.template.ISyringe{*;}
 -keep interface * implements com.alibaba.android.arouter.facade.template.IProvider
+
+
+-dontwarn com.alibaba.android.**
+-dontwarn coil.compose.**
+-dontwarn com.amazonaws.**
+-dontwarn io.netty.**
+-dontwarn io.reactivex.**
+-dontwarn io.smallrye.**
+-dontwarn java.beans.**
+-dontwarn java.lang.reflect.AnnotatedType
+-dontwarn javax.xml.**
+-dontwarn jdk.jfr.**
+-dontwarn joptsimple.**
+-dontwarn kotlinx.coroutines.**
+-dontwarn org.apache.**
+-dontwarn org.aspectj.**
+-dontwarn org.jaxen.**
+-dontwarn org.slf4j.**
+-dontwarn reactor.**
+-dontwarn rx.**
