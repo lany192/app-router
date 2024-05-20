@@ -4,13 +4,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.alibaba.android.arouter.AppPaths;
 import com.alibaba.android.arouter.facade.Postcard;
 import com.alibaba.android.arouter.facade.annotation.Interceptor;
 import com.alibaba.android.arouter.facade.callback.InterceptorCallback;
 import com.alibaba.android.arouter.facade.template.IInterceptor;
-import com.alibaba.android.arouter.launcher.ARouter;
 import com.github.lany192.arouter.demo.sample.UserHelper;
+import com.github.lany192.arouter.demo.sample.activity.LoginRouter;
+import com.github.lany192.arouter.demo.sample.activity.ThreeRouter;
+import com.github.lany192.arouter.demo.sample.activity.TwoRouter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,8 +27,8 @@ public class LoginInterceptor implements IInterceptor {
     @Override
     public void init(Context context) {
         //这里添加需要登录的界面路径
-        paths.add(AppPaths.APP_THREE);
-        paths.add(AppPaths.APP_TWO);
+        paths.add(ThreeRouter.PATH);
+        paths.add(TwoRouter.PATH);
     }
 
     @Override
@@ -37,9 +38,8 @@ public class LoginInterceptor implements IInterceptor {
             callback.onInterrupt(null);
             String path = postcard.getPath();
             Bundle bundle = postcard.getExtras();
-            bundle.putString(AppPaths.KEY_ROUTE_PATH, path);
-
-            ARouter.getInstance().build(AppPaths.APP_LOGIN).with(bundle).navigation();
+            bundle.putString("route_path", path);
+            LoginRouter.start(bundle);
             return;
         }
         Log.i(TAG, "不拦截，直接通过" + postcard);
