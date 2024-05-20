@@ -45,6 +45,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
     private final ClassName postcardClass = ClassName.get("com.alibaba.android.arouter.facade", "Postcard");
     private final ClassName callbackClass = ClassName.get("com.alibaba.android.arouter.facade.callback", "NavCallback");
     private final ClassName activityClass = ClassName.get("android.app", "Activity");
+    private final ClassName contextClass = ClassName.get("android.content", "Context");
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -106,6 +107,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
         builder.addMethod(createPostcard(element));
         builder.addMethod(createStart(element));
         builder.addMethod(createStart2(element));
+        builder.addMethod(createStart5(element));
         builder.addMethod(createStart3(element));
         builder.addMethod(createStart4(element));
 
@@ -125,7 +127,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
      * Postcard方法
      */
     private MethodSpec createPostcard(Element element) {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("getPostcard").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("构建Postcard");
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("getPostcard").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("构建Postcard\n");
         builder.addCode("$T postcard = $T.getInstance().build(PATH);", postcardClass, arouterClassName);
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -143,7 +145,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
      * Start方法
      */
     private MethodSpec createStart(Element element) {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("start").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器");
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("start").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器\n");
         String params = "";
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -168,7 +170,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
      * Start方法
      */
     private MethodSpec createStart2(Element element) {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("start").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器");
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("start").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器\n");
         String params = "";
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -197,7 +199,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
      * Start方法
      */
     private MethodSpec createStart3(Element element) {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("startForResult").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器");
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("startForResult").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器\n");
         String params = "";
         for (Element field : element.getEnclosedElements()) {
             if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
@@ -266,7 +268,38 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
         builder.returns(void.class);
         return builder.build();
     }
-
+    /**
+     * Start方法
+     */
+    private MethodSpec createStart5(Element element) {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("start").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("启动器");
+        String params = "";
+        for (Element field : element.getEnclosedElements()) {
+            if (field.getKind().isField() && field.getAnnotation(Autowired.class) != null && !types.isSubtype(field.asType(), iProvider)) {
+                Autowired autowired = field.getAnnotation(Autowired.class);
+                String fieldName = field.getSimpleName().toString();
+                String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
+                if (StringUtils.isEmpty(params)) {
+                    params = key;
+                } else {
+                    params = params + "," + key;
+                }
+                builder.addParameter(createParameterSpec(field, autowired));
+            }
+        }
+        builder.addCode("$T postcard = getPostcard(" + params + ");", postcardClass);
+        builder.addParameter(ParameterSpec
+                .builder(contextClass, "context")
+                .addJavadoc("上下文\n")
+                .build());
+        builder.addParameter(ParameterSpec
+                .builder(callbackClass, "callback")
+                .addJavadoc("导航回调\n")
+                .build());
+        builder.addCode("\npostcard.navigation(context, callback);");
+        builder.returns(void.class);
+        return builder.build();
+    }
     private ParameterSpec createParameterSpec(Element field, Autowired autowired) {
         String fieldName = field.getSimpleName().toString();
         String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();

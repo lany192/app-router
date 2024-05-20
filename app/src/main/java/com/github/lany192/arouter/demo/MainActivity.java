@@ -25,7 +25,9 @@ import com.github.lany192.arouter.demo.service.model.TestParcelable;
 import com.github.lany192.arouter.demo.service.model.TestSerializable;
 import com.github.lany192.purple.KotlinTestRouter;
 import com.github.lany192.yellow.BlankBuilder;
+import com.github.lany192.yellow.TestWebviewRouter;
 import com.github.lany192.yellow.testactivity.Test2Router;
+import com.github.lany192.yellow.testactivity.Test4Router;
 import com.github.lany192.yellow.testactivity.TestDynamicActivity;
 import com.github.lany192.yellow.testservice.SingleService;
 import com.hjq.toast.Toaster;
@@ -52,40 +54,28 @@ public class MainActivity extends AppCompatActivity {
                     .navigation();
         });
         binding.oldVersionAnim.setOnClickListener(v -> {
-            ARouter.getInstance()
-                    .build("/test/activity2")
+            Test2Router.getPostcard("张三")
                     .withTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom)
                     .navigation(this);
         });
         binding.newVersionAnim.setOnClickListener(v -> {
             ActivityOptionsCompat compat = ActivityOptionsCompat.
                     makeScaleUpAnimation(v, v.getWidth() / 2, v.getHeight() / 2, 0, 0);
-            ARouter.getInstance()
-                    .build("/test/activity2")
+            Test2Router.getPostcard("张三")
                     .withOptionsCompat(compat)
                     .navigation();
         });
-        binding.interceptor.setOnClickListener(v -> {
-            ARouter.getInstance()
-                    .build("/test/activity4")
-                    .navigation(this, new NavCallback() {
-                        @Override
-                        public void onArrival(Postcard postcard) {
+        binding.interceptor.setOnClickListener(v -> Test4Router.start(this, new NavCallback() {
+            @Override
+            public void onArrival(Postcard postcard) {
 
-                        }
-
-                        @Override
-                        public void onInterrupt(Postcard postcard) {
-                            Toaster.show("被拦截了");
-                        }
-                    });
-        });
-        binding.navByUrl.setOnClickListener(v -> {
-            ARouter.getInstance()
-                    .build("/test/webview")
-                    .withString("url", "file) {///android_asset/scheme-test.html")
-                    .navigation();
-        });
+            }
+            @Override
+            public void onInterrupt(Postcard postcard) {
+                Toaster.show("被拦截了");
+            }
+        }));
+        binding.navByUrl.setOnClickListener(v -> TestWebviewRouter.start("file) {///android_asset/scheme-test.html"));
         binding.autoInject.setOnClickListener(v -> {
             TestSerializable testSerializable = new TestSerializable("Titanic", 555);
             TestParcelable testParcelable = new TestParcelable("jack", 666);
