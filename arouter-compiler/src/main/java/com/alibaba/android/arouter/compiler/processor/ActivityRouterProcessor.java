@@ -21,9 +21,7 @@ import com.squareup.javapoet.TypeSpec;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.ProcessingEnvironment;
@@ -330,6 +328,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
         builder.returns(void.class);
         return builder.build();
     }
+
     /**
      * Start方法
      */
@@ -364,6 +363,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
         builder.returns(void.class);
         return builder.build();
     }
+
     private ParameterSpec createParameterSpec(Element field, Autowired autowired) {
         String fieldName = field.getSimpleName().toString();
         String key = StringUtils.isEmpty(autowired.name()) ? fieldName : autowired.name();
