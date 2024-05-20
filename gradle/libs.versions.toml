@@ -25,7 +25,7 @@ activity = "1.9.0"
 constraintlayout = "2.1.4"
 fastjson = "1.2.83"
 toaster = "12.6" #Toast工具 https://github.com/getActivity/Toaster
-router = "2.0.6" #https://github.com/lany192/app-router
+router = "2.0.8" #https://github.com/lany192/app-router
 
 [libraries]
 androidx-annotation = { module = "androidx.annotation:annotation", version.ref = "annotation" }
