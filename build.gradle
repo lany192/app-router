@@ -1,6 +1,6 @@
 buildscript {
     dependencies {
-        classpath libs.app.router.arouter.register
+        classpath libs.router.register
     }
 }
 

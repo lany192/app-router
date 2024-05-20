@@ -3,28 +3,27 @@ agp = "8.4.0"
 annotation = "1.7.1"
 asmUtil = "9.6"
 autoServiceAnnotationsVersion = "1.1.1"
-commonsIo = "2.14.0"
+commonsIo = "2.15.1"
 commonsCodec = "1.16.1"
-commonsLang3Version = "3.13.0"
+commonsLang3Version = "3.14.0"
 commonsCollections4Version = "4.4"
-core = "1.12.0"
-fragment = "1.6.2"
-gradle = "8.3.0"
+core = "1.13.1"
+fragment = "1.7.0"
+gradle = "8.3.2"
 gson = "2.10.1"
-javapoetVersion = "1.13.0"
+javapoet = "1.13.0"
 kotlin = "1.9.23"
-coreKtx = "1.12.0"
+coreKtx = "1.13.1"
 junit = "4.13.2"
 junitVersion = "1.1.5"
 espressoCore = "3.5.1"
 appcompat = "1.6.1"
 legacySupportV4 = "1.0.0"
 link_builder = "2.0.5"
-material = "1.11.0"
-activity = "1.8.2"
+material = "1.12.0"
+activity = "1.9.0"
 constraintlayout = "2.1.4"
 fastjson = "1.2.83"
-arouterRegisterVersion = "2.0.2"
 toaster = "12.6" #Toast工具 https://github.com/getActivity/Toaster
 router = "2.0.6" #https://github.com/lany192/app-router
 
@@ -36,7 +35,6 @@ androidx-fragment = { module = "androidx.fragment:fragment", version.ref = "frag
 androidx-legacy-support-v4 = { module = "androidx.legacy:legacy-support-v4", version.ref = "legacySupportV4" }
 apache-commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "commonsLang3Version" }
 apache-commons-collections4 = { module = "org.apache.commons:commons-collections4", version.ref = "commonsCollections4Version" }
-app-router-arouter-register = { module = "com.github.lany192.app-router:arouter-register", version.ref = "arouterRegisterVersion" }
 asm-util = { module = "org.ow2.asm:asm-util", version.ref = "asmUtil" }
 commons-io = { module = "commons-io:commons-io", version.ref = "commonsIo" }
 commons-codec = { module = "commons-codec:commons-codec", version.ref = "commonsCodec" }
@@ -52,11 +50,11 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 alibaba-fastjson = { group = "com.alibaba", name = "fastjson", version.ref = "fastjson" }
 service-auto-service-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "autoServiceAnnotationsVersion" }
-squareup-javapoet = { module = "com.squareup:javapoet", version.ref = "javapoetVersion" }
+squareup-javapoet = { module = "com.squareup:javapoet", version.ref = "javapoet" }
 toaster = { module = "com.github.getActivity:Toaster", version.ref = "toaster" }
 
-router-compiler = { module = "com.github.lany192.app-router:arouter-compiler", version.ref = "router" }
 router = { module = "com.github.lany192.app-router:arouter-api", version.ref = "router" }
+router-compiler = { module = "com.github.lany192.app-router:arouter-compiler", version.ref = "router" }
 router-register = { module = "com.github.lany192.app-router:arouter-register", version.ref = "router" }
 
 [plugins]
