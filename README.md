@@ -41,3 +41,14 @@
 #反馈  如有任何问题或者疑问，欢迎提问 https://github.com/lany192/app-router/issues
 
 https://github.com/jadepeakpoet/ARouter
+
+
+## 一键本地打包
+
+```bash
+# 测试包
+gradle assembleDebug
+
+# 正式包
+gradle assembleRelease
+```
