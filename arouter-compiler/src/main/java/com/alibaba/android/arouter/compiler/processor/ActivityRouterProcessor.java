@@ -46,6 +46,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
     private final ClassName callbackClass = ClassName.get("com.alibaba.android.arouter.facade.callback", "NavCallback");
     private final ClassName activityClass = ClassName.get("android.app", "Activity");
     private final ClassName contextClass = ClassName.get("android.content", "Context");
+    private final ClassName bundleClass = ClassName.get("android.os", "Bundle");
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
@@ -105,6 +106,7 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
                 .build());
 
         builder.addMethod(createPostcard(element));
+        builder.addMethod(createPostcard2(element));
         builder.addMethod(createStart(element));
         builder.addMethod(createStart2(element));
         builder.addMethod(createStart5(element));
@@ -136,6 +138,22 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
                 builder.addParameter(createParameterSpec(field, autowired));
             }
         }
+        builder.addCode("\nreturn postcard;");
+        builder.returns(postcardClass);
+        return builder.build();
+    }
+
+    /**
+     * Postcard方法
+     */
+    private MethodSpec createPostcard2(Element element) {
+        MethodSpec.Builder builder = MethodSpec.methodBuilder("getPostcard").addModifiers(Modifier.PUBLIC, Modifier.STATIC).addJavadoc("构建Postcard\n");
+        builder.addCode("$T postcard = $T.getInstance().build(PATH);", postcardClass, arouterClassName);
+        builder.addParameter(ParameterSpec
+                .builder(bundleClass, "bundle")
+                .addJavadoc("参数信息\n")
+                .build());
+        builder.addCode("\npostcard.with(bundle);");
         builder.addCode("\nreturn postcard;");
         builder.returns(postcardClass);
         return builder.build();
