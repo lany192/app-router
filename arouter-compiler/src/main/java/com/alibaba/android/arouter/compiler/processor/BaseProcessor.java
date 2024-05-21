@@ -5,8 +5,10 @@ import static com.alibaba.android.arouter.compiler.utils.Consts.KEY_MODULE_NAME;
 import static com.alibaba.android.arouter.compiler.utils.Consts.NO_MODULE_NAME_TIPS;
 import static com.alibaba.android.arouter.compiler.utils.Consts.VALUE_ENABLE;
 
+import com.alibaba.android.arouter.compiler.utils.Constants;
 import com.alibaba.android.arouter.compiler.utils.Logger;
 import com.alibaba.android.arouter.compiler.utils.TypeUtils;
+import com.alibaba.fastjson.JSON;
 
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -36,19 +38,30 @@ public abstract class BaseProcessor extends AbstractProcessor {
     Elements elementUtils;
     TypeUtils typeUtils;
     // Module name, maybe its 'app' or others
-    String moduleName = null;
+    String moduleName;
     // If need generate router doc
     boolean generateDoc;
+    /**
+     * 配置传递的参数
+     */
+    private Map<String, String> options;
 
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
+        options = processingEnv.getOptions();
+        String configInfo = JSON.toJSONString(options);
+
+        logger = new Logger(processingEnv.getMessager());
+        logger.setDebug(Boolean.parseBoolean(getValue(Constants.ROUTER_DEBUG, "true")));
+        logger.info("初始化......");
+        logger.info("配置信息：" + configInfo);
 
         mFiler = processingEnv.getFiler();
         types = processingEnv.getTypeUtils();
         elementUtils = processingEnv.getElementUtils();
         typeUtils = new TypeUtils(types, elementUtils);
-        logger = new Logger(processingEnv.getMessager());
+
 
         // Attempt to get user configuration [moduleName]
         Map<String, String> options = processingEnv.getOptions();
@@ -65,6 +78,26 @@ public abstract class BaseProcessor extends AbstractProcessor {
             logger.error(NO_MODULE_NAME_TIPS);
             throw new RuntimeException("ARouter::Compiler >>> No module name, for more information, look at gradle log.");
         }
+    }
+
+    public String getValue(String key) {
+        return getValue(key, "");
+    }
+
+    public boolean getBooleanValue(String key) {
+        String value = options.get(key);
+        if (StringUtils.isEmpty(value)) {
+            value = "false";
+        }
+        return Boolean.parseBoolean(value);
+    }
+
+    public String getValue(String key, String defaultValue) {
+        String value = options.get(key);
+        if (StringUtils.isEmpty(value)) {
+            value = defaultValue;
+        }
+        return value;
     }
 
     @Override

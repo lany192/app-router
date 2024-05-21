@@ -24,7 +24,7 @@
 // */
 //@AutoService(Processor.class)
 ////@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
-//public class PathsProcessor extends BaseRouterProcessor {
+//public class PathsProcessor extends BaseProcessor {
 //
 //    @Override
 //    public Set<String> getSupportedAnnotationTypes() {

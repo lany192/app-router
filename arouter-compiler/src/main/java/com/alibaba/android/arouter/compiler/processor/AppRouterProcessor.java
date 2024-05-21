@@ -35,7 +35,7 @@
 // */
 //@AutoService(Processor.class)
 ////@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
-//public class AppRouterProcessor extends BaseRouterProcessor {
+//public class AppRouterProcessor extends BaseProcessor {
 //    private Types types;
 //    private TypeMirror iProvider = null;
 //    private TypeUtils typeUtils;

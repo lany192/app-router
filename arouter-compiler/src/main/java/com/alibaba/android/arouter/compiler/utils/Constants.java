@@ -34,10 +34,6 @@ public class Constants {
     public static final String FRAGMENT_V4 = "android.support.v4.app.Fragment";
     public static final String FRAGMENT_X = "androidx.fragment.app.Fragment";
     public static final String SERVICE = "android.app.Service";
-
-
-    //模块名称
-    public static final String MODULE_NAME = "AROUTER_MODULE_NAME";
     //是否debug模式
     public static final String ROUTER_DEBUG = "ROUTER_DEBUG";
     //是否打印JS路由文档

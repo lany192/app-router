@@ -35,7 +35,7 @@ import javax.lang.model.util.Types;
 
 @AutoService(Processor.class)
 //@IncrementalAnnotationProcessor(IncrementalAnnotationProcessorType.ISOLATING)
-public class ActivityRouterProcessor extends BaseRouterProcessor {
+public class ActivityRouterProcessor extends BaseProcessor {
     private Types types;
     private TypeMirror iProvider = null;
     private TypeUtils typeUtils;
@@ -405,18 +405,18 @@ public class ActivityRouterProcessor extends BaseRouterProcessor {
         String name = Utils.toUpperCaseFirstOne(typeName);
         String code = "";
         if (typeMirror.getKind().isPrimitive()) {
-            logger.info(module + ",字段:" + fieldName + " -> 基本类型:" + name);
+            logger.info(moduleName + ",字段:" + fieldName + " -> 基本类型:" + name);
             code += "\npostcard.with" + name + "(\"" + key + "\"," + key + ");";
         } else {
             code = "\nif (" + key + " != null) {";
             if (typeKind == SERIALIZABLE) {
-                logger.info(module + ",字段:" + fieldName + " -> Serializable类型:" + name);
+                logger.info(moduleName + ",字段:" + fieldName + " -> Serializable类型:" + name);
                 code += "\n    postcard.withSerializable(\"" + key + "\",(" + typeName + ")" + key + ");";
             } else if (typeKind == PARCELABLE) {
-                logger.info(module + ",字段:" + fieldName + " -> Parcelable类型:" + name);
+                logger.info(moduleName + ",字段:" + fieldName + " -> Parcelable类型:" + name);
                 code += "\n    postcard.withParcelable(\"" + key + "\",(" + typeName + ")" + key + ");";
             } else {
-                logger.info(module + ",字段:" + fieldName + " -> 字段类型:" + name);
+                logger.info(moduleName + ",字段:" + fieldName + " -> 字段类型:" + name);
                 if (name.contentEquals("Java.lang.Integer")) {
                     code += "\n    postcard.withInt(\"" + key + "\"," + key + ");";
                 } else {
