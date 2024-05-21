@@ -9,6 +9,14 @@ plugins {
 kapt {
     arguments {
         arg("AROUTER_MODULE_NAME", project.getName())
+        //是否debug模式
+        arg("ROUTER_DEBUG", true)
+        //是否打印JS路由文档
+        arg("ROUTER_JS_DOC", true)
+        //JS路由调用方法
+        arg("ROUTER_JS_FUN", "window.app.route")
+        //Uri Scheme标识
+        arg("ROUTER_SCHEME", "appbox")
     }
 }
 

@@ -8,8 +8,6 @@ plugins {
 kapt {
     arguments {
         arg("AROUTER_MODULE_NAME", project.getName())
-//        arg("AROUTER_GENERATE_DOC", "enable")
-
         //是否debug模式
         arg("ROUTER_DEBUG", true)
         //是否打印JS路由文档
