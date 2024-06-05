@@ -2,6 +2,7 @@ plugins {
     id("maven-publish")
     id("org.jetbrains.kotlin.jvm")
     id "java-gradle-plugin"
+    id 'java'
 }
 
 dependencies {
@@ -23,3 +24,8 @@ gradlePlugin {
 }
 
 apply from: rootProject.file('gradle/maven-publish.gradle')
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}

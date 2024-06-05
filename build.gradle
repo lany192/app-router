@@ -2,14 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
     dependencies {
-//        if (useOnlineLibrary.toBoolean()) {
-//            classpath libs.router.register
-//        } else {
-//            classpath project(':arouter-register')
-//        }
-//        classpath libs.router.register
-        classpath 'com.github.lany192.app-router:arouter-register:2.0.8'
-//        classpath project(':arouter-register')
+        classpath libs.arouter.register
     }
 }
 
