@@ -14,10 +14,10 @@ dependencies {
 
     implementation libs.javapoet
 
-    implementation libs.apache.commons.lang3
-    implementation libs.apache.commons.collections4
+    implementation libs.commons.lang3
+    implementation libs.commons.collections4
 
-    implementation libs.alibaba.fastjson
+    implementation libs.fastjson
 }
 
 apply from: rootProject.file('gradle/maven-publish.gradle')

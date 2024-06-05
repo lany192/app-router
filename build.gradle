@@ -1,12 +1,15 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 buildscript {
     dependencies {
-        classpath libs.router.register
-
 //        if (useOnlineLibrary.toBoolean()) {
 //            classpath libs.router.register
 //        } else {
 //            classpath project(':arouter-register')
 //        }
+//        classpath libs.router.register
+        classpath 'com.github.lany192.app-router:arouter-register:2.0.8'
+//        classpath project(':arouter-register')
     }
 }
 
@@ -16,4 +19,26 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.kapt) apply false
+}
+
+allprojects {
+    afterEvaluate {
+        if (project.plugins.hasPlugin('com.android.library') || project.plugins.hasPlugin('com.android.application')) {
+            def android = project.extensions.getByName('android')
+            android.compileOptions {
+                sourceCompatibility JavaVersion.VERSION_1_8
+                targetCompatibility JavaVersion.VERSION_1_8
+            }
+            if (project.plugins.hasPlugin('org.jetbrains.kotlin.android')) {
+                android.kotlinOptions {
+                    jvmTarget = JavaVersion.VERSION_1_8
+                }
+            }
+        }
+        tasks.withType(KotlinCompile).configureEach {
+            kotlinOptions {
+                jvmTarget = JavaVersion.VERSION_1_8
+            }
+        }
+    }
 }

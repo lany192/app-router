@@ -48,9 +48,8 @@ dependencies {
     api project(':arouter-annotation')
 
     implementation libs.androidx.annotation
-    implementation libs.androidx.core
     implementation libs.androidx.fragment
-    implementation libs.androidx.legacy.support.v4
+//    implementation libs.androidx.legacy.support.v4
 }
 
 apply from: rootProject.file('gradle/maven-publish.gradle')

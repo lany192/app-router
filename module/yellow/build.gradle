@@ -37,12 +37,12 @@ android {
 
 dependencies {
     implementation project(':module:black')
-    implementation libs.alibaba.fastjson
+    implementation libs.fastjson
     implementation libs.androidx.appcompat
     implementation libs.androidx.constraintlayout
     testImplementation libs.junit
-    androidTestImplementation libs.androidx.junit
-    androidTestImplementation libs.androidx.espresso.core
+    androidTestImplementation libs.androidx.test.ext.junit2
+    androidTestImplementation libs.androidx.test.espresso
 
     if (useOnlineLibrary.toBoolean()) {
         implementation libs.router
