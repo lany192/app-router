@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.library'
+    alias(libs.plugins.android.library)
 }
 
 android {
@@ -37,8 +37,8 @@ android {
 
 dependencies {
     if (useOnlineLibrary.toBoolean()) {
-        implementation libs.router
-        annotationProcessor libs.router.compiler
+        implementation libs.lany.router
+        annotationProcessor libs.lany.router.compiler
     } else {
         implementation project(':arouter-annotation')
         implementation project(':arouter')

@@ -1,7 +1,6 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
-    id 'kotlin-android'
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
     id 'kotlin-kapt'
     id 'com.github.lany192.router'
 }
@@ -48,8 +47,8 @@ dependencies {
     androidTestImplementation libs.androidx.test.espresso
 
     if (useOnlineLibrary.toBoolean()) {
-        implementation libs.router
-        kapt libs.router.compiler
+        implementation libs.lany.router
+        kapt libs.lany.router.compiler
     } else {
         implementation project(':arouter')
         kapt project(':arouter-compiler')
