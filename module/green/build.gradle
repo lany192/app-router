@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    id 'kotlin-kapt'
+    alias(libs.plugins.kotlin.kapt)
     id 'com.github.lany192.router'
 }
 
@@ -21,11 +21,11 @@ kapt {
 
 android {
     namespace 'com.github.lany192.green'
-    compileSdk Integer.parseInt(COMPILE_SDK_VERSION)
+    compileSdk Integer.parseInt(libs.versions.compileSdk.get())
 
     defaultConfig {
-        minSdk Integer.parseInt(MIN_SDK_VERSION)
-        targetSdk Integer.parseInt(TARGET_SDK_VERSION)
+        minSdk Integer.parseInt(libs.versions.minSdk.get())
+        targetSdk Integer.parseInt(libs.versions.targetSdk.get())
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -42,7 +42,7 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = JavaVersion.VERSION_1_8
     }
 }
 
