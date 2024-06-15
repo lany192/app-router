@@ -22,7 +22,7 @@ commons-lang3 = "3.14.0"
 compileSdk = "34" # 编译版本
 constraintlayout = "2.1.4"
 coreKtx = "1.13.1"
-coroutines = "1.8.0" #协程 https://github.com/Kotlin/kotlinx.coroutines
+coroutines = "1.8.1" #协程 https://github.com/Kotlin/kotlinx.coroutines
 datetime-picker = "1.0.9" #https://github.com/lany192/DateTimePicker
 decoration = "1.23" #分割线 https://github.com/lany192/ItemDecoration
 espressoCore = "3.5.1"
@@ -33,7 +33,8 @@ feature = "0.0.1" #本地仓库
 flexbox = "3.0.0" #flexbox控件 https://github.com/google/flexbox-layout
 fragment = "1.7.1"
 glide = "4.16.0" #glide依赖 https://github.com/bumptech/glide
-gradle = "8.3.2"
+glide-webp = "2.6.4.16.0" #webp解析器 https://github.com/zjupure/GlideWebpDecoder
+gradle = "8.5.0"
 gson = "2.10.1"
 hilt = "2.45" #注入依赖 https://dagger.dev/hilt/
 html-cleaner = "2.29" #html解析 https://mvnrepository.com/artifact/net.sourceforge.htmlcleaner/htmlcleaner
@@ -94,7 +95,6 @@ vasdolly = "3.0.6" #多渠道打包工具 https://github.com/Tencent/VasDolly
 viewpager2 = "1.0.0"
 watermark = "0.2.3" # 水印 https://github.com/huangyz0918/AndroidWM
 webkit = "1.10.0"
-webpdecoder = "2.6.4.16.0" #webp解析器 https://github.com/zjupure/GlideWebpDecoder
 wechat = "6.8.18" #微信SDK https://developers.weixin.qq.com/doc/oplatform/Downloads/Android_Resource.html
 xcrash = "3.1.0" #异常捕获 https://github.com/iqiyi/xCrash
 xlog = "1.2.5" #日志工具 https://github.com/Tencent/mars
@@ -157,10 +157,11 @@ commons-lang3 = { module = "org.apache.commons:commons-lang3", version.ref = "co
 coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 eventbus = { module = "org.greenrobot:eventbus", version.ref = "eventbus" }
-fastjson = { group = "com.alibaba", name = "fastjson", version.ref = "fastjson" }
+fastjson = { module = "com.alibaba:fastjson", version.ref = "fastjson" }
 flexbox = { module = "com.google.android.flexbox:flexbox", version.ref = "flexbox" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 glide-compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "glide" }
+glide-webp = { module = "com.github.zjupure:webpdecoder", version.ref = "glide-webp" }
 gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
@@ -238,7 +239,6 @@ umsdk-share-qq = { module = "com.umeng.umsdk:share-qq", version.ref = "umeng-sha
 umsdk-share-sina = { module = "com.umeng.umsdk:share-sina", version.ref = "umeng-share" }
 umsdk-share-wx = { module = "com.umeng.umsdk:share-wx", version.ref = "umeng-share" }
 watermark = { module = "com.huangyz0918:androidwm", version.ref = "watermark" }
-webpdecoder = { module = "com.github.zjupure:webpdecoder", version.ref = "webpdecoder" }
 xcrash = { module = "com.iqiyi.xcrash:xcrash-android-lib", version.ref = "xcrash" }
 zxing-lite = { module = "com.github.jenly1314:zxing-lite", version.ref = "zxing-lite" }
 
