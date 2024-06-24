@@ -5,7 +5,13 @@ pluginManagement {
         maven { url 'https://maven.aliyun.com/repository/google' }
         maven { url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://www.jitpack.io' }
-        google()
+        google {
+            content {
+                includeGroupByRegex "com\\.android.*"
+                includeGroupByRegex "com\\.google.*"
+                includeGroupByRegex "androidx.*"
+            }
+        }
         gradlePluginPortal()
         mavenCentral()
         mavenLocal()
@@ -28,7 +34,13 @@ dependencyResolutionManagement {
         maven { url 'https://maven.aliyun.com/repository/google' }
         maven { url 'https://maven.aliyun.com/repository/public' }
         maven { url 'https://www.jitpack.io' }
-        google()
+        google {
+            content {
+                includeGroupByRegex "com\\.android.*"
+                includeGroupByRegex "com\\.google.*"
+                includeGroupByRegex "androidx.*"
+            }
+        }
         mavenCentral()
         mavenLocal()
         maven {
