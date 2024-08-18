@@ -68,6 +68,7 @@ include ':arouter'
 include ':arouter-compiler'
 include ':arouter-annotation'
 include ':arouter-register'
+include ':compiler'
 
 include ':app'
 include ':module:yellow'
