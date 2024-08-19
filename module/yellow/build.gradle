@@ -5,11 +5,11 @@ plugins {
 android {
     namespace 'com.github.lany192.yellow'
 
-    compileSdk Integer.parseInt(libs.versions.compileSdk.get())
+    compileSdk Integer.parseInt(libs.versions.android.compile.sdk.get())
 
     defaultConfig {
-        minSdk Integer.parseInt(libs.versions.minSdk.get())
-        targetSdk Integer.parseInt(libs.versions.targetSdk.get())
+        minSdk Integer.parseInt(libs.versions.android.min.sdk.get())
+        targetSdk Integer.parseInt(libs.versions.android.target.sdk.get())
 
         javaCompileOptions {
             annotationProcessorOptions {
