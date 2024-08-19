@@ -20,14 +20,11 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
 }
 
 dependencies {
-    implementation 'com.alibaba:arouter-annotation:1.0.6'
-
-    implementation 'com.squareup:javapoet:1.8.0'
-
-    implementation 'org.apache.commons:commons-lang3:3.5'
-    implementation 'org.apache.commons:commons-collections4:4.1'
-
-    implementation 'com.alibaba:fastjson:1.2.69'
+    implementation project(':arouter-annotation')
+    implementation libs.javapoet
+    implementation libs.commons.lang3
+    implementation libs.commons.collections4
+    implementation libs.fastjson
 
     // ksp deps https://github.com/google/ksp/releases/tag/1.7.20-1.0.6
     implementation libs.ksp.symbol.processing.api
