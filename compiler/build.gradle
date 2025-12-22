@@ -29,9 +29,9 @@ dependencies {
     // ksp deps https://github.com/google/ksp/releases/tag/1.7.20-1.0.6
     implementation libs.ksp.symbol.processing.api
     // https://square.github.io/kotlinpoet/
-    implementation("com.squareup:kotlinpoet:1.18.1")
-    implementation("com.squareup:kotlinpoet-ksp:1.18.1")
-    implementation("com.squareup:kotlinpoet-metadata:1.18.1")
+    implementation(libs.kotlinpoet)
+    implementation(libs.kotlinpoet.ksp)
+    implementation(libs.kotlinpoet.metadata)
 }
 
 apply from: rootProject.file('gradle/maven-publish.gradle')

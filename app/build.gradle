@@ -8,9 +8,9 @@ kapt {
     arguments {
         arg("AROUTER_MODULE_NAME", project.getName())
         //是否debug模式
-        arg("ROUTER_DEBUG", true)
+        arg("ROUTER_DEBUG", "true")
         //是否打印JS路由文档
-        arg("ROUTER_JS_DOC", true)
+        arg("ROUTER_JS_DOC", "true")
         //JS路由调用方法
         arg("ROUTER_JS_FUN", "window.app.route")
         //Uri Scheme标识
@@ -40,7 +40,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     lint {
@@ -65,12 +65,9 @@ dependencies {
     implementation project(':module:blue')
     implementation project(':module:green')
 
-//    implementation libs.androidx.legacy.support.v4
-
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.androidx.material
-    implementation libs.androidx.activity
     implementation libs.androidx.constraintlayout
     testImplementation libs.junit
     androidTestImplementation libs.androidx.test.ext.junit2

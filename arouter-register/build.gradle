@@ -8,7 +8,6 @@ plugins {
 dependencies {
     implementation gradleApi()
     implementation localGroovy()
-    implementation libs.gradle
     implementation libs.commons.codec
     implementation libs.commons.io
     implementation libs.asm.util
