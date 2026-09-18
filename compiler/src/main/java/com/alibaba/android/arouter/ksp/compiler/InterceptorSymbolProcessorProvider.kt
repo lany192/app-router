@@ -1,6 +1,5 @@
 package com.alibaba.android.arouter.ksp.compiler
 
-import cn.jailedbird.arouter.ksp.compiler.utils.*
 import com.alibaba.android.arouter.ksp.compiler.utils.findAnnotationWithType
 import com.alibaba.android.arouter.ksp.compiler.utils.findModuleName
 import com.alibaba.android.arouter.facade.annotation.Interceptor
@@ -14,12 +13,10 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFile
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.writeTo
 import java.util.*
 
-@KotlinPoetKspPreview
 class InterceptorSymbolProcessorProvider : SymbolProcessorProvider {
 
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {

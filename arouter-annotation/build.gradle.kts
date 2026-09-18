@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id("java")
 }
 
 java {
@@ -7,4 +7,4 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-apply from: rootProject.file('gradle/maven-publish.gradle')
+apply(from = rootProject.file("gradle/maven-publish.gradle.kts"))

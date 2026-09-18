@@ -1,0 +1,81 @@
+import org.gradle.api.initialization.resolve.RepositoriesMode
+
+pluginManagement {
+    repositories {
+        maven { url = uri("https://mirrors.tencent.com/nexus/repository/maven-public/") }
+        maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin") }
+        maven {
+            url = uri("https://maven.aliyun.com/repository/google")
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        maven { url = uri("https://maven.aliyun.com/repository/public") }
+        maven { url = uri("https://www.jitpack.io") }
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        gradlePluginPortal()
+        mavenCentral()
+        mavenLocal()
+        maven { url = rootDir.resolve("repository").toURI() }
+    }
+}
+
+/*
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS) 代码的含义是 解析依赖时 , 只能使用本脚本块中的 Maven 仓库 , 不能使用 Module 子项目中的依赖 ;
+    repositoriesMode 模式有两种 :
+    RepositoriesMode.PREFER_PROJECT : 解析依赖库时 , 优先使用本地仓库 , 本地仓库没有该依赖 , 则使用远程仓库 ;
+    RepositoriesMode.FAIL_ON_PROJECT_REPOS : 解析依赖库时 , 强行使用远程仓库 , 不管本地仓库有没有该依赖库 ;
+*/
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        maven { url = uri("https://mirrors.tencent.com/nexus/repository/maven-public/") }
+        maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin") }
+        maven {
+            url = uri("https://maven.aliyun.com/repository/google")
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        maven { url = uri("https://maven.aliyun.com/repository/public") }
+        maven { url = uri("https://www.jitpack.io") }
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
+        mavenCentral()
+        mavenLocal()
+        maven { url = rootDir.resolve("repository").toURI() }
+    }
+}
+
+rootProject.name = "app-router"
+
+include(":arouter")
+include(":arouter-compiler")
+include(":arouter-annotation")
+include(":arouter-register")
+include(":compiler")
+
+include(":app")
+include(":module:yellow")
+include(":module:black")
+include(":module:purple")
+
+include(":module:common")
+include(":module:blue")
+include(":module:green")
+//include(":module:app")

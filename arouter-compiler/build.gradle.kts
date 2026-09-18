@@ -1,0 +1,23 @@
+plugins {
+    id("java")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    implementation(project(":arouter-annotation"))
+    annotationProcessor(libs.auto.service.compiler)
+    compileOnly(libs.auto.service.annotations)
+
+    implementation(libs.javapoet)
+
+    implementation(libs.commons.lang3)
+    implementation(libs.commons.collections4)
+
+    implementation(libs.fastjson)
+}
+
+apply(from = rootProject.file("gradle/maven-publish.gradle.kts"))

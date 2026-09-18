@@ -43,12 +43,19 @@
 https://github.com/jadepeakpoet/ARouter
 
 
+## 构建环境要求
+
+- Gradle 9.7.1（`gradle/wrapper/gradle-wrapper.properties`）
+- Android Gradle Plugin 9.4.0（`gradle/libs.versions.toml`）
+- JDK 17 及以上（Gradle 9 不再支持 JDK 8/11，可用 Android Studio 自带的 JBR，或执行前设置 `JAVA_HOME`）
+- 构建脚本统一使用 Kotlin DSL（`*.gradle.kts`）
+
 ## 一键本地打包
 
 ```bash
 # 测试包
-gradle assembleDebug
+./gradlew assembleDebug
 
 # 正式包
-gradle assembleRelease
+./gradlew assembleRelease
 ```

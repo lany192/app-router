@@ -3,7 +3,6 @@ package com.alibaba.android.arouter.ksp.compiler
 import com.alibaba.android.arouter.ksp.compiler.entity.RouteDoc
 import com.alibaba.android.arouter.ksp.compiler.entity.RouteMetaKsp
 import com.alibaba.android.arouter.ksp.compiler.entity.kspRawType
-import cn.jailedbird.arouter.ksp.compiler.utils.*
 import com.alibaba.android.arouter.facade.annotation.Autowired
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.alibaba.android.arouter.facade.enums.RouteType
@@ -25,12 +24,10 @@ import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSFile
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.ksp.KotlinPoetKspPreview
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.writeTo
 import java.util.*
 
-@KotlinPoetKspPreview
 class RouteSymbolProcessorProvider : SymbolProcessorProvider {
 
     override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
